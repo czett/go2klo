@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=SUSE:wght@100..800&display=swap');
+
+:root{
+    --fg: #131B23;
+    --bg: #F8F4F9;
+    --ac: #3C91E6;
+
+    --rlpad: 15vw;
+    --brad: 1.5rem;
+    --trans: 250ms;
+    --tbmar: 3vh;
+}
+
+::selection{
+    background: var(--ac);
+    color: var(--bg);
+}
+
+body, html{
+    margin: 0;
+    width: 100vw;
+    background: var(--bg);
+    overflow-x: hidden;
+}
+
+*{
+    color: var(--fg);
+    font-family: 'GABARITO';
+}
+
+.content{
+    padding: 0 var(--rlpad);
+    padding-top: 10vh;
+}
+
+/* nav */
+
+.nav{
+    z-index: 10;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    padding: 0 var(--rlpad);
+    background: var(--bg);
+}
+
+.nav .links{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav .links *{
+    font-size: 1.3rem;
+    text-decoration: none;
+}
+
+.nav .links .logo{
+    font-size: 2.5rem;
+    text-decoration: none;
+    font-family: 'SUSE';
+    color: var(--ac);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.banner{
+    margin: var(--tbmar) 0;
+    margin-top: 5vh;
+    aspect-ratio: 4;
+    width: 100%;
+    background-color: var(--ac);
+    border-radius: var(--brad);
+    overflow: hidden;
+    position: relative;
+}
+
+.banner .icon{
+    position: absolute;
+    inset: auto 0% 0% auto;
+}
+
+.banner .icon span{
+    font-size: 10rem;
+    color: var(--bg);
+}
+
+.banner .title-text{
+    position: absolute;
+    inset: 2vw auto auto 2vw;
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 3rem;
+}
+
+.banner .bottom-text{
+    position: absolute;
+    inset: 5vw auto auto 2vw;
+    color: var(--bg);
+    font-weight: 400;
+    font-size: 1.25rem;
+}
+
+.benefit-cards{
+    margin: var(--tbmar) 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1vw;
+}
+
+.benefit-cards .card{
+    flex: 1;
+    background: var(--bg);
+    border: 2px solid var(--ac);
+    box-sizing: border-box;
+    padding: 2vh;
+    border-radius: var(--brad);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.benefit-cards .card .card-icon span{
+    font-size: 4rem;
+    margin-bottom: 1vh;
+}
+
+.benefit-cards .card .card-title{
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1vh;
+}
+
+.benefit-cards .card .card-text{
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 1vh;
+    text-align: center;
+}
+
+.benefit-header{
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.get-started{
+    margin: var(--tbmar) 0;
+    margin-top: 0;
+    position: relative;
+    aspect-ratio: 4;
+    width: 100%;
+}
+
+.get-started .icon span{
+    color: var(--ac);
+    position: absolute;
+    inset: auto auto 0% 5%;
+    transform: scale(-1, 1);
+    rotate: 90deg;
+    font-size: 20rem;
+}
+
+.get-started .box-text{
+    font-size: 2rem;
+    position: absolute;
+    inset: 25% auto auto 0%;
+    font-weight: 600;
+}
