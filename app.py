@@ -133,7 +133,7 @@ def profile(pid):
         avg_lon = sum(rating['longitude'] for rating in ratings) / len(ratings)
     else:
         # Default center if no ratings
-        avg_lat, avg_lon = 51.505, -0.09  # A default point in the UK (you can change this to another location)
+        avg_lat, avg_lon = 51.505, -0.09 # default is uk or so
 
     if session.get("user"):
         if session["user"] == uname:
