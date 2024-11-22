@@ -1,11 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-<!-- Include Leaflet.js library (CSS and JS) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-{% endblock %}
-
 {% block content %}
 <h1>Details - Toilet #{{ toilet.toilet_id }}</h1>
 
@@ -27,7 +21,7 @@
 <ul>
     {% for rating in toilet.ratings %}
         <li>
-            <strong>{{ rating.username }}</strong>:
+            <a href="/profile/{{ rating.username }}"><strong>{{ rating.username }}</strong>:</a>
             Cleanliness: {{ rating.cleanliness }},
             Supplies: {{ rating.supplies }},
             Privacy: {{ rating.privacy }},

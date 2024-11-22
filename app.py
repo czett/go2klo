@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, request
+from flask import Flask, render_template, redirect, session, request, url_for
 import funcs
 
 app = Flask(__name__)
@@ -116,5 +116,42 @@ def toilet(tid):
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
     return render_template("toilet.html", toilet=info)
 
+@app.route("/profile/<int:pid>")
+def profile(pid):
+    # if not funcs.check_user_exists(pid):
+    #     return redirect("/")
+
+    pid = int(pid)
+    
+    ratings = funcs.get_user_ratings(pid)
+    uname = funcs.get_username_by_user_id(pid)
+
+    # Calculate the average latitude and longitude for all rated toilets
+    if ratings:
+        avg_lat = sum(rating['latitude'] for rating in ratings) / len(ratings)
+        avg_lon = sum(rating['longitude'] for rating in ratings) / len(ratings)
+    else:
+        # Default center if no ratings
+        avg_lat, avg_lon = 51.505, -0.09  # A default point in the UK (you can change this to another location)
+
+    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon)
+
+@app.route("/profile/<username>")
+def profile_by_username(username):
+    # Fetch the user ID using the username
+    user_id = funcs.get_user_id_by_username(username)
+    
+    if not user_id:
+        return redirect("/")  # Redirect to homepage if username does not exist
+    
+    # Redirect to the original profile route with user ID
+    return redirect(url_for('profile', pid=user_id))
+
+@app.route("/myprofile")
+def my_profile():
+    check_login_status()
+    username = session["user"]
+    return redirect(f"/profile/{username}")
+    
 if __name__ == "__main__":
     app.run(debug=True, port=7000)

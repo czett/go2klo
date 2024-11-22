@@ -1,28 +1,26 @@
 {% extends "base.html" %}
 
-{% block head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-{% endblock %}
-
 {% block content %}
 <h1 class="explore-title">Map of rated Toilets</h1>
 <div class="map-tip">tip: click a pin to get to its ratings</div>
-<div id="map"></div>
+<div id="map" style="height: 400px;"></div>
 
 <div class="toilets-list">
     {% for toilet in toilets %}
-    <div class="toilet">
-        <div class="name">Toilet {{toilet["toilet_id"]}}</div>
-        <div class="ratings">Ratings: {{toilet["rating_count"]}}</div>
-        <div class="coords">Coordinates: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
-    </div>
+    <a href="/toilet/{{toilet['toilet_id']}}">
+        <div class="toilet">
+            <div class="name">Toilet {{toilet["toilet_id"]}}</div>
+            <div class="ratings">Ratings: {{toilet["rating_count"]}}</div>
+            <div class="coords">Coordinates: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
+        </div>
+    </a>
     {% endfor %}
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    // Initialize map
-    var map = L.map('map').setView([51.5149, 7.4660], 13);  // Default view (can be dynamic)
+    // Initialize map and set view to center of Europe
+    var map = L.map('map').setView([51.1657, 10.4515], 6);  // Centered at the center of Europe (Germany)
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

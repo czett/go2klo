@@ -433,7 +433,31 @@ input[type="range"]::-webkit-slider-thumb {
     box-sizing: border-box;
 }
 
+.toilets-list a{
+    text-decoration: none;
+}
+
 .toilets-list .toilet .name{
     font-size: 2rem;
     font-weight: 600;
+}
+
+/* user profile */
+
+.user-profile{
+    width: 100%;
+    padding-bottom: 2vh;
+}
+
+.user-profile .ratings-header{
+    font-size: 1.75rem;
+}
+
+.user-profile .rating{
+    font-size: 1.25rem;
+    line-height: 150%;
+}
+
+.users-ratings{
+    margin-bottom: 3vh;
 }

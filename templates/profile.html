@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="user-profile">
+    <div class="banner">
+        <div class="title-text">{{name}}</div>
+        <div class="bottom-text">{{name}} has {{ratings|length}} ratings</div>
+        <div class="icon">
+            <span class="material-symbols-rounded">stars</span>
+        </div>
+    </div>
+
+    <h2 class="ratings-header">Ratings on go2klo:</h2>
+    <ul class="users-ratings">
+        {% for rating in ratings %}
+        <li class="rating">
+            <a href="/toilet/{{ rating.toilet_id }}"><strong>Toilet #{{ rating.toilet_id }}:</strong></a>
+            Cleanliness: {{ rating.cleanliness }},
+            Supplies: {{ rating.supplies }},
+            Privacy: {{ rating.privacy }},
+            Comment: "{{ rating.comment }}"
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div id="map"></div>
+</div>
+
+<!-- Leaflet map setup -->
+<script>
+    // Initialize the map with the dynamic center
+    var map = L.map('map').setView([{{ avg_lat }}, {{ avg_lon }}], 13); // Set dynamic center based on average lat/lon
+
+    // Add tile layer to the map (OpenStreetMap by default)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add markers for each toilet
+    {% for rating in ratings %}
+    L.marker([{{ rating.latitude }}, {{ rating.longitude }}])
+        .addTo(map)
+        .bindPopup("<b>Toilet #{{ rating.toilet_id }}</b><br>Cleanliness: {{ rating.cleanliness }}<br>Supplies: {{ rating.supplies }}<br>Privacy: {{ rating.privacy }}<br>Comment: {{ rating.comment }}")
+        .openPopup();
+    {% endfor %}
+</script>
+
+{% endblock %}

@@ -223,3 +223,136 @@ def get_toilet_details(toilet_id):
                 }
     except Exception as e:
         return {"error": str(e)}
+    
+def get_user_ratings(user_id: int):
+    """
+    Fetches all ratings made by a user, based on their user_id.
+    
+    Args:
+        user_id (int): The ID of the user for whom to fetch ratings.
+
+    Returns:
+        list: A list of dictionaries containing the ratings made by the user, 
+              or an error message if an issue occurs.
+    """
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                # Fetch the username using user_id
+                cur.execute("SELECT username FROM users WHERE user_id = %s", (user_id,))
+                username = cur.fetchone()
+                
+                if not username:
+                    return {"message": "User not found."}
+
+                username = username[0]  # Get the actual username from the query result
+
+                # Now fetch the ratings for this username
+                cur.execute("""
+                    SELECT 
+                        r.toilet_id,
+                        t.latitude,
+                        t.longitude,
+                        r.cleanliness,
+                        r.supplies,
+                        r.privacy,
+                        r.comment,
+                        r.username
+                    FROM ratings r
+                    JOIN toilets t ON r.toilet_id = t.toilet_id
+                    WHERE r.username = %s
+                """, (username,))
+
+                ratings = cur.fetchall()
+
+                # If no ratings found, return an empty list
+                if not ratings:
+                    return {"message": "No ratings found for this user."}
+
+                # Format the result into a list of dictionaries
+                return [
+                    {
+                        "toilet_id": r[0],
+                        "latitude": r[1],
+                        "longitude": r[2],
+                        "cleanliness": r[3],
+                        "supplies": r[4],
+                        "privacy": r[5],
+                        "comment": r[6],
+                        "username": r[7]
+                    }
+                    for r in ratings
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def check_user_exists(user_id: str):
+    """
+    Checks if a user exists in the database by their user_id.
+    
+    Args:
+        user_id (str): The ID of the user to check.
+
+    Returns:
+        bool: True if the user exists, False otherwise.
+    """
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                # Check if the user exists by querying the 'users' table
+                cur.execute("SELECT 1 FROM users WHERE username = %s", (user_id,))
+                user = cur.fetchone()
+
+                # If the user exists, fetchone() will return a result, otherwise it will return None
+                if user:
+                    return True
+                else:
+                    return False
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+    finally:
+        conn.close()
+
+def get_username_by_user_id(user_id):
+    try:
+        conn = get_db_connection()
+        with conn.cursor() as cur:
+            cur.execute("SELECT username FROM users WHERE user_id = %s", (user_id,))
+            username = cur.fetchone()
+            if username:
+                return username[0]  # Return the username
+            else:
+                return None  # No username found for the given user_id
+    except Exception as e:
+        return None  # In case of an error, return None
+
+def get_user_id_by_username(username):
+    """
+    Fetches the user ID by the provided username.
+
+    Args:
+        username (str): The username of the user.
+
+    Returns:
+        int: The user ID, or None if the username does not exist.
+    """
+    try:
+        conn = get_db_connection()
+        with conn.cursor() as cur:
+            cur.execute("SELECT user_id FROM users WHERE username = %s", (username,))
+            user = cur.fetchone()
+
+            if user:
+                return user[0]  # Return the user ID
+            else:
+                return None  # Username does not exist
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+    finally:
+        conn.close()
