@@ -15,6 +15,7 @@
         </div>
     </div>
 
+    {% if ratings|length > 0 %}
     <h2 class="ratings-header">Ratings on go2klo:</h2>
     <ul class="users-ratings">
         {% for rating in ratings %}
@@ -27,8 +28,20 @@
         </li>
         {% endfor %}
     </ul>
+    {% endif %}
 
     <div id="map"></div>
+
+    <div class="trophy-case-title">Trophy Case</div>
+
+    <div class="trophy-case">
+        {% for trophy in achievements %}
+        <div class="trophy">
+            <img src="{{ url_for('static', filename='icons/' + trophy + '.png') }}">
+            <div class="name">{{trophy | replace("_", " ")}}</div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <!-- Leaflet map setup -->

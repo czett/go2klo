@@ -7,58 +7,61 @@ app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
 def check_login_status():
     if session.get("logged_in"):
         if session["logged_in"]:
-            return redirect("/")
+            return True
+    else:
+        session["logged_in"] = False
+        return False
+    
+    return True
 
 @app.route("/")
 def startpoint():
     return render_template("index.html", session=session)
 
 @app.route("/login")
-def login():
-    check_login_status()
-    
+def login():    
     return render_template("logreg.html", action="login", msg=None)
 
 @app.route("/login/process", methods=["POST"])
-def process_login():
-    check_login_status()
-    
-    username = request.form["username"]
-    password = request.form["password"]
+def process_login():    
+    try:
+        username = request.form["username"]
+        password = request.form["password"]
 
-    if username and password:
-        response = funcs.login(username, password)
-        if response[0] == True:
-            session["user"] = username
-            session["logged_in"] = True
-            return redirect("/")
-        else:
-            return render_template("logreg.html", action="login", msg=response[1])
+        if username and password:
+            response = funcs.login(username, password)
+            if response[0] == True:
+                session["user"] = username
+                session["logged_in"] = True
+                return redirect("/")
+            else:
+                return render_template("logreg.html", action="login", msg=response[1])
+    except:
+        return redirect("/")
 
     return "Congrats, you worked around my code :)"
 
 @app.route("/register")
-def register():
-    check_login_status()
-    
+def register():    
     return render_template("logreg.html", action="register", msg=None)
 
 @app.route("/register/process", methods=["POST"])
-def process_register():
-    check_login_status()
+def process_register():    
+    try:
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username and password:
+            response = funcs.register(username, password)
+            if response[0] == True:
+                session["user"] = username
+                session["logged_in"] = True
+                return redirect("/")
+            else:
+                return render_template("logreg.html", action="register", msg=response[1])
+    except:
+        return redirect("/")
     
-    username = request.form["username"]
-    password = request.form["password"]
-
-    if username and password:
-        response = funcs.register(username, password)
-        if response[0] == True:
-            session["user"] = username
-            session["logged_in"] = True
-            return redirect("/")
-        else:
-            return render_template("logreg.html", action="register", msg=response[1])
-
     return "Congrats, you worked around my code :)"
 
 @app.route("/logout")
@@ -68,13 +71,15 @@ def logout():
 
 @app.route("/rate")
 def rate():
-    check_login_status()
+    if not check_login_status():
+        return redirect("/")
 
     return render_template("get_location.html")
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
-    check_login_status()
+    if not check_login_status():
+        return redirect("/")
 
     query = request.form["location_query"]
     lat, lng = funcs.get_coordinates(query)
@@ -85,7 +90,8 @@ def process_rating():
 
 @app.route("/rate/finish", methods=["POST"])
 def finish_rating():
-    check_login_status()
+    if not check_login_status():
+        return redirect("/")
 
     cleanliness = request.form["cleanliness"]
     supplies = request.form["supplies"]
@@ -127,8 +133,12 @@ def profile(pid):
     ratings = funcs.get_user_ratings(pid)
     uname = funcs.get_username_by_user_id(pid)
 
+    user_achievements = funcs.get_achievements_by_user_id(pid)[1]
+
+    # return str(ratings)
+
     # Calculate the average latitude and longitude for all rated toilets
-    if ratings:
+    if ratings != []:
         avg_lat = sum(rating['latitude'] for rating in ratings) / len(ratings)
         avg_lon = sum(rating['longitude'] for rating in ratings) / len(ratings)
     else:
@@ -141,7 +151,7 @@ def profile(pid):
         else:
             own = False
 
-    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own)
+    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -156,7 +166,8 @@ def profile_by_username(username):
 
 @app.route("/myprofile")
 def my_profile():
-    check_login_status()
+    if not check_login_status():
+        return redirect("/")
     username = session["user"]
     return redirect(f"/profile/{username}")
     

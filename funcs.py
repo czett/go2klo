@@ -4,6 +4,7 @@ import bcrypt
 from geopy.geocoders import Nominatim
 import requests
 from math import radians, sin, cos, sqrt, atan2
+import achievements
 
 with open("credentials.yml", "r") as creds:
     pw = creds.readlines()[0]
@@ -132,6 +133,14 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
 
                 rating_id = cur.fetchone()[0]
 
+                # check for "first flush" trophy whether user has rating already
+                if len(get_user_ratings(user)) == 1:
+                    achievements.acquire(user, "first_flush")
+                
+                # check for "toilet master" trophy whether user has rating already
+                if len(get_user_ratings(user)) >= 5:
+                    achievements.acquire(user, "toilet_master")
+
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
     except Exception as e:
         return False, f"Error: {e}"
@@ -259,7 +268,7 @@ def get_user_ratings(user_id: int):
                 ratings = cur.fetchall()
 
                 if not ratings:
-                    return {"message": "No ratings found for this user."}
+                    return []
 
                 return [
                     {
@@ -352,3 +361,28 @@ def coords_to_address(latitude, longitude):
         return location.address
     else:
         return "Address not found"
+    
+def get_achievements_by_user_id(user_id: int):
+    """
+    Fetches all achievements of a user by their user ID.
+
+    Args:
+        user_id (int): The ID of the user.
+
+    Returns:
+        tuple: (bool, list or str) - A tuple where the first element indicates success, 
+               and the second element is either the list of achievements or an error message.
+    """
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT achievements FROM users WHERE user_id = %s", (user_id,))
+            result = cur.fetchone()
+            if result:
+                return True, result[0]
+            else:
+                return False, "User not found."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()

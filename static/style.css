@@ -53,7 +53,7 @@ body, html {
 /* nav */
 
 .nav{
-    z-index: 10;
+    z-index: 1000;
     width: 100vw;
     position: fixed;
     top: 0;
@@ -416,7 +416,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .toilets-list{
-    margin-top: 2vh;
+    margin: 2vh 0;
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -460,4 +460,34 @@ input[type="range"]::-webkit-slider-thumb {
 
 .users-ratings{
     margin-bottom: 3vh;
+}
+
+/* trophy case */
+
+.trophy-case-title{
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 2vh 0;
+}
+
+.trophy-case{
+    display: grid;
+    gap: 2vh;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.trophy-case .trophy{
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.trophy-case .trophy img{
+    width: 50%;
+}
+
+.trophy-case .trophy .name{
+    font-size: 1.5rem;
+    font-weight: 600;
 }
