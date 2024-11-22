@@ -83,7 +83,6 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     try:
         with conn:
             with conn.cursor() as cur:
-                # Check if the user has already rated this toilet
                 cur.execute(
                     """
                     SELECT 1 FROM ratings
@@ -94,10 +93,10 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     """,
                     (latitude, longitude, user)
                 )
+                # if toilet alr rated
                 if cur.fetchone():
                     return False, "You have already rated this toilet."
 
-                # Check if the toilet already exists
                 cur.execute(
                     """
                     SELECT toilet_id FROM toilets
@@ -108,9 +107,9 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 result = cur.fetchone()
 
                 if result:
-                    toilet_id = result[0]  # Get existing toilet_id
+                    toilet_id = result[0]
                 else:
-                    # Insert a new toilet entry
+                    # new toilet entry
                     cur.execute(
                         """
                         INSERT INTO toilets (latitude, longitude)
@@ -119,19 +118,19 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         """,
                         (latitude, longitude),
                     )
-                    toilet_id = cur.fetchone()[0]  # Get the new toilet_id
+                    toilet_id = cur.fetchone()[0]
 
-                # Insert the rating along with the username (user)
+                # add rating
                 cur.execute(
                     """
                     INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, username)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     RETURNING rating_id
                     """,
-                    (toilet_id, cleanliness, supplies, privacy, comment, user)  # username will now be passed here
+                    (toilet_id, cleanliness, supplies, privacy, comment, user)
                 )
 
-                rating_id = cur.fetchone()[0]  # Fetch the auto-generated rating_id
+                rating_id = cur.fetchone()[0]
 
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
     except Exception as e:
@@ -144,8 +143,6 @@ def get_all_toilets():
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                # SQL query that joins the toilets table with the ratings table
-                # and counts the number of ratings for each toilet
                 cur.execute("""
                     SELECT 
                         t.toilet_id, 
@@ -158,7 +155,6 @@ def get_all_toilets():
                 """)
                 toilets = cur.fetchall()
 
-                # Return list of dictionaries for each toilet with its coordinates and rating count
                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
     except Exception as e:
         return f"Error: {e}"
@@ -177,7 +173,7 @@ def get_toilet_details(toilet_id):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                # Fetch the toilet's basic information and ratings
+                # get toilet info
                 cur.execute("""
                     SELECT latitude, longitude
                     FROM toilets
@@ -185,11 +181,10 @@ def get_toilet_details(toilet_id):
                 """, (toilet_id,))
                 toilet = cur.fetchone()
                 if not toilet:
-                    return None  # Toilet not found
+                    return None
 
                 latitude, longitude = toilet
 
-                # Fetch the ratings for this toilet
                 cur.execute("""
                     SELECT cleanliness, supplies, privacy, comment, username
                     FROM ratings
@@ -197,12 +192,11 @@ def get_toilet_details(toilet_id):
                 """, (toilet_id,))
                 ratings = cur.fetchall()
 
-                # Calculate averages for cleanliness, supplies, and privacy
+                # avg calc
                 avg_cleanliness = sum(r[0] for r in ratings) / len(ratings) if ratings else 0
                 avg_supplies = sum(r[1] for r in ratings) / len(ratings) if ratings else 0
                 avg_privacy = sum(r[2] for r in ratings) / len(ratings) if ratings else 0
 
-                # Return the toilet details along with the ratings and averages
                 return {
                     "toilet_id": toilet_id,
                     "latitude": latitude,
@@ -239,16 +233,14 @@ def get_user_ratings(user_id: int):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                # Fetch the username using user_id
                 cur.execute("SELECT username FROM users WHERE user_id = %s", (user_id,))
                 username = cur.fetchone()
                 
                 if not username:
                     return {"message": "User not found."}
 
-                username = username[0]  # Get the actual username from the query result
+                username = username[0]
 
-                # Now fetch the ratings for this username
                 cur.execute("""
                     SELECT 
                         r.toilet_id,
@@ -266,11 +258,9 @@ def get_user_ratings(user_id: int):
 
                 ratings = cur.fetchall()
 
-                # If no ratings found, return an empty list
                 if not ratings:
                     return {"message": "No ratings found for this user."}
 
-                # Format the result into a list of dictionaries
                 return [
                     {
                         "toilet_id": r[0],
@@ -303,11 +293,9 @@ def check_user_exists(user_id: str):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                # Check if the user exists by querying the 'users' table
                 cur.execute("SELECT 1 FROM users WHERE username = %s", (user_id,))
                 user = cur.fetchone()
 
-                # If the user exists, fetchone() will return a result, otherwise it will return None
                 if user:
                     return True
                 else:
@@ -325,11 +313,11 @@ def get_username_by_user_id(user_id):
             cur.execute("SELECT username FROM users WHERE user_id = %s", (user_id,))
             username = cur.fetchone()
             if username:
-                return username[0]  # Return the username
+                return username[0]
             else:
-                return None  # No username found for the given user_id
+                return None
     except Exception as e:
-        return None  # In case of an error, return None
+        return None
 
 def get_user_id_by_username(username):
     """
@@ -348,9 +336,9 @@ def get_user_id_by_username(username):
             user = cur.fetchone()
 
             if user:
-                return user[0]  # Return the user ID
+                return user[0]
             else:
-                return None  # Username does not exist
+                return None
     except Exception as e:
         print(f"Error: {e}")
         return None
