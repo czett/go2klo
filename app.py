@@ -113,6 +113,7 @@ def toilets_api():
 @app.route("/toilet/<tid>")
 def toilet(tid):
     info = funcs.get_toilet_details(tid)
+    info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
     return render_template("toilet.html", toilet=info)
 

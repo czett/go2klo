@@ -356,3 +356,11 @@ def get_user_id_by_username(username):
         return None
     finally:
         conn.close()
+
+def coords_to_address(latitude, longitude):
+    geolocator = Nominatim(user_agent="go2klo_app")
+    location = geolocator.reverse((latitude, longitude))
+    if location:
+        return location.address
+    else:
+        return "Address not found"
