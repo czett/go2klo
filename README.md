@@ -31,7 +31,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Backend**: Flask (Python)  
 - **Frontend**: HTML, CSS, and JavaScript  
 - **Database**: Supabase, PostgreSQL
-- **Maps Integration**: Leaflet/OSM
+- **Maps Integration**: Leaflet/OSM and Google Maps
 
 ---
 
