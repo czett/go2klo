@@ -3,16 +3,16 @@
 {% block content %}
 
 <div class="rating-form">
-    <form action="/rate/process" enctype="multipart/form-data" method="post">
+    <form action="/rate/finish" enctype="multipart/form-data" method="post">
         <h2 class="title">Rate your toilet</h2>
 
         <!-- <iframe src="'https://maps.google.com/maps?q=' + {{lat}} + ',' + {{lng}} + '&t=&z=15&ie=UTF8&iwloc=&output=embed'" /> -->
         <iframe src = "https://maps.google.com/maps?q={{lat}},{{lng}}&hl=es;z=14&amp;output=embed"></iframe>
         <div class="wrong-pin">Wrong geo-pin? <a href="/rate">Try again</a> by using a new query</div>
     
-        <!-- {% if msg != None %}
+        {% if msg != None %}
             <div class="rating-msg msg">{{msg}}</div>
-        {% endif %} -->
+        {% endif %}
     
         <!-- <label for="toilet-name">Enter a name for the toilet:</label>
         <input type="text" name="toilet-name" id="toilet-name" placeholder="toilet name"> -->

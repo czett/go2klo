@@ -395,3 +395,45 @@ input[type="range"]::-webkit-slider-thumb {
 .rating-form form *{
     box-sizing: border-box;
 }
+
+/* explore page */
+
+#map{
+    width: 100%;
+    aspect-ratio: 3;
+    border-radius: var(--brad);
+}
+
+.explore-title{
+    font-size: 3rem;
+    line-height: 100%;
+    margin: 0;
+    margin-top: 1vh;
+}
+
+.map-tip{
+    margin-bottom: 2vh;
+}
+
+.toilets-list{
+    margin-top: 2vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5vh;
+}
+
+.toilets-list .toilet{
+    border-radius: var(--brad);
+    aspect-ratio: 3;
+    background: transparent;
+    border: 2px solid var(--ac);
+    overflow: hidden;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+
+.toilets-list .toilet .name{
+    font-size: 2rem;
+    font-weight: 600;
+}

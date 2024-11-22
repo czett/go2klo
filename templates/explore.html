@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block content %}
+<h1 class="explore-title">Map of rated Toilets</h1>
+<div class="map-tip">tip: click a pin to get to its ratings</div>
+<div id="map"></div>
+
+<div class="toilets-list">
+    {% for toilet in toilets %}
+    <div class="toilet">
+        <div class="name">Toilet {{toilet["toilet_id"]}}</div>
+        <div class="ratings">Ratings: {{toilet["rating_count"]}}</div>
+        <div class="coords">Coordinates: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // Initialize map
+    var map = L.map('map').setView([51.5149, 7.4660], 13);  // Default view (can be dynamic)
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Get toilets data from Flask backend
+    fetch('/api/toilets')
+        .then(response => response.json())
+        .then(data => {
+            // Loop through each toilet and add a marker
+            data.forEach(function(toilet) {
+                var marker = L.marker([toilet.latitude, toilet.longitude])
+                    .addTo(map)
+                    .bindPopup('Toilet ID: ' + toilet.toilet_id);
+
+                // Add a click event to each marker
+                marker.on('click', function() {
+                    // Redirect to the toilet details page
+                    window.location.href = '/toilet/' + toilet.toilet_id;
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching toilet data:', error));
+</script>
+{% endblock %}

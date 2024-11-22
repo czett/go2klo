@@ -4,23 +4,24 @@ import funcs
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
 
+def check_login_status():
+    if session.get("logged_in"):
+        if session["logged_in"]:
+            return redirect("/")
+
 @app.route("/")
 def startpoint():
     return render_template("index.html", session=session)
 
 @app.route("/login")
 def login():
-    if session.get("logged_in"):
-        if session["logged_in"]:
-            return redirect("/")
+    check_login_status()
     
     return render_template("logreg.html", action="login", msg=None)
 
 @app.route("/login/process", methods=["POST"])
 def process_login():
-    if session.get("logged_in"):
-        if session["logged_in"]:
-            return redirect("/")
+    check_login_status()
     
     username = request.form["username"]
     password = request.form["password"]
@@ -38,17 +39,13 @@ def process_login():
 
 @app.route("/register")
 def register():
-    if session.get("logged_in"):
-        if session["logged_in"]:
-            return redirect("/")
+    check_login_status()
     
     return render_template("logreg.html", action="register", msg=None)
 
 @app.route("/register/process", methods=["POST"])
 def process_register():
-    if session.get("logged_in"):
-        if session["logged_in"]:
-            return redirect("/")
+    check_login_status()
     
     username = request.form["username"]
     password = request.form["password"]
@@ -71,16 +68,46 @@ def logout():
 
 @app.route("/rate")
 def rate():
-    # logged in checker missing!
+    check_login_status()
+
     return render_template("get_location.html")
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
-    # logged in checker missing!
+    check_login_status()
+
     query = request.form["location_query"]
     lat, lng = funcs.get_coordinates(query)
 
-    return render_template("rate.html", lat=lat, lng=lng)
+    session["rating_coords"] = (lat, lng)
+
+    return render_template("rate.html", lat=lat, lng=lng, msg=None)
+
+@app.route("/rate/finish", methods=["POST"])
+def finish_rating():
+    check_login_status()
+    
+    cleanliness = request.form["cleanliness"]
+    supplies = request.form["supplies"]
+    privacy = request.form["privacy"]
+    comment = request.form["comment"]
+
+    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"])
+    
+    if response[0] == True:
+        return redirect("/")
+    else:
+        return render_template("rate.html", msg=response[1])
+    
+@app.route("/explore")
+def explore():
+    toilets = funcs.get_all_toilets()
+    return render_template("explore.html", toilets=toilets)
+
+@app.route("/api/toilets")
+def toilets_api():
+    toilets = funcs.get_all_toilets()
+    return toilets
 
 if __name__ == "__main__":
     app.run(debug=True, port=7000)
