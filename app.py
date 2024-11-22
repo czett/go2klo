@@ -6,7 +6,7 @@ app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
 
 @app.route("/")
 def startpoint():
-    return render_template("index.html")
+    return render_template("index.html", session=session)
 
 @app.route("/login")
 def login():

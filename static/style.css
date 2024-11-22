@@ -28,9 +28,13 @@
     background: var(--fg);
 }
 
-body, html{
+body, html {
     margin: 0;
+    padding: 0;
     width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background: var(--bg);
     overflow-x: hidden;
 }
@@ -43,6 +47,7 @@ body, html{
 .content{
     padding: 0 var(--rlpad);
     padding-top: 10vh;
+    flex: 1;
 }
 
 /* nav */
