@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="rating-form">
+    <form action="/rate/process" enctype="multipart/form-data" method="post">
+        <h2 class="title">Rate your toilet</h2>
+
+        <input type="text" name="location_query" required placeholder="Describe your toilet: address or name">
+    
+        <button type="submit">Submit rating</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -2,6 +2,7 @@
 
 {% block content %}
 
+{% if not session["logged_in"] %}
 <div class="banner">
     <div class="title-text">Scared of toilets? Not anymore!</div>
     <div class="bottom-text">Join go2klo now to rate toilets and always know where to go</div>
@@ -9,6 +10,17 @@
         <span class="material-symbols-rounded">wc</span>
     </div>
 </div>
+{% endif %}
+
+{% if session["logged_in"] %}
+<div class="banner">
+    <div class="title-text">Got something to share?</div>
+    <div class="bottom-text"><a href="/rate">Start rating</a> toilets now or explore nearby ones <a href="/explore">here</a>!</div>
+    <div class="icon">
+        <span class="material-symbols-rounded">share_location</span>
+    </div>
+</div>
+{% endif %}
 
 <div class="benefit-header">Why should you use go2klo?</div>
 

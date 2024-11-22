@@ -297,7 +297,7 @@ body, html {
     font-weight: 600;
 }
 
-.logreg-msg{
+.msg{
     width: 75%;
     margin-bottom: 2vh;
     padding: 1vh 0;
@@ -308,4 +308,90 @@ body, html {
     color: var(--bg);
     font-weight: 600;
     font-size: 1.1rem;
+}
+
+/* logged in index banner */
+
+.banner a{
+    color: var(--bg);
+    cursor: pointer;
+}
+
+/* rating form */
+
+.rating-form{
+    /* position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%); */
+    width: 50%;
+    margin: 0 auto;
+}
+
+.rating-form form{
+    display: flex;
+    flex-direction: column;
+}
+
+.rating-form form .title{
+    font-size: 3rem;
+}
+
+.rating-form form .subtitle{
+    font-size: 2rem;
+}
+
+.rating-form form input, .rating-form form textarea{
+    resize: none;
+    padding: 1vh;
+    border-radius: calc(var(--brad)/2);
+    border: 2px solid var(--ac);
+    color: var(--fg);
+    background: transparent;
+    outline: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.rating-form form label{
+    margin: 1vh 0;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.rating-form form button{
+    margin-top: 2vh;
+    background-color: var(--ac);
+    border: none;
+    outline: none;
+    padding: 1.5vh 0;
+    border-radius: calc(var(--brad)/2);
+    color: var(--bg);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+input[type="range"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    margin: 10px 0 16px;
+    background: #ddd;
+    border-radius: 4px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.rating-form form *{
+    box-sizing: border-box;
 }

@@ -69,5 +69,18 @@ def logout():
     session.clear()
     return redirect("/")
 
+@app.route("/rate")
+def rate():
+    # logged in checker missing!
+    return render_template("get_location.html")
+
+@app.route("/rate/process", methods=["POST"])
+def process_rating():
+    # logged in checker missing!
+    query = request.form["location_query"]
+    lat, lng = funcs.get_coordinates(query)
+
+    return render_template("rate.html", lat=lat, lng=lng)
+
 if __name__ == "__main__":
     app.run(debug=True, port=7000)

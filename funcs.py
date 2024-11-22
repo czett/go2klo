@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import sql
 import bcrypt
+from geopy.geocoders import Nominatim
 
 with open("credentials.yml", "r") as creds:
     pw = creds.readlines()[0]
@@ -48,3 +49,13 @@ def login(username: str, password: str):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def get_coordinates(location_name):
+    geolocator = Nominatim(user_agent="go2klo_app")
+
+    location = geolocator.geocode(location_name)
+
+    if location:
+        return location.latitude, location.longitude
+    else:
+        return None, None
