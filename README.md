@@ -1,3 +1,5 @@
+![banner where?](https://github.com/czett/go2klo/blob/main/statis/img/banner.png)
+
 # 🚽 go2klo  
 
 **The quirky public toilet rating app!**  
