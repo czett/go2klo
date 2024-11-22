@@ -6,7 +6,6 @@
 
 Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** is your one-stop solution for finding and reviewing public toilets wherever you go. Whether you're in a new city, on a road trip, or just in a hurry, let go2klo guide you to the throne you deserve.  
 
----
 
 ## 📦 Features  
 
@@ -26,7 +25,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Add new public toilets to the map and help expand the database.  
 - Flag toilets that are closed, under construction, or just plain terrifying.  
 
----
 
 ## 🛠️ Tech Stack  
 
