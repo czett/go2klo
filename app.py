@@ -134,7 +134,13 @@ def profile(pid):
         # Default center if no ratings
         avg_lat, avg_lon = 51.505, -0.09  # A default point in the UK (you can change this to another location)
 
-    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon)
+    if session.get("user"):
+        if session["user"] == uname:
+            own = True
+        else:
+            own = False
+
+    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):

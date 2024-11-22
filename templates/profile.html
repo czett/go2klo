@@ -7,7 +7,11 @@
         <div class="title-text">{{name}}</div>
         <div class="bottom-text">{{name}} has {{ratings|length}} ratings</div>
         <div class="icon">
+            {% if own %}
+            <a href="/logout"><span class="material-symbols-rounded">logout</span></a>
+            {% else%}
             <span class="material-symbols-rounded">stars</span>
+            {% endif %}
         </div>
     </div>
 
