@@ -16,7 +16,7 @@ DB_CONFIG = {
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
 
-def register(username: str, password: str) -> str:
+def register(username: str, password: str):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     conn = get_db_connection()
     try:
@@ -26,25 +26,25 @@ def register(username: str, password: str) -> str:
                     "INSERT INTO users (username, password) VALUES (%s, %s)",
                     (username, hashed_password.decode()),
                 )
-        return "User registered successfully."
+        return True, "Success"
     except psycopg2.errors.UniqueViolation:
-        return "Error: Username already exists."
+        return False, "Username already exists"
     except Exception as e:
-        return f"Error: {e}"
+        return False, f"Error: {e}"
     finally:
         conn.close()
 
-def login(username: str, password: str) -> str:
+def login(username: str, password: str):
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
             cur.execute("SELECT password FROM users WHERE username = %s", (username,))
             user = cur.fetchone()
             if user and bcrypt.checkpw(password.encode(), user[0].encode()):
-                return "Login successful!"
+                return True, "Success"
             else:
-                return "Invalid username or password."
+                return False, "Wrong username or password"
     except Exception as e:
-        return f"Error: {e}"
+        return False, f"Error: {e}"
     finally:
         conn.close()

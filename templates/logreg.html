@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="logreg-form">
+    {% if action == "login" %}
+        <form action="/login/process" enctype="multipart/form-data" method="post">
+            <h2 class="title">Log into go2klo</h2>
+            
+            {% if msg != None %}
+                <div class="logreg-msg">{{msg}}</div>
+            {% endif %}
+
+            <label for="username">Enter your username:</label>
+            <input type="text" name="username" id="username" placeholder="username">
+            <label for="password">Enter your password:</label>
+            <input type="password" name="password" id="password" placeholder="password">
+            <button type="submit">Login</button>
+            <a href="/register">
+                <div class="switch-form">I'd rather register</div>
+            </a>
+        </form>
+    {% endif %}
+    {% if action == "register" %}
+        <form action="/register/process" enctype="multipart/form-data" method="post">
+            <h2 class="title">Register into go2klo</h2>
+
+            {% if msg != None %}
+                <div class="logreg-msg">{{msg}}</div>
+            {% endif %}
+
+            <label for="username">Enter your username:</label>
+            <input type="text" name="username" id="username" placeholder="username">
+            <label for="password">Enter your password:</label>
+            <input type="password" name="password" id="password" placeholder="password">
+            <button type="submit">Register</button>
+            <a href="/login">
+                <div class="switch-form">I'd rather login</div>
+            </a>
+        </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

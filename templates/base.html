@@ -12,14 +12,16 @@
     <div class="nav">
         <div class="links">
             <a href="#" class="link">Home</a>
-            <a href="#" class="link">Home</a>
+            <a href="#" class="link">Explore</a>
 
-            <div class="logo">
-                go2klo
-            </div>
+            <a href="/">
+                <div class="logo">
+                    go2klo
+                </div>
+            </a>
 
-            <a href="#" class="link">Home</a>
-            <a href="#" class="link">Home</a>
+            <a href="#" class="link">Post</a>
+            <a href="#" class="link">Profile</a>
         </div>
     </div>
     {% endblock %}
@@ -28,5 +30,15 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    {% block footer %}
+    <div class="footer">
+        <div class="links">
+            <a href="#" class="link">about us</a>
+            <a href="#" class="link">legal info</a>
+            <a href="#" class="link">miscellaneous</a>
+        </div>
+    </div>
+    {% endblock %}
 </body>
 </html>

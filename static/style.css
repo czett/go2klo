@@ -16,6 +16,18 @@
     color: var(--bg);
 }
 
+::-webkit-scrollbar{
+    width: 5px;
+}
+
+::-webkit-scrollbar-track{
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb{
+    background: var(--fg);
+}
+
 body, html{
     margin: 0;
     width: 100vw;
@@ -69,6 +81,30 @@ body, html{
     font-weight: 700;
     cursor: pointer;
 }
+
+/* footer */
+
+.footer{
+    width: 100vw;
+    box-sizing: border-box;
+    padding: 3vh 0;
+    background-color: var(--ac);
+}
+
+.footer .links{
+    gap: 5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer .links *{
+    color: var(--bg);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* index content */
 
 .banner{
     margin: var(--tbmar) 0;
@@ -152,10 +188,10 @@ body, html{
 
 .get-started{
     margin: var(--tbmar) 0;
-    margin-top: 0;
+    /* margin-top: 0; */
     position: relative;
-    aspect-ratio: 4;
     width: 100%;
+    margin-bottom: 5vh;
 }
 
 .get-started .icon span{
@@ -169,7 +205,102 @@ body, html{
 
 .get-started .box-text{
     font-size: 2rem;
-    position: absolute;
-    inset: 25% auto auto 0%;
     font-weight: 600;
+    margin-bottom: 2vh;
+}
+
+.get-started .action-btns{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1vh;
+}
+
+.get-started .action-btns button{
+    box-sizing: border-box;
+    padding: 2vh 4vh;
+    font-size: 1.5rem;
+    color: var(--bg);
+    background: var(--ac);
+    border-radius: calc(0.5*var(--brad));
+    border: none;
+    outline: none;
+    transition: var(--trans);
+    cursor: pointer;
+}
+
+.get-started .action-btns button:hover{
+    filter: brightness(1.1);
+}
+
+/* login form */
+
+.logreg-form{
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: green; */
+    aspect-ratio: 0.75; /* revise */
+    width: 20%;
+}
+
+.logreg-form form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2vh 0;
+    gap: 1vh;
+}
+
+.logreg-form .title{
+    font-size: 3rem;
+}
+
+.logreg-form form label, .logreg-form form input, .logreg-form form button{
+    width: 75%;
+    box-sizing: border-box;
+}
+
+.logreg-form form input, .logreg-form form button{
+    padding: 1.5vh 2vh;
+    outline: none;
+    border-radius: calc(var(--brad)/2);
+}
+
+.logreg-form form button{
+    margin-top: 2vh;
+    border: none;
+    background: var(--ac);
+    color: var(--bg);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.logreg-form form input{
+    border: 2px solid var(--ac);
+    background-color: transparent;
+    font-size: 1.2rem;
+    color: var(--ac);
+}
+
+.logreg-form form label:last-of-type{
+    margin-top: 2vh;
+}
+
+.logreg-form form label{
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.logreg-msg{
+    width: 75%;
+    margin-bottom: 2vh;
+    padding: 1vh 0;
+    text-align: center;
+    background: lightcoral;
+    border: 2px solid #d4040d;
+    border-radius: calc(var(--brad)/2);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 1.1rem;
 }
