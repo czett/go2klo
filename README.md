@@ -41,3 +41,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 Because everyone deserves a clean, accessible, and welcoming place to go when nature calls. **go2klo** isn't just an app; it's a mission to make public spaces better for everyone.  
 
 So sit back, relax, and let go2klo take the *pressure* off. 😉  
+
+## 🫡 Credits
+
+- geopy Nominatim, this project relies on you
+- icon-icons and Google Fonts for icons and logos
