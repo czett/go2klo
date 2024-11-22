@@ -34,7 +34,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ## 🚧 Future Features  
 
 - Gamified user badges (e.g., *Bathroom Barista*, *Royal Flush Guru*).  
-- Integration with social platforms for toilet-check-in bragging rights.  
+- Integration with social platforms for toilet-check-in bragging rights.
+- Hosting, so you can use it
 
 ## 🤔 Why go2klo?  
 
