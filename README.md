@@ -1,12 +1,10 @@
-![banner where?](https://github.com/czett/go2klo/blob/main/statis/img/banner.png)
+![banner where?](https://github.com/czett/go2klo/blob/main/static/img/banner.png)
 
 # 🚽 go2klo  
 
 **The quirky public toilet rating app!**  
 
 Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** is your one-stop solution for finding and reviewing public toilets wherever you go. Whether you're in a new city, on a road trip, or just in a hurry, let go2klo guide you to the throne you deserve.  
-
----
 
 ## 📦 Features  
 
@@ -26,8 +24,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Add new public toilets to the map and help expand the database.  
 - Flag toilets that are closed, under construction, or just plain terrifying.  
 
----
-
 ## 🛠️ Tech Stack  
 
 - **Backend**: Flask (Python)  
@@ -35,14 +31,10 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
 
----
-
 ## 🚧 Future Features  
 
 - Gamified user badges (e.g., *Bathroom Barista*, *Royal Flush Guru*).  
 - Integration with social platforms for toilet-check-in bragging rights.  
-
----
 
 ## 🤔 Why go2klo?  
 
