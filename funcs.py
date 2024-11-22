@@ -137,9 +137,10 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 if len(get_user_ratings(user)) == 1:
                     achievements.acquire(user, "first_flush")
                 
+                #  FIXXXXX!!!!!
                 # check for "toilet master" trophy whether user has rating already
-                if len(get_user_ratings(user)) >= 5:
-                    achievements.acquire(user, "toilet_master")
+                # if len(get_user_ratings(user)) >= 5:
+                #     achievements.acquire(user, "toilet_master")
 
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
     except Exception as e:
