@@ -1,4 +1,4 @@
-![banner where?](https://github.com/czett/go2klo/blob/main/statis/img/banner.png)
+![banner where?](https://github.com/czett/go2klo/blob/main/static/img/banner.png)
 
 # 🚽 go2klo  
 
