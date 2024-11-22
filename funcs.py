@@ -62,7 +62,7 @@ def get_coordinates(location_name):
     else:
         return None, None
     
-def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple):
+def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user: str):
     """
     Adds a rating for a toilet at the specified coordinates.
     
@@ -72,6 +72,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
         privacy (int): Rating for privacy (1-5).
         comment (str): Optional comment.
         coords (tuple): Tuple of (latitude, longitude) for the toilet.
+        user (str): username from login/registering
 
     Returns:
         tuple: (bool, str) indicating success and a message.
@@ -82,6 +83,20 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     try:
         with conn:
             with conn.cursor() as cur:
+                # Check if the user has already rated this toilet
+                cur.execute(
+                    """
+                    SELECT 1 FROM ratings
+                    WHERE toilet_id IN (
+                        SELECT toilet_id FROM toilets
+                        WHERE latitude = %s AND longitude = %s
+                    ) AND username = %s
+                    """,
+                    (latitude, longitude, user)
+                )
+                if cur.fetchone():
+                    return False, "You have already rated this toilet."
+
                 # Check if the toilet already exists
                 cur.execute(
                     """
@@ -106,15 +121,16 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     )
                     toilet_id = cur.fetchone()[0]  # Get the new toilet_id
 
-                # Insert the rating
+                # Insert the rating along with the username (user)
                 cur.execute(
                     """
-                    INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment)
-                    VALUES (%s, %s, %s, %s, %s)
+                    INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, username)
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     RETURNING rating_id
                     """,
-                    (toilet_id, cleanliness, supplies, privacy, comment),
+                    (toilet_id, cleanliness, supplies, privacy, comment, user)  # username will now be passed here
                 )
+
                 rating_id = cur.fetchone()[0]  # Fetch the auto-generated rating_id
 
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
@@ -146,3 +162,64 @@ def get_all_toilets():
                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
     except Exception as e:
         return f"Error: {e}"
+    
+def get_toilet_details(toilet_id):
+    """
+    Fetches the details of a specific toilet, including its ratings and average scores.
+    
+    Args:
+        toilet_id (int): The ID of the toilet.
+
+    Returns:
+        dict: A dictionary containing toilet details, including ratings and average scores.
+    """
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                # Fetch the toilet's basic information and ratings
+                cur.execute("""
+                    SELECT latitude, longitude
+                    FROM toilets
+                    WHERE toilet_id = %s
+                """, (toilet_id,))
+                toilet = cur.fetchone()
+                if not toilet:
+                    return None  # Toilet not found
+
+                latitude, longitude = toilet
+
+                # Fetch the ratings for this toilet
+                cur.execute("""
+                    SELECT cleanliness, supplies, privacy, comment, username
+                    FROM ratings
+                    WHERE toilet_id = %s
+                """, (toilet_id,))
+                ratings = cur.fetchall()
+
+                # Calculate averages for cleanliness, supplies, and privacy
+                avg_cleanliness = sum(r[0] for r in ratings) / len(ratings) if ratings else 0
+                avg_supplies = sum(r[1] for r in ratings) / len(ratings) if ratings else 0
+                avg_privacy = sum(r[2] for r in ratings) / len(ratings) if ratings else 0
+
+                # Return the toilet details along with the ratings and averages
+                return {
+                    "toilet_id": toilet_id,
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "ratings": [
+                        {
+                            "username": r[4],
+                            "cleanliness": r[0],
+                            "supplies": r[1],
+                            "privacy": r[2],
+                            "comment": r[3]
+                        }
+                        for r in ratings
+                    ],
+                    "avg_cleanliness": avg_cleanliness,
+                    "avg_supplies": avg_supplies,
+                    "avg_privacy": avg_privacy
+                }
+    except Exception as e:
+        return {"error": str(e)}

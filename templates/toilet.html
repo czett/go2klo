@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- Include Leaflet.js library (CSS and JS) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Details - Toilet #{{ toilet.toilet_id }}</h1>
+
+<!-- Map container -->
+<div id="map"></div>
+
+<!-- Toilet details -->
+<p><strong>Location:</strong> Latitude: {{ toilet.latitude }}, Longitude: {{ toilet.longitude }}</p>
+
+<!-- Average Ratings -->
+<h2>Average Ratings:</h2>
+<ul>
+    <li><strong>Cleanliness:</strong> {{ toilet.avg_cleanliness | round(2) }}</li>
+    <li><strong>Supplies:</strong> {{ toilet.avg_supplies | round(2) }}</li>
+    <li><strong>Privacy:</strong> {{ toilet.avg_privacy | round(2) }}</li>
+</ul>
+
+<h2>Ratings:</h2>
+<ul>
+    {% for rating in toilet.ratings %}
+        <li>
+            <strong>{{ rating.username }}</strong>:
+            Cleanliness: {{ rating.cleanliness }},
+            Supplies: {{ rating.supplies }},
+            Privacy: {{ rating.privacy }},
+            Comment: "{{ rating.comment }}"
+        </li>
+    {% endfor %}
+</ul>
+
+<script>
+    // Create the map
+    var map = L.map('map').setView([{{ toilet.latitude }}, {{ toilet.longitude }}], 13); // Set map view to toilet coordinates
+
+    // Set the tile Layer (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add a marker for the toilet location
+    var marker = L.marker([{{ toilet.latitude }}, {{ toilet.longitude }}]).addTo(map);
+    marker.bindPopup("<b>Toilet #{{ toilet.toilet_id }}</b><br>Location: {{ toilet.latitude }}, {{ toilet.longitude }}").openPopup();
+</script>
+
+{% endblock %}

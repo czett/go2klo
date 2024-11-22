@@ -86,13 +86,14 @@ def process_rating():
 @app.route("/rate/finish", methods=["POST"])
 def finish_rating():
     check_login_status()
-    
+
     cleanliness = request.form["cleanliness"]
     supplies = request.form["supplies"]
     privacy = request.form["privacy"]
     comment = request.form["comment"]
+    user = session["user"]
 
-    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"])
+    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
     if response[0] == True:
         return redirect("/")
@@ -108,6 +109,12 @@ def explore():
 def toilets_api():
     toilets = funcs.get_all_toilets()
     return toilets
+
+@app.route("/toilet/<tid>")
+def toilet(tid):
+    info = funcs.get_toilet_details(tid)
+    # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
+    return render_template("toilet.html", toilet=info)
 
 if __name__ == "__main__":
     app.run(debug=True, port=7000)
