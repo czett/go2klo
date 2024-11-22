@@ -37,10 +37,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features  
 
-- Real-time toilet occupancy updates.  
 - Gamified user badges (e.g., *Bathroom Barista*, *Royal Flush Guru*).  
 - Integration with social platforms for toilet-check-in bragging rights.  
-- AI-powered toilet quality predictions based on user trends.  
 
 ---
 
