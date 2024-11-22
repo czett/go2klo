@@ -20,10 +20,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
 - Categories include "Cleanest," "Most Accessible," and "Hidden Gems."  
 
-### 🚼 Advanced Search Filters  
-- Look for specific amenities like baby-changing stations or wheelchair access.  
-- Spot quirky features like scenic views, quirky designs, or premium "golden throne" vibes.  
-
 ### 🤝 Community Contributions  
 - Add new public toilets to the map and help expand the database.  
 - Flag toilets that are closed, under construction, or just plain terrifying.  
