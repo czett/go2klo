@@ -13,7 +13,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ### ⭐ Rate & Review  
 - Share your experience by rating restrooms on cleanliness, comfort, and convenience.  
-- Add funny or helpful comments to guide others (e.g., “Bring your own TP!”).  
+- Add funny or helpful comments to guide others (e.g., “Bring your own TP!”).
+- Earn crazy cool achievements (four implemented)!
 
 ### 🏆 Top Toilet Rankings  
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
@@ -31,7 +32,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features  
 
-- Gamified user badges (e.g., *Bathroom Barista*, *Royal Flush Guru*).  (partially implemented alr)
 - Integration with social platforms for toilet-check-in bragging rights.
 - Hosting, so you can use it
 
