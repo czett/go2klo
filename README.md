@@ -34,7 +34,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 - Integration with social platforms for toilet-check-in bragging rights.
 - Responsive design!
-- Hosting, so you can use it
+- Hosting, so you can use it.
+- Notifications (e.g. for earned achievements)
 
 ## 🤔 Why go2klo?  
 
