@@ -96,14 +96,14 @@ body, html {
     background-color: var(--ac);
 }
 
-.footer .links{
+.footer .flinks{
     gap: 5vw;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.footer .links *{
+.footer .flinks *{
     color: var(--bg);
     text-decoration: none;
     cursor: pointer;
@@ -142,7 +142,7 @@ body, html {
 
 .banner .bottom-text{
     position: absolute;
-    inset: 5vw auto auto 2vw;
+    inset: 6vw auto auto 2vw;
     color: var(--bg);
     font-weight: 400;
     font-size: 1.25rem;
@@ -246,7 +246,7 @@ body, html {
     transform: translate(-50%, -50%);
     /* background-color: green; */
     aspect-ratio: 0.75; /* revise */
-    width: 20%;
+    width: 25%;
 }
 
 .logreg-form form{
@@ -259,6 +259,8 @@ body, html {
 
 .logreg-form .title{
     font-size: 3rem;
+    width: 100%;
+    text-align: center;
 }
 
 .logreg-form form label, .logreg-form form input, .logreg-form form button{
@@ -490,4 +492,131 @@ input[type="range"]::-webkit-slider-thumb {
 .trophy-case .trophy .name{
     font-size: 1.5rem;
     font-weight: 600;
+}
+
+.nomobile{
+    display: block;
+}
+
+.nopc{
+    display: none;
+}
+
+/* responsive design (spooky) */
+
+@media (width < 1500px){
+    :root{
+        --rlpad: 10vw;
+    }
+    
+    .banner{
+        aspect-ratio: 2.5;
+    }
+
+    .banner .bottom-text{
+        top: 7vw;
+    }
+
+    .rating-form{
+        width: 75%;
+    }
+    
+    .rating-form form{
+        width: 100%;
+    }
+
+    .logreg-form{
+        width: 50%;
+    }
+}
+
+@media (width < 1000px){
+    :root{
+        --rlpad: 5vw;
+    }
+    
+    .banner{
+        aspect-ratio: 2.5;
+    }
+
+    .banner .bottom-text{
+        top: 10vw;
+    }
+
+    .rating-form{
+        width: 85%;
+        padding-bottom: 2vh;
+    }
+
+    .benefit-cards, .trophy-case{
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 2vh;
+    }
+
+    .logreg-form{
+        width: 75%;
+    }
+}
+
+@media (width < 700px){
+    .nomobile{
+        display: none;
+    }
+
+    .nopc{
+        display: block;
+    }
+
+    .nav .links{
+        visibility: hidden;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5vh;
+        width: 100%;
+        z-index: 1001;
+        background: var(--bg);
+        inset: auto auto 0 0;
+        transform: translateY(99%);
+        box-sizing: border-box;
+        padding: 1.5vh 0;
+    }
+
+    .nav .menu-icon{
+        position: absolute;
+        inset: 50% auto auto 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .nav .menu-icon span{
+        transition: var(--trans);
+    }
+
+    .nav .menu-icon span{
+        font-size: 2rem;
+    }
+
+    .banner{
+        aspect-ratio: 1;
+    }
+
+    .banner .bottom-text{
+        inset: auto auto 3vw 3vw;
+        width: 50%;
+    }
+
+    .rating-form form .title{
+        font-size: 2rem;
+    }
+
+    #map{
+        aspect-ratio: 1;
+    }
+
+    .logreg-form{
+        width: 90%;
+    }
 }

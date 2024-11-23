@@ -15,11 +15,14 @@
 <body>
     {% block navbar %}
     <div class="nav">
+        <div class="nopc menu-icon" onmousedown="mobileMenu()" data-collapsed="1">
+            <span class="material-symbols-rounded menu-icon-span">menu</span>
+        </div>
         <div class="links">
             <a href="/" class="link">Home</a>
             <a href="/explore" class="link">Explore</a>
 
-            <a href="/">
+            <a href="/" class="nomobile">
                 <div class="logo">
                     go2klo
                 </div>
@@ -38,12 +41,29 @@
 
     {% block footer %}
     <div class="footer">
-        <div class="links">
+        <div class="flinks">
             <a href="#" class="link">about us</a>
             <a href="#" class="link">legal info</a>
             <a href="#" class="link">miscellaneous</a>
         </div>
     </div>
     {% endblock %}
+
+    <script>
+        function mobileMenu(){
+            iconBtn = document.querySelector(".menu-icon");
+            // let state = iconBtn.dataset.collapsed;
+
+            if (iconBtn.dataset.collapsed == "1"){
+                document.querySelector(".links").style.visibility = "visible";
+                document.querySelector(".menu-icon-span").style.rotate = "90deg";
+                iconBtn.dataset.collapsed = "0";
+            }else{
+                document.querySelector(".links").style.visibility = "hidden";
+                document.querySelector(".menu-icon-span").style.rotate = "0deg";
+                iconBtn.dataset.collapsed = "1";
+            }
+        }
+    </script>
 </body>
 </html>
