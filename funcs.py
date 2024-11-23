@@ -2,20 +2,28 @@ import psycopg2
 from psycopg2 import sql
 import bcrypt
 from geopy.geocoders import Nominatim
-import requests
 from math import radians, sin, cos, sqrt, atan2
 import json
+import os
 
-with open("credentials.yml", "r") as creds:
-    pw = creds.readlines()[0]
+# with open("credentials.yml", "r") as creds:
+#     pw = creds.readlines()[0]
 
 DB_CONFIG = {
     "dbname": "postgres",
     "user": "postgres.barioakzubwwtootaupm",
-    "password": pw,
+    "password": os.getenv("DB_PASSWORD"),
     "host": "aws-0-eu-west-3.pooler.supabase.com",
     "port": 6543,
 }
+
+# DB_CONFIG = {
+#     "dbname": "postgres",
+#     "user": "postgres.barioakzubwwtootaupm",
+#     "password": pw,
+#     "host": "aws-0-eu-west-3.pooler.supabase.com",
+#     "port": 6543,
+# }
 
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
