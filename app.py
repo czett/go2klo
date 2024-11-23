@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, url_for
-import funcs, achievements
+import funcs
 
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
@@ -13,6 +13,16 @@ def check_login_status():
         return False
     
     return True
+
+def add_notification(notficiation: dict) -> None:
+    if not session.get("notifications"):
+        session["notifications"] = []
+
+    current_notifications = session["notifications"]
+    current_notifications.append(notficiation)
+
+    session["notifications"] = current_notifications
+    session.update()
 
 @app.route("/")
 def startpoint():
@@ -151,7 +161,16 @@ def profile(pid):
         else:
             own = False
 
-    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements)
+    # return nots as list of notifications, as of now list of dicts
+    if uname == session["user"]:
+        if session.get("notifications"):
+            nots = session["notifications"]
+        else:
+            nots = []
+    else:
+        nots = []
+
+    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -168,6 +187,7 @@ def profile_by_username(username):
 def my_profile():
     if not check_login_status():
         return redirect("/")
+    
     username = session["user"]
     return redirect(f"/profile/{username}")
     

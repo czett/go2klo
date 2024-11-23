@@ -4,7 +4,6 @@ import bcrypt
 from geopy.geocoders import Nominatim
 import requests
 from math import radians, sin, cos, sqrt, atan2
-import achievements
 import json
 
 with open("credentials.yml", "r") as creds:
