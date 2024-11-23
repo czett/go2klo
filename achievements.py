@@ -21,38 +21,34 @@ achievements = {"first_flush": {"_id": "first_flush", "name": "First Flush", "ra
                 "toilet_master": {"_id": "toilet_master", "name": "Toilet Connoisseur", "rarity": "epic", "icon": "toilet_connoisseur.png", "desc": "Awarded after rating 10 toilets."},
                 "clean_sweep": {"_id": "clean_sweep", "name": "Clean Sweep", "rarity": "epic", "icon": "clean_sweep.png", "desc": "Awarded when a user rates cleanliness with a perfect score (5/5) on 10+ toilets."}}
 
-def acquire(username: str, achievement: str):
-    if not achievement in achievements:
-        return "Error, achievement not available"
-    
+def acquire(username: str, trophy_name: str):
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
-                # Fetch the current achievements of the user
+                # Fetch current achievements
                 cur.execute("SELECT achievements FROM users WHERE username = %s", (username,))
-                user_achievements = cur.fetchone()
+                existing = cur.fetchone()
                 
-                if user_achievements:
-                    current_achievements = user_achievements[0]  # this should be a list (array)
-                else:
-                    current_achievements = []
+                current_achievements = existing[0] or []  # Default to empty list if null
 
-                # Ensure no duplicates by checking if the achievement is already in the list
-                if achievement not in current_achievements:
-                    # Append the new achievement to the list
-                    current_achievements.append(achievement)
+                # Prevent duplicates
+                if trophy_name in current_achievements:
+                    print(f"Trophy '{trophy_name}' already acquired for user {username}")
+                    return False, "Achievement already acquired"
 
-                    # Update the user's achievements in the database
-                    cur.execute("""
-                        UPDATE users 
-                        SET achievements = %s
-                        WHERE username = %s
-                    """, (current_achievements, username))
-                    return True, "Achievement added successfully!"
-                else:
-                    return False, "Achievement already unlocked!"
+                # Add the new achievement
+                current_achievements.append(trophy_name)
+
+                # Update the achievements column
+                cur.execute(
+                    "UPDATE users SET achievements = %s WHERE username = %s",
+                    (json.dumps(current_achievements), username),
+                )
+                print(f"Added trophy '{trophy_name}' for user {username}")
+                return True, "Achievement added successfully"
     except Exception as e:
+        print(f"Error in acquire: {e}")
         return False, f"Error: {e}"
     finally:
         conn.close()

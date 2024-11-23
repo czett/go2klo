@@ -5,6 +5,7 @@ from geopy.geocoders import Nominatim
 import requests
 from math import radians, sin, cos, sqrt, atan2
 import achievements
+import json
 
 with open("credentials.yml", "r") as creds:
     pw = creds.readlines()[0]
@@ -65,18 +66,7 @@ def get_coordinates(location_name):
     
 def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user: str):
     """
-    Adds a rating for a toilet at the specified coordinates.
-    
-    Args:
-        cleanliness (int): Rating for cleanliness (1-5).
-        supplies (int): Rating for supplies (1-5).
-        privacy (int): Rating for privacy (1-5).
-        comment (str): Optional comment.
-        coords (tuple): Tuple of (latitude, longitude) for the toilet.
-        user (str): username from login/registering
-
-    Returns:
-        tuple: (bool, str) indicating success and a message.
+    Adds a rating for a toilet at the specified coordinates and checks for trophies.
     """
     latitude, longitude = coords
     conn = get_db_connection()
@@ -84,6 +74,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     try:
         with conn:
             with conn.cursor() as cur:
+                # Check if the user already rated this toilet
                 cur.execute(
                     """
                     SELECT 1 FROM ratings
@@ -94,34 +85,34 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     """,
                     (latitude, longitude, user)
                 )
-                # if toilet alr rated
                 if cur.fetchone():
                     return False, "You have already rated this toilet."
 
+                # Check if the toilet already exists
                 cur.execute(
                     """
                     SELECT toilet_id FROM toilets
                     WHERE latitude = %s AND longitude = %s
                     """,
-                    (latitude, longitude),
+                    (latitude, longitude)
                 )
                 result = cur.fetchone()
 
                 if result:
                     toilet_id = result[0]
                 else:
-                    # new toilet entry
+                    # Create a new toilet entry
                     cur.execute(
                         """
                         INSERT INTO toilets (latitude, longitude)
                         VALUES (%s, %s)
                         RETURNING toilet_id
                         """,
-                        (latitude, longitude),
+                        (latitude, longitude)
                     )
                     toilet_id = cur.fetchone()[0]
 
-                # add rating
+                # Add the rating
                 cur.execute(
                     """
                     INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, username)
@@ -130,17 +121,52 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     """,
                     (toilet_id, cleanliness, supplies, privacy, comment, user)
                 )
-
                 rating_id = cur.fetchone()[0]
 
-                # check for "first flush" trophy whether user has rating already
-                if len(get_user_ratings(user)) == 1:
-                    achievements.acquire(user, "first_flush")
-                
-                #  FIXXXXX!!!!!
-                # check for "toilet master" trophy whether user has rating already
-                # if len(get_user_ratings(user)) >= 5:
-                #     achievements.acquire(user, "toilet_master")
+                # Trophy checks
+                cur.execute("SELECT achievements FROM users WHERE username = %s", (user,))
+                result = cur.fetchone()
+                if result is None:
+                    return False, "User not found."
+
+                # Ensure achievements column is a list
+                current_achievements = result[0] or []
+
+                # First Flush Trophy
+                cur.execute("SELECT COUNT(*) FROM ratings WHERE username = %s", (user,))
+                rating_count = cur.fetchone()[0]
+                if rating_count == 1 and "first_flush" not in current_achievements:
+                    current_achievements.append("first_flush")
+
+                # Globetrotter Trophy
+                cur.execute(
+                    """
+                    SELECT latitude, longitude 
+                    FROM toilets t
+                    JOIN ratings r ON t.toilet_id = r.toilet_id
+                    WHERE r.username = %s
+                    """,
+                    (user,)
+                )
+                user_ratings = cur.fetchall()
+                if len(user_ratings) > 1:
+                    first_coords = (user_ratings[0][0], user_ratings[0][1])
+                    if distance_between_coords(first_coords, coords) >= 50 and "globetrotter" not in current_achievements:
+                        current_achievements.append("globetrotter")
+
+                # Clean Sweep Trophy
+                if int(cleanliness) == 5 and int(supplies) == 5 and int(privacy) == 5 and "clean_sweep" not in current_achievements:
+                    current_achievements.append("clean_sweep")
+
+                # Toilet Master Trophy
+                if rating_count >= 10 and "toilet_master" not in current_achievements:
+                    current_achievements.append("toilet_master")
+
+                # Update achievements in the database
+                cur.execute(
+                    "UPDATE users SET achievements = %s WHERE username = %s",
+                    (json.dumps(current_achievements), user)
+                )
 
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
     except Exception as e:
@@ -387,3 +413,19 @@ def get_achievements_by_user_id(user_id: int):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def distance_between_coords(coord1, coord2):
+    """
+    Calculate the distance between two latitude-longitude coordinates in kilometers.
+    """
+    R = 6371  # Radius of the Earth in kilometers
+    lat1, lon1 = map(radians, coord1)
+    lat2, lon2 = map(radians, coord2)
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return R * c
