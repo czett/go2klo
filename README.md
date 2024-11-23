@@ -21,7 +21,10 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ### 🤝 Community Contributions  
 - Add new public toilets to the map and help expand the database.  
-- Comment on toilets that are closed, under construction, or just plain terrifying.  
+- Comment on toilets that are closed, under construction, or just plain terrifying.
+
+### 💻 Responsive design!
+- Conveniently usable on mobile as well.
 
 ## 🛠️ Tech Stack  
 
@@ -33,7 +36,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ## 🚧 Future Features  
 
 - Integration with social platforms for toilet-check-in bragging rights.
-- Responsive design!
 - Hosting, so you can use it.
 - Notifications (e.g. for earned achievements)
 
