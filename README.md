@@ -9,8 +9,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ## 📦 Features  
 
 ### 🗺️ Find Nearby Toilets  
-- Quickly locate the closest public restrooms using geolocation.  
-- Filter by accessibility, cleanliness, amenities, or even “weird and wonderful” options.  
+- Quickly locate the closest public restrooms using the map.
 
 ### ⭐ Rate & Review  
 - Share your experience by rating restrooms on cleanliness, comfort, and convenience.  
@@ -18,11 +17,10 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ### 🏆 Top Toilet Rankings  
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
-- Categories include "Cleanest," "Most Accessible," and "Hidden Gems."  
 
 ### 🤝 Community Contributions  
 - Add new public toilets to the map and help expand the database.  
-- Flag toilets that are closed, under construction, or just plain terrifying.  
+- Comment on toilets that are closed, under construction, or just plain terrifying.  
 
 ## 🛠️ Tech Stack  
 
@@ -33,8 +31,9 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features  
 
-- Gamified user badges (e.g., *Bathroom Barista*, *Royal Flush Guru*).  
-- Integration with social platforms for toilet-check-in bragging rights.  
+- Gamified user badges (e.g., *Bathroom Barista*, *Royal Flush Guru*).  (partially implemented alr)
+- Integration with social platforms for toilet-check-in bragging rights.
+- Hosting, so you can use it
 
 ## 🤔 Why go2klo?  
 
@@ -46,3 +45,5 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 
 - geopy Nominatim, this project relies on you
 - icon-icons and Google Fonts for icons and logos
+
+go2klo, dev'ed 11/24 (idea and prototype 10/2022)
