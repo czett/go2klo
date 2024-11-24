@@ -442,3 +442,25 @@ def distance_between_coords(coord1, coord2):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
     return R * c
+
+def get_users_sorted_by_ratings():
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT 
+                        u.username, 
+                        COUNT(r.rating_id) AS rating_count
+                    FROM users u
+                    LEFT JOIN ratings r ON u.username = r.username
+                    GROUP BY u.username
+                    ORDER BY rating_count DESC
+                """)
+                users = cur.fetchall()
+
+                return [{"username": user[0], "rating_count": user[1]} for user in users]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()

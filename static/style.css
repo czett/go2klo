@@ -150,8 +150,8 @@ body, html {
 
 .benefit-cards{
     margin: var(--tbmar) 0;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1vw;
 }
 
@@ -173,17 +173,19 @@ body, html {
     margin-bottom: 1vh;
 }
 
-.benefit-cards .card .card-title{
+.benefit-cards .card .card-title, .benefit-cards a .card .card-title{
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1vh;
+    text-decoration: none;
 }
 
-.benefit-cards .card .card-text{
+.benefit-cards .card .card-text, .benefit-cards a .card .card-text{
     font-size: 1.25rem;
     font-weight: 400;
     margin-bottom: 1vh;
     text-align: center;
+    text-decoration: none;
 }
 
 .benefit-header{
@@ -564,6 +566,38 @@ input[type="range"]::-webkit-slider-thumb {
 
 .notifications-box .header .read-all{
     cursor: pointer;
+}
+
+/* leaderboard */
+
+.leaderboard{
+    width: 100%;
+    padding-bottom: 1vw;
+}
+
+.leaderboard .title{
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 1vw 0;
+}
+
+.leaderboard .entry{
+    font-size: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+    padding: 1.5vw;
+    box-sizing: border-box;
+}
+
+.leaderboard .entry a{
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.leaderboard .entry:nth-of-type(odd){
+    filter: brightness(0.95);
 }
 
 /* responsive design (spooky) */

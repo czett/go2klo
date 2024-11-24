@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="banner">
+    <div class="title-text">Who's the toilet master?</div>
+    <div class="bottom-text">Check the leaderboard below!</div>
+    <div class="icon">
+        <span class="material-symbols-rounded">leaderboard</span>
+    </div>
+</div>
+
+<div class="leaderboard">
+    <div class="title">Leaderboard</div>
+    {% for entry in leaderboard %}
+        <div class="entry">
+            <a href="/profile/{{entry.username}}">
+                <div class="username">{{entry.username}}</div>
+            </a>
+            <div class="ratings">{{entry.rating_count}}</div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

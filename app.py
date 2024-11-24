@@ -194,6 +194,11 @@ def my_profile():
     username = session["user"]
     return redirect(f"/profile/{username}")
 
+@app.route("/leaderboard")
+def leaderboard():    
+    leaderboard = funcs.get_users_sorted_by_ratings()
+    return render_template("leaderboard.html", leaderboard=leaderboard, session=session)
+
 @app.route("/clear-notifications")
 def clear_notifications():
     if not check_login_status():
