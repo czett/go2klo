@@ -5,7 +5,7 @@ from geopy.geocoders import Nominatim
 import requests
 from math import radians, sin, cos, sqrt, atan2
 import json
-import os
+import app
 
 with open("credentials.yml", "r") as creds:
     pw = creds.readlines()[0]
@@ -145,6 +145,8 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 rating_count = cur.fetchone()[0]
                 if rating_count == 1 and "first_flush" not in current_achievements:
                     current_achievements.append("first_flush")
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'first flush'!"})
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'first flush'!"})
 
                 # Globetrotter Trophy
                 cur.execute(
@@ -161,14 +163,17 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     first_coords = (user_ratings[0][0], user_ratings[0][1])
                     if distance_between_coords(first_coords, coords) >= 50 and "globetrotter" not in current_achievements:
                         current_achievements.append("globetrotter")
+                        app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'globetrotter'!"})
 
                 # Clean Sweep Trophy
                 if int(cleanliness) == 5 and int(supplies) == 5 and int(privacy) == 5 and "clean_sweep" not in current_achievements:
                     current_achievements.append("clean_sweep")
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'clean sweep'!"})
 
                 # Toilet Master Trophy
                 if rating_count >= 10 and "toilet_master" not in current_achievements:
                     current_achievements.append("toilet_master")
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'toilet master'!"})
 
                 # Update achievements in the database
                 cur.execute(
