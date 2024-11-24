@@ -15,6 +15,8 @@ def check_login_status():
     return True
 
 def add_notification(notficiation: dict) -> None:
+    # dict with keys title and text!!!!!
+
     if not session.get("notifications"):
         session["notifications"] = []
 
@@ -26,11 +28,12 @@ def add_notification(notficiation: dict) -> None:
 
 @app.route("/")
 def startpoint():
+    #add_notification({"title": "title here", "text": "some text here :3"})
     return render_template("index.html", session=session)
 
 @app.route("/login")
 def login():    
-    return render_template("logreg.html", action="login", msg=None)
+    return render_template("logreg.html", action="login", msg=None, session=session)
 
 @app.route("/login/process", methods=["POST"])
 def process_login():    
@@ -45,7 +48,7 @@ def process_login():
                 session["logged_in"] = True
                 return redirect("/")
             else:
-                return render_template("logreg.html", action="login", msg=response[1])
+                return render_template("logreg.html", action="login", msg=response[1], session=session)
     except:
         return redirect("/")
 
@@ -53,7 +56,7 @@ def process_login():
 
 @app.route("/register")
 def register():    
-    return render_template("logreg.html", action="register", msg=None)
+    return render_template("logreg.html", action="register", msg=None, session=session)
 
 @app.route("/register/process", methods=["POST"])
 def process_register():    
@@ -68,7 +71,7 @@ def process_register():
                 session["logged_in"] = True
                 return redirect("/")
             else:
-                return render_template("logreg.html", action="register", msg=response[1])
+                return render_template("logreg.html", action="register", msg=response[1], session=session)
     except:
         return redirect("/")
     
@@ -84,7 +87,7 @@ def rate():
     if not check_login_status():
         return redirect("/")
 
-    return render_template("get_location.html")
+    return render_template("get_location.html", session=session)
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
@@ -96,7 +99,7 @@ def process_rating():
 
     session["rating_coords"] = (lat, lng)
 
-    return render_template("rate.html", lat=lat, lng=lng, msg=None)
+    return render_template("rate.html", lat=lat, lng=lng, msg=None, session=session)
 
 @app.route("/rate/finish", methods=["POST"])
 def finish_rating():
@@ -114,12 +117,12 @@ def finish_rating():
     if response[0] == True:
         return redirect("/")
     else:
-        return render_template("rate.html", msg=response[1])
+        return render_template("rate.html", msg=response[1], session=session)
     
 @app.route("/explore")
 def explore():
     toilets = funcs.get_all_toilets()
-    return render_template("explore.html", toilets=toilets)
+    return render_template("explore.html", toilets=toilets, session=session)
 
 @app.route("/api/toilets")
 def toilets_api():
@@ -131,7 +134,7 @@ def toilet(tid):
     info = funcs.get_toilet_details(tid)
     info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
-    return render_template("toilet.html", toilet=info)
+    return render_template("toilet.html", toilet=info, session=session)
 
 @app.route("/profile/<int:pid>")
 def profile(pid):
@@ -170,7 +173,7 @@ def profile(pid):
     else:
         nots = []
 
-    return render_template("profile.html", ratings=ratings, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
+    return render_template("profile.html", ratings=ratings, session=session, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -190,6 +193,17 @@ def my_profile():
     
     username = session["user"]
     return redirect(f"/profile/{username}")
+
+@app.route("/clear-notifications")
+def clear_notifications():
+    if not check_login_status():
+        return redirect("/")
+    
+    if session.get("notifications"):
+        print(session["notifications"])
+        session["notifications"] = []
+
+    return redirect("/")
     
 if __name__ == "__main__":
     app.run(debug=True, port=7000)

@@ -49,6 +49,32 @@
     </div>
     {% endblock %}
 
+    {% block notifications %}
+        {% if session.logged_in == True %}
+            <div class="notifications-btn nomobile" onmousedown="notiToggler()">
+                {% if session.notifications|length > 0 %}
+                <span class="open-nots material-symbols-rounded">notifications_active</span>
+                {% else %}
+                <span class="open-nots material-symbols-rounded">notifications</span>
+                {% endif%}
+            </div>
+            <div class="notifications-box nomobile" data-collapsed="1">
+                <div class="header">
+                    <div class="count">{{session.notifications|length}} Notifications</div>
+                    <a href="/clear-notifications">
+                        <span class="read-all material-symbols-rounded">done_all</span>
+                    </a>
+                </div>
+                {% for notification in session.notifications %}
+                    <div class="notification">
+                        <div class="title">{{notification.title}}</div>
+                        <div class="text">{{notification.text}}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif%}
+    {% endblock %}
+
     <script>
         function mobileMenu(){
             iconBtn = document.querySelector(".menu-icon");
@@ -62,6 +88,18 @@
                 document.querySelector(".links").style.visibility = "hidden";
                 document.querySelector(".menu-icon-span").style.rotate = "0deg";
                 iconBtn.dataset.collapsed = "1";
+            }
+        }
+
+        function notiToggler(){
+            const box = document.querySelector(".notifications-box");
+
+            if (box.dataset.collapsed == "1"){
+                box.style.visibility = "visible";
+                box.dataset.collapsed = "0";
+            }else{
+                box.style.visibility = "hidden";
+                box.dataset.collapsed = "1";
             }
         }
     </script>

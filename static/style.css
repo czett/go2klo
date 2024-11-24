@@ -502,6 +502,70 @@ input[type="range"]::-webkit-slider-thumb {
     display: none;
 }
 
+/* notifications box */
+
+.notifications-btn{
+    position: fixed;
+    inset: auto 2vw 2vw auto;
+    background: var(--bg);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .75vw;
+    box-sizing: border-box;
+    border: 2px solid var(--ac);
+    cursor: pointer;
+}
+
+.notifications-btn span{
+    font-size: 2rem;
+}
+
+.notifications-box{
+    background: var(--bg);
+    border: 2px solid var(--ac);
+    position: fixed;
+    inset: auto 2vw 6vw auto;
+    max-width: 20%;
+    overflow: hidden;
+    border-radius: var(--brad);
+    visibility: hidden;
+}
+
+.notifications-box .notification{
+    padding: 1vw;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.notifications-box .notification:not(:first-of-type){
+    border-top: 2px solid var(--ac);
+}
+
+.notifications-box .notification .title, .notifications-box .header .count{
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 125%;
+}
+
+.notifications-box .header{
+    padding: 1vw;
+    width: 100%;
+    display: flex;
+    gap: 2vh;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg);
+    filter: brightness(0.975);
+    box-sizing: border-box;
+}
+
+.notifications-box .header .read-all{
+    cursor: pointer;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1500px){
@@ -527,6 +591,11 @@ input[type="range"]::-webkit-slider-thumb {
 
     .logreg-form{
         width: 50%;
+    }
+
+    .notifications-box{
+        max-width: 30%;
+        inset: auto 2vw 8vw auto;
     }
 }
 
@@ -557,6 +626,19 @@ input[type="range"]::-webkit-slider-thumb {
 
     .logreg-form{
         width: 75%;
+    }
+
+    .notifications-btn{
+        padding: 1.5vw;
+    }
+
+    .notifications-box .notification, .notifications-box .header{
+        padding: 2vw;
+    }
+
+    .notifications-box{
+        max-width: 30%;
+        inset: auto 2vw 11vw auto;
     }
 }
 
