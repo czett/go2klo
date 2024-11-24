@@ -36,7 +36,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features  
 
-- Integration with social platforms for toilet-check-in bragging rights.
 - Hosting, so you can use it.
 - Trending toilets?
 - Social features like a leaderboard
