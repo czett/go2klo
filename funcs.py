@@ -131,7 +131,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 )
                 rating_id = cur.fetchone()[0]
 
-                # Trophy checks
+                # Fetch current achievements for the user
                 cur.execute("SELECT achievements FROM users WHERE username = %s", (user,))
                 result = cur.fetchone()
                 if result is None:
@@ -140,15 +140,17 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 # Ensure achievements column is a list
                 current_achievements = result[0] or []
 
-                # First Flush Trophy
+                # List of new achievements to add
+                new_achievements = []
+
+                # Trophy 1: First Flush
                 cur.execute("SELECT COUNT(*) FROM ratings WHERE username = %s", (user,))
                 rating_count = cur.fetchone()[0]
                 if rating_count == 1 and "first_flush" not in current_achievements:
-                    current_achievements.append("first_flush")
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'first flush'!"})
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'first flush'!"})
+                    new_achievements.append("first_flush")
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'First Flush'!"})
 
-                # Globetrotter Trophy
+                # Trophy 2: Globetrotter (distance >= 50 km)
                 cur.execute(
                     """
                     SELECT latitude, longitude 
@@ -160,26 +162,31 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 )
                 user_ratings = cur.fetchall()
                 if len(user_ratings) > 1:
-                    first_coords = (user_ratings[0][0], user_ratings[0][1])
-                    if distance_between_coords(first_coords, coords) >= 50 and "globetrotter" not in current_achievements:
-                        current_achievements.append("globetrotter")
-                        app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'globetrotter'!"})
+                    for prev_coords in user_ratings:
+                        if distance_between_coords(prev_coords, coords) >= 50 and "globetrotter" not in current_achievements:
+                            new_achievements.append("globetrotter")
+                            app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Globetrotter'!"})
+                            break
 
-                # Clean Sweep Trophy
+                # Trophy 3: Clean Sweep (all scores = 5)
                 if int(cleanliness) == 5 and int(supplies) == 5 and int(privacy) == 5 and "clean_sweep" not in current_achievements:
-                    current_achievements.append("clean_sweep")
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'clean sweep'!"})
+                    new_achievements.append("clean_sweep")
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Clean Sweep'!"})
 
-                # Toilet Master Trophy
+                # Trophy 4: Toilet Master (10+ ratings)
                 if rating_count >= 10 and "toilet_master" not in current_achievements:
-                    current_achievements.append("toilet_master")
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'toilet master'!"})
+                    new_achievements.append("toilet_master")
+                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Toilet Master'!"})
 
-                # Update achievements in the database
-                cur.execute(
-                    "UPDATE users SET achievements = %s WHERE username = %s",
-                    (json.dumps(current_achievements), user)
-                )
+                # Additional Trophy: Unique achievement logic can be added here
+
+                # Update achievements if there are new ones
+                if new_achievements:
+                    updated_achievements = list(set(current_achievements + new_achievements))
+                    cur.execute(
+                        "UPDATE users SET achievements = %s WHERE username = %s",
+                        (json.dumps(updated_achievements), user)
+                    )
 
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
     except Exception as e:
@@ -369,15 +376,6 @@ def get_username_by_user_id(user_id):
         return None
 
 def get_user_id_by_username(username):
-    """
-    Fetches the user ID by the provided username.
-
-    Args:
-        username (str): The username of the user.
-
-    Returns:
-        int: The user ID, or None if the username does not exist.
-    """
     try:
         conn = get_db_connection()
         with conn.cursor() as cur:
@@ -403,16 +401,6 @@ def coords_to_address(latitude, longitude):
         return "Address not found"
     
 def get_achievements_by_user_id(user_id: int):
-    """
-    Fetches all achievements of a user by their user ID.
-
-    Args:
-        user_id (int): The ID of the user.
-
-    Returns:
-        tuple: (bool, list or str) - A tuple where the first element indicates success, 
-               and the second element is either the list of achievements or an error message.
-    """
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
@@ -464,3 +452,50 @@ def get_users_sorted_by_ratings():
         return {"error": str(e)}
     finally:
         conn.close()
+
+def get_reviewed_countries(user):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT t.country 
+                FROM toilets t
+                JOIN ratings r ON t.toilet_id = r.toilet_id
+                WHERE r.username = %s AND t.country IS NOT NULL
+                """,
+                (user,)
+            )
+            countries = [row[0] for row in cur.fetchall()]
+            return countries
+    except Exception as e:
+        print(f"Error fetching countries: {e}")
+        return []
+    finally:
+        conn.close()
+
+def get_achievements(user):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT achievements FROM users WHERE username = %s", (user,))
+            result = cur.fetchone()
+            if result:
+                return json.loads(result[0]) if result[0] else []
+            else:
+                return []
+    except Exception as e:
+        print(f"Error fetching achievements: {e}")
+        return []
+    finally:
+        conn.close()
+
+def get_country_from_coordinates(lat, lon):
+    geolocator = Nominatim(user_agent="go2klo_app")
+    try:
+        location = geolocator.reverse((lat, lon))
+        if location and "address" in location.raw:
+            return location.raw["address"].get("country", "unknown")
+    except Exception as e:
+        print(f"Error fetching country: {e}")
+    return "unknown"
