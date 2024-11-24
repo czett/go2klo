@@ -25,7 +25,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ### 💻 Miscellaneous
 - Responsive design, conveniently usable on mobile now.
-- Notification system, including pushing new ones and marking old ones as read. 
+- Notification system, including pushing new ones and marking old ones as read.
+- Leaderboard of users with most ratings
 
 ## 🛠️ Tech Stack  
 
@@ -38,7 +39,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 - Hosting, so you can use it.
 - Trending toilets?
-- Social features like a leaderboard
 
 ## 🤔 Why go2klo?  
 
