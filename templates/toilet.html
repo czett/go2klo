@@ -21,7 +21,7 @@
 <ul>
     {% for rating in toilet.ratings %}
         <li>
-            <a href="/profile/{{ rating.username }}"><strong>{{ rating.username }}</strong>:</a>
+            <a href="/profile/{{ rating.username }}"><strong>@{{ rating.username }}</strong>:</a>
             Cleanliness: {{ rating.cleanliness }},
             Supplies: {{ rating.supplies }},
             Privacy: {{ rating.privacy }},

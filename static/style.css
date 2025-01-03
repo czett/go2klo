@@ -602,7 +602,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* responsive design (spooky) */
 
-@media (width < 1500px){
+@media (width < 1650px){
     :root{
         --rlpad: 10vw;
     }
@@ -631,9 +631,13 @@ input[type="range"]::-webkit-slider-thumb {
         max-width: 30%;
         inset: auto 2vw 8vw auto;
     }
+
+    .toilets-list .toilet{
+        aspect-ratio: 2;
+    }
 }
 
-@media (width < 1000px){
+@media (width < 1100px){
     :root{
         --rlpad: 5vw;
     }
@@ -641,38 +645,50 @@ input[type="range"]::-webkit-slider-thumb {
     .banner{
         aspect-ratio: 2.5;
     }
-
+    
     .banner .bottom-text{
         top: 10vw;
     }
-
+    
     .rating-form{
         width: 85%;
         padding-bottom: 2vh;
     }
-
+    
     .benefit-cards, .trophy-case{
         display: flex;
         flex: 1;
         flex-direction: column;
         gap: 2vh;
     }
-
+    
     .logreg-form{
         width: 75%;
     }
-
+    
     .notifications-btn{
         padding: 1.5vw;
     }
-
+    
     .notifications-box .notification, .notifications-box .header{
         padding: 2vw;
     }
-
+    
     .notifications-box{
         max-width: 30%;
         inset: auto 2vw 11vw auto;
+    }
+    
+    .toilets-list{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .toilets-list .toilet{
+        aspect-ratio: 1.75;
+    }
+
+    .leaderboard div{
+        font-size: 1.5rem;
     }
 }
 
@@ -680,11 +696,11 @@ input[type="range"]::-webkit-slider-thumb {
     .nomobile{
         display: none;
     }
-
+    
     .nopc{
         display: block;
     }
-
+    
     .nav .links{
         visibility: hidden;
         position: absolute;
@@ -700,39 +716,58 @@ input[type="range"]::-webkit-slider-thumb {
         box-sizing: border-box;
         padding: 1.5vh 0;
     }
-
+    
     .nav .menu-icon{
         position: absolute;
         inset: 50% auto auto 50%;
         transform: translate(-50%, -50%);
     }
-
+    
     .nav .menu-icon span{
         transition: var(--trans);
     }
-
+    
     .nav .menu-icon span{
         font-size: 2rem;
     }
-
+    
     .banner{
         aspect-ratio: 1;
     }
-
-    .banner .bottom-text{
-        inset: auto auto 3vw 3vw;
-        width: 50%;
+    
+    .banner .title-text{
+        inset: 5vw auto auto 5vw;
+        width: calc(100% - 10vw);
+        font-size: 2.5rem;
     }
-
+    
+    .banner .bottom-text{
+        inset: auto auto 5vw 5vw;
+        width: 50%;
+        font-size: 1rem;
+    }
+    
     .rating-form form .title{
         font-size: 2rem;
     }
-
+    
     #map{
         aspect-ratio: 1;
     }
-
+    
     .logreg-form{
         width: 90%;
+    }
+    
+    .toilets-list{
+        grid-template-columns: repeat(1, 1fr);
+    }
+    
+    .toilets-list .toilet{
+        aspect-ratio: 2.5;
+    }
+
+    .leaderboard .entry{
+        padding: 5vw;
     }
 }
