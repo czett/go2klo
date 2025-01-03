@@ -508,7 +508,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 .notifications-btn{
     position: fixed;
-    inset: auto 2vw 2vw auto;
+    inset: auto auto 2vw 2vw;
     background: var(--bg);
     border-radius: 50%;
     overflow: hidden;
@@ -519,6 +519,9 @@ input[type="range"]::-webkit-slider-thumb {
     box-sizing: border-box;
     border: 2px solid var(--ac);
     cursor: pointer;
+    user-select: none;
+    aspect-ratio: 1;
+    width: 5rem;
 }
 
 .notifications-btn span{
@@ -529,7 +532,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: var(--bg);
     border: 2px solid var(--ac);
     position: fixed;
-    inset: auto 2vw 6vw auto;
+    inset: auto auto 6vw 2vw;
     max-width: 20%;
     overflow: hidden;
     border-radius: var(--brad);
@@ -598,6 +601,30 @@ input[type="range"]::-webkit-slider-thumb {
 
 .leaderboard .entry:nth-of-type(odd){
     filter: brightness(0.95);
+}
+
+/* rate btn */
+
+.rate-btn{
+    position: fixed;
+    inset: auto 2vw 2vw auto;
+    background: var(--bg);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .75vw;
+    box-sizing: border-box;
+    border: 2px solid var(--ac);
+    cursor: pointer;
+    user-select: none;
+    aspect-ratio: 1;
+    width: 5rem;
+}
+
+.notifications-btn span{
+    font-size: 2rem;
 }
 
 /* responsive design (spooky) */
@@ -769,5 +796,18 @@ input[type="range"]::-webkit-slider-thumb {
 
     .leaderboard .entry{
         padding: 5vw;
+    }
+
+    .banner .icon{
+        inset: auto 3vw 3vw auto;
+    }
+
+    .banner .icon span{
+        font-size: 7.5rem;
+    }
+
+    .rate-btn{
+        inset: auto 4vw 4vw auto;
+        width: 4rem;
     }
 }

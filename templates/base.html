@@ -74,6 +74,16 @@
             </div>
         {% endif%}
     {% endblock %}
+    
+    {% block postbtn %}
+        {% if session.logged_in == True %}
+            <a href="/rate">
+                <div class="rate-btn">
+                    <span class="material-symbols-rounded">library_add</span>
+                </div>
+            </a>
+        {% endif%}
+    {% endblock %}
 
     <script>
         function mobileMenu(){
