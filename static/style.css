@@ -235,7 +235,7 @@ body, html {
     gap: 1vh;
 }
 
-.get-started .action-btns button{
+.get-started .action-btns button, .navbar-cta-btn{
     box-sizing: border-box;
     padding: 2vh 4vh;
     font-size: 1.5rem;
@@ -246,6 +246,10 @@ body, html {
     outline: none;
     transition: var(--trans);
     cursor: pointer;
+}
+
+.navbar-cta-btn{
+    padding: 1vh 2vh;
 }
 
 .get-started .action-btns button:hover{

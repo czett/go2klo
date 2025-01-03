@@ -29,7 +29,13 @@
             </a>
 
             <a href="/rate" class="link">Rate</a>
-            <a href="/myprofile" class="link">Profile</a>
+            {% if session.logged_in != True %}
+                <a href="/register">
+                    <button class="navbar-cta-btn">register</button>
+                </a>
+            {% else %}
+                <a href="/myprofile" class="link">Profile</a>
+            {% endif%}
         </div>
     </div>
     {% endblock %}
