@@ -48,4 +48,4 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - geopy Nominatim, this project relies on you
 - icon-icons and Google Fonts for icons and logos
 
-go2klo, dev'ed 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.vercel.app/), dev'ed 11/24 (idea and prototype 10/2022)
