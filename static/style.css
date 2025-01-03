@@ -680,6 +680,23 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
 }
 
+/* login warning spaces, my misrtake */
+
+.username-warning{
+    padding: 2vh;
+    border: 4px solid #d4040d;
+    box-sizing: border-box;
+    border-radius: var(--brad);
+    display: flex;
+    justify-content: space-between;
+    gap: 2vh;
+    align-items: center;
+}
+
+.username-warning span{
+    font-size: 5rem;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
