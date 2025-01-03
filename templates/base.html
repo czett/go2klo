@@ -86,6 +86,22 @@
         {% endif%}
     {% endblock %}
 
+    {% block cookies %}
+        {% if session.cookies == False %}
+            <div class="cookie-banner">
+                <h1 class="cookie-title">
+                    No Cookies, No Flush
+                </h1>
+                <p class="cookie-subtitle">
+                    By using this site, you agree to our essential cookies. Without them, things just won't go down smoothly!
+                </p>
+                <a href="/accept-cookies">
+                    <button>Agreed</button>
+                </a>
+            </div>
+        {% endif%}
+    {% endblock %}
+
     <script>
         function mobileMenu(){
             iconBtn = document.querySelector(".menu-icon");

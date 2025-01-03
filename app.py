@@ -14,6 +14,16 @@ def check_login_status():
     
     return True
 
+def check_cookie_status():
+    if session.get("cookies"):
+        if session["cookies"]:
+            return True
+    else:
+        session["cookies"] = False
+        return False
+    
+    return True
+
 def add_notification(notficiation: dict) -> None:
     # dict with keys title and text!!!!!
 
@@ -28,10 +38,11 @@ def add_notification(notficiation: dict) -> None:
 
 @app.route("/")
 def startpoint():
+    check_cookie_status()
     return render_template("index.html", session=session)
 
 @app.route("/login")
-def login():    
+def login():
     return render_template("logreg.html", action="login", msg=None, session=session)
 
 @app.route("/login/process", methods=["POST"])
@@ -52,6 +63,12 @@ def process_login():
         return redirect("/")
 
     return "Congrats, you worked around my code :)"
+
+@app.route("/accept-cookies")
+def accept_cookies(): 
+    session["cookies"] = True
+    session.modified = True   
+    return redirect("/")
 
 @app.route("/register")
 def register():    
