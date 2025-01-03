@@ -17,7 +17,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Earn crazy cool achievements (four implemented)!
 
 ### 🏆 Top Toilet Rankings  
-- Discover the best-rated toilets with our *Royal Flush Rankings*.  
+
 
 ### 🤝 Community Contributions  
 - Add new public toilets to the map and help expand the database.  
@@ -39,6 +39,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 - Hosting, so you can use it.
 - Trending toilets?
+- Discover the best-rated toilets with our *Royal Flush Rankings*.  
 
 ## 🤔 Why go2klo?  
 
