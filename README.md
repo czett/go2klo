@@ -1,6 +1,6 @@
 ![banner where?](https://github.com/czett/go2klo/blob/main/static/img/banner.png)
 
-# 🚽 go2klo  
+# 🚽 go2klo (visit [here](https://go2klo.vercel.app/) now!)
 
 **The quirky public toilet rating app!**  
 
@@ -15,9 +15,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Share your experience by rating restrooms on cleanliness, comfort, and convenience.  
 - Add funny or helpful comments to guide others (e.g., “Bring your own TP!”).
 - Earn crazy cool achievements (four implemented)!
-
-### 🏆 Top Toilet Rankings  
-
 
 ### 🤝 Community Contributions  
 - Add new public toilets to the map and help expand the database.  
@@ -37,7 +34,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features  
 
-- Hosting, so you can use it.
 - Trending toilets?
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
 
@@ -52,4 +48,4 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - geopy Nominatim, this project relies on you
 - icon-icons and Google Fonts for icons and logos
 
-go2klo, dev'ed 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.vercel.app/), dev'ed 11/24 (idea and prototype 10/2022)
