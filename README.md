@@ -1,6 +1,6 @@
 ![banner where?](https://github.com/czett/go2klo/blob/main/static/img/banner.png)
 
-# 🚽 go2klo (visit [here](http://www.go2klo.vercel.app/) now!)
+# 🚽 go2klo (visit [here](https://go2klo.vercel.app/) now!)
 
 **The quirky public toilet rating app!**  
 
