@@ -177,20 +177,16 @@ def profile(pid):
         # Default center if no ratings
         avg_lat, avg_lon = 51.505, -0.09 # default is uk or so
 
+    nots = []
     if session.get("user"):
         if session["user"] == uname:
             own = True
+            if session.get("notifications"):
+                nots = session["notifications"]
+            else:
+                nots = []
         else:
             own = False
-
-    # return nots as list of notifications, as of now list of dicts
-    if uname == session["user"]:
-        if session.get("notifications"):
-            nots = session["notifications"]
-        else:
-            nots = []
-    else:
-        nots = []
 
     return render_template("profile.html", ratings=ratings, session=session, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
 
