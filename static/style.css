@@ -92,7 +92,7 @@ body, html {
 .footer{
     width: 100vw;
     box-sizing: border-box;
-    padding: 3vh 0;
+    padding: 2vh 0;
     background-color: var(--ac);
 }
 
@@ -107,6 +107,18 @@ body, html {
     color: var(--bg);
     text-decoration: none;
     cursor: pointer;
+}
+
+.footer .flinks a{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75vw;
+}
+
+.footer .flinks a img{
+    width: 1.5vw;
+    filter: brightness(0.9);
 }
 
 /* index content */
@@ -661,6 +673,10 @@ input[type="range"]::-webkit-slider-thumb {
 
     .toilets-list .toilet{
         aspect-ratio: 2;
+    }
+
+    .footer .flinks a img{
+        width: 3vw;
     }
 }
 
