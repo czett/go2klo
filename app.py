@@ -178,6 +178,7 @@ def profile(pid):
         avg_lat, avg_lon = 51.505, -0.09 # default is uk or so
 
     nots = []
+    own = False
     if session.get("user"):
         if session["user"] == uname:
             own = True
