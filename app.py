@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, url_for
-import funcs
+import old_funcs
 
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
@@ -42,7 +42,7 @@ def process_login():
         password = request.form["password"]
 
         if username and password:
-            response = funcs.login(username, password)
+            response = old_funcs.login(username, password)
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
@@ -65,7 +65,7 @@ def process_register():
         password = request.form["password"]
 
         if username and password:
-            response = funcs.register(username, password)
+            response = old_funcs.register(username, password)
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
@@ -95,7 +95,7 @@ def process_rating():
         return redirect("/")
 
     query = request.form["location_query"]
-    lat, lng = funcs.get_coordinates(query)
+    lat, lng = old_funcs.get_coordinates(query)
 
     session["rating_coords"] = (lat, lng)
 
@@ -112,7 +112,7 @@ def finish_rating():
     comment = request.form["comment"]
     user = session["user"]
 
-    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
+    response = old_funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
     if response[0] == True:
         return redirect("/")
@@ -121,18 +121,18 @@ def finish_rating():
     
 @app.route("/explore")
 def explore():
-    toilets = funcs.get_all_toilets()
+    toilets = old_funcs.get_all_toilets()
     return render_template("explore.html", toilets=toilets, session=session)
 
 @app.route("/api/toilets")
 def toilets_api():
-    toilets = funcs.get_all_toilets()
+    toilets = old_funcs.get_all_toilets()
     return toilets
 
 @app.route("/toilet/<tid>")
 def toilet(tid):
-    info = funcs.get_toilet_details(tid)
-    info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
+    info = old_funcs.get_toilet_details(tid)
+    info["address"] = str(old_funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
     return render_template("toilet.html", toilet=info, session=session)
 
@@ -143,10 +143,10 @@ def profile(pid):
 
     pid = int(pid)
     
-    ratings = funcs.get_user_ratings(pid)
-    uname = funcs.get_username_by_user_id(pid)
+    ratings = old_funcs.get_user_ratings(pid)
+    uname = old_funcs.get_username_by_user_id(pid)
 
-    user_achievements = funcs.get_achievements_by_user_id(pid)[1]
+    user_achievements = old_funcs.get_achievements_by_user_id(pid)[1]
 
     # return str(ratings)
 
@@ -178,7 +178,7 @@ def profile(pid):
 @app.route("/profile/<username>")
 def profile_by_username(username):
     # Fetch the user ID using the username
-    user_id = funcs.get_user_id_by_username(username)
+    user_id = old_funcs.get_user_id_by_username(username)
     
     if not user_id:
         return redirect("/")  # Redirect to homepage if username does not exist
@@ -196,7 +196,7 @@ def my_profile():
 
 @app.route("/leaderboard")
 def leaderboard():    
-    leaderboard = funcs.get_users_sorted_by_ratings()
+    leaderboard = old_funcs.get_users_sorted_by_ratings()
     return render_template("leaderboard.html", leaderboard=leaderboard, session=session)
 
 @app.route("/clear-notifications")

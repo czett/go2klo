@@ -1,29 +1,33 @@
-import psycopg
-from psycopg import sql
+import psycopg2
+from psycopg2 import sql
 import bcrypt
 from geopy.geocoders import Nominatim
 import requests
 from math import radians, sin, cos, sqrt, atan2
 import json
 import app
-import os
-from dotenv import load_dotenv
 
-try:
-    load_dotenv()
-except:
-    pass # :) great code, right?
+with open("credentials.yml", "r") as creds:
+    pw = creds.readlines()[0]
+
+# DB_CONFIG = {
+#     "dbname": "postgres",
+#     "user": "postgres.barioakzubwwtootaupm",
+#     "password": os.getenv("DB_PASSWORD"),
+#     "host": "aws-0-eu-west-3.pooler.supabase.com",
+#     "port": 6543,
+# }
 
 DB_CONFIG = {
-    "dbname": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT")
+    "dbname": "postgres",
+    "user": "postgres.barioakzubwwtootaupm",
+    "password": pw,
+    "host": "aws-0-eu-west-3.pooler.supabase.com",
+    "port": 6543,
 }
 
 def get_db_connection():
-    return psycopg.connect(**DB_CONFIG)
+    return psycopg2.connect(**DB_CONFIG)
 
 def register(username: str, password: str):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
@@ -36,7 +40,7 @@ def register(username: str, password: str):
                     (username, hashed_password.decode()),
                 )
         return True, "Success"
-    except psycopg.errors.UniqueViolation:
+    except psycopg2.errors.UniqueViolation:
         return False, "Username already exists"
     except Exception as e:
         return False, f"Error: {e}"
@@ -60,19 +64,25 @@ def login(username: str, password: str):
 
 def get_coordinates(location_name):
     geolocator = Nominatim(user_agent="go2klo_app")
+
     location = geolocator.geocode(location_name)
+
     if location:
         return location.latitude, location.longitude
     else:
         return None, None
-
+    
 def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user: str):
+    """
+    Adds a rating for a toilet at the specified coordinates and checks for trophies.
+    """
     latitude, longitude = coords
     conn = get_db_connection()
 
     try:
         with conn:
             with conn.cursor() as cur:
+                # Check if the user already rated this toilet
                 cur.execute(
                     """
                     SELECT 1 FROM ratings
@@ -86,6 +96,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 if cur.fetchone():
                     return False, "You have already rated this toilet."
 
+                # Check if the toilet already exists
                 cur.execute(
                     """
                     SELECT toilet_id FROM toilets
@@ -98,6 +109,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 if result:
                     toilet_id = result[0]
                 else:
+                    # Create a new toilet entry
                     cur.execute(
                         """
                         INSERT INTO toilets (latitude, longitude)
@@ -108,6 +120,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     )
                     toilet_id = cur.fetchone()[0]
 
+                # Add the rating
                 cur.execute(
                     """
                     INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, username)
@@ -118,20 +131,26 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 )
                 rating_id = cur.fetchone()[0]
 
+                # Fetch current achievements for the user
                 cur.execute("SELECT achievements FROM users WHERE username = %s", (user,))
                 result = cur.fetchone()
                 if result is None:
                     return False, "User not found."
 
+                # Ensure achievements column is a list
                 current_achievements = result[0] or []
+
+                # List of new achievements to add
                 new_achievements = []
 
+                # Trophy 1: First Flush
                 cur.execute("SELECT COUNT(*) FROM ratings WHERE username = %s", (user,))
                 rating_count = cur.fetchone()[0]
                 if rating_count == 1 and "first_flush" not in current_achievements:
                     new_achievements.append("first_flush")
                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'First Flush'!"})
 
+                # Trophy 2: Globetrotter (distance >= 50 km)
                 cur.execute(
                     """
                     SELECT latitude, longitude 
@@ -149,14 +168,19 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                             app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Globetrotter'!"})
                             break
 
-                if cleanliness == 5 and supplies == 5 and privacy == 5 and "clean_sweep" not in current_achievements:
+                # Trophy 3: Clean Sweep (all scores = 5)
+                if int(cleanliness) == 5 and int(supplies) == 5 and int(privacy) == 5 and "clean_sweep" not in current_achievements:
                     new_achievements.append("clean_sweep")
                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Clean Sweep'!"})
 
+                # Trophy 4: Toilet Master (10+ ratings)
                 if rating_count >= 10 and "toilet_master" not in current_achievements:
                     new_achievements.append("toilet_master")
                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Toilet Master'!"})
 
+                # Additional Trophy: Unique achievement logic can be added here
+
+                # Update achievements if there are new ones
                 if new_achievements:
                     updated_achievements = list(set(current_achievements + new_achievements))
                     cur.execute(
@@ -190,12 +214,22 @@ def get_all_toilets():
                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
     except Exception as e:
         return f"Error: {e}"
-
+    
 def get_toilet_details(toilet_id):
+    """
+    Fetches the details of a specific toilet, including its ratings and average scores.
+    
+    Args:
+        toilet_id (int): The ID of the toilet.
+
+    Returns:
+        dict: A dictionary containing toilet details, including ratings and average scores.
+    """
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
+                # get toilet info
                 cur.execute("""
                     SELECT latitude, longitude
                     FROM toilets
@@ -214,6 +248,7 @@ def get_toilet_details(toilet_id):
                 """, (toilet_id,))
                 ratings = cur.fetchall()
 
+                # avg calc
                 avg_cleanliness = sum(r[0] for r in ratings) / len(ratings) if ratings else 0
                 avg_supplies = sum(r[1] for r in ratings) / len(ratings) if ratings else 0
                 avg_privacy = sum(r[2] for r in ratings) / len(ratings) if ratings else 0
@@ -238,8 +273,18 @@ def get_toilet_details(toilet_id):
                 }
     except Exception as e:
         return {"error": str(e)}
-
+    
 def get_user_ratings(user_id: int):
+    """
+    Fetches all ratings made by a user, based on their user_id.
+    
+    Args:
+        user_id (int): The ID of the user for whom to fetch ratings.
+
+    Returns:
+        list: A list of dictionaries containing the ratings made by the user, 
+              or an error message if an issue occurs.
+    """
     try:
         conn = get_db_connection()
         with conn:
@@ -291,6 +336,15 @@ def get_user_ratings(user_id: int):
         conn.close()
 
 def check_user_exists(user_id: str):
+    """
+    Checks if a user exists in the database by their user_id.
+    
+    Args:
+        user_id (str): The ID of the user to check.
+
+    Returns:
+        bool: True if the user exists, False otherwise.
+    """
     try:
         conn = get_db_connection()
         with conn:
@@ -362,6 +416,9 @@ def get_achievements_by_user_id(user_id: int):
         conn.close()
 
 def distance_between_coords(coord1, coord2):
+    """
+    Calculate the distance between two latitude-longitude coordinates in kilometers.
+    """
     R = 6371  # Radius of the Earth in kilometers
     lat1, lon1 = map(radians, coord1)
     lat2, lon2 = map(radians, coord2)
