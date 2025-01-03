@@ -28,7 +28,6 @@ def add_notification(notficiation: dict) -> None:
 
 @app.route("/")
 def startpoint():
-    #add_notification({"title": "title here", "text": "some text here :3"})
     return render_template("index.html", session=session)
 
 @app.route("/login")
