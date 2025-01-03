@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, session, request, url_for
 import funcs, re
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
@@ -225,6 +226,17 @@ def clear_notifications():
         session["notifications"] = []
 
     return redirect("/")
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
+
+@app.route("/error/<code>")
+def error(code):
+    return render_template("error.html", code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)
