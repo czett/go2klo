@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, url_for
-import funcs
+import funcs, re
 
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
@@ -79,6 +79,9 @@ def process_register():
     try:
         username = request.form["username"]
         password = request.form["password"]
+
+        if not bool(re.match("^[a-zA-Z0-9_]+$", username)): # name limitation
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session)
 
         if username and password:
             response = funcs.register(username, password)

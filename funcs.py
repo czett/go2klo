@@ -44,6 +44,7 @@ def register(username: str, password: str):
         conn.close()
 
 def login(username: str, password: str):
+    username = username.replace(" ", "")
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
@@ -52,7 +53,7 @@ def login(username: str, password: str):
             if user and bcrypt.checkpw(password.encode(), user[0].encode()):
                 return True, "Success"
             else:
-                return False, "Wrong username or password"
+                return False, "Wrong username or password. Remove spaces if entered!"
     except Exception as e:
         return False, f"Error: {e}"
     finally:
