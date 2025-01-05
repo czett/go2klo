@@ -81,7 +81,7 @@ def process_register():
         username = request.form["username"]
         password = request.form["password"]
 
-        if not bool(re.match("^[a-zA-Z0-9_]+$", username)): # name limitation
+        if not username.isalpha(): # only letters
             return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session)
 
         if username and password:
