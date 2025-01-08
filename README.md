@@ -24,6 +24,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Responsive design, conveniently usable on mobile now.
 - Notification system, including pushing new ones and marking old ones as read.
 - Leaderboard of users with most ratings
+- Chunk Loading for explore page!
 
 ## 🛠️ Tech Stack  
 
@@ -36,7 +37,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 - Trending toilets?
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
-- Chunk Loading for explore page!
 
 ## 🤔 Why go2klo?  
 
