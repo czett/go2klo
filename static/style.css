@@ -778,13 +778,6 @@ input[type="range"]::-webkit-slider-thumb {
         padding-bottom: 2vh;
     }
     
-    .benefit-cards, .trophy-case{
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        gap: 2vh;
-    }
-    
     .logreg-form{
         width: 75%;
     }
@@ -899,6 +892,13 @@ input[type="range"]::-webkit-slider-thumb {
 
     .leaderboard .entry{
         padding: 5vw;
+    }
+
+    .benefit-cards, .trophy-case{
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 2vh;
     }
 
     .banner .icon{
