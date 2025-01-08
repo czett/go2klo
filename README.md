@@ -32,11 +32,12 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
 
-## 🚧 Future Features  
+## 🚧 Future Features/planned improvements
 
 - Trending toilets?
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
 - Chunk Loading for explore page!
+- Redesign of trophy case.
 
 ## 🤔 Why go2klo?  
 
