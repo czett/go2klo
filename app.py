@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, request, url_for
+from flask import Flask, render_template, redirect, session, request, url_for, jsonify
 import funcs, re
 from werkzeug.exceptions import HTTPException
 
@@ -144,10 +144,18 @@ def explore():
     toilets = funcs.get_all_toilets()
     return render_template("explore.html", toilets=toilets, session=session)
 
+# old, from before chunking below :)
+# @app.route("/api/toilets")
+# def toilets_api():
+#     toilets = funcs.get_all_toilets()
+#     return toilets
+
 @app.route("/api/toilets")
-def toilets_api():
-    toilets = funcs.get_all_toilets()
-    return toilets
+def toilets_api(): # thanks GPT here :o
+    start_id = request.args.get("start_id", default=0, type=int)
+    limit = request.args.get("limit", default=50, type=int)
+    toilets = funcs.get_toilets_chunk(start_id, limit)
+    return jsonify(toilets)
 
 @app.route("/toilet/<tid>")
 def toilet(tid):

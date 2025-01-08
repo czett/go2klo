@@ -171,7 +171,28 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     finally:
         conn.close()
 
-def get_all_toilets():
+# def get_all_toilets():
+#     try:
+#         conn = get_db_connection()
+#         with conn:
+#             with conn.cursor() as cur:
+#                 cur.execute("""
+#                     SELECT 
+#                         t.toilet_id, 
+#                         t.latitude, 
+#                         t.longitude,
+#                         COUNT(r.rating_id) AS rating_count
+#                     FROM toilets t
+#                     LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
+#                     GROUP BY t.toilet_id
+#                 """)
+#                 toilets = cur.fetchall()
+
+#                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+#     except Exception as e:
+#         return f"Error: {e}"
+    
+def get_toilets_chunk(start_id, limit):
     try:
         conn = get_db_connection()
         with conn:
@@ -184,13 +205,17 @@ def get_all_toilets():
                         COUNT(r.rating_id) AS rating_count
                     FROM toilets t
                     LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
+                    WHERE t.toilet_id > %s
                     GROUP BY t.toilet_id
-                """)
+                    ORDER BY t.toilet_id
+                    LIMIT %s
+                """, (start_id, limit))
                 toilets = cur.fetchall()
 
                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
     except Exception as e:
-        return f"Error: {e}"
+        return {"error": str(e)}
+
 
 def get_toilet_details(toilet_id):
     try:

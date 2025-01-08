@@ -18,7 +18,7 @@
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
+<!-- <script>
     // Initialize map and set view to center of Europe
     var map = L.map('map').setView([51.1657, 10.4515], 6);  // Centered at the center of Europe (Germany)
 
@@ -45,5 +45,54 @@
             });
         })
         .catch(error => console.error('Error fetching toilet data:', error));
+</script> -->
+<script>
+    var map = L.map('map').setView([51.1657, 10.4515], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var markers = {};
+    var lastLoadedId = 0;
+    var loading = false;
+
+    function fetchToiletsChunk() {
+        if (loading) return;
+        loading = true;
+
+        // fetching 50 toilets at max :o
+        fetch(`/api/toilets?start_id=${lastLoadedId}&limit=50`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(function(toilet) {
+                        if (!markers[toilet.toilet_id]) {
+                            var marker = L.marker([toilet.latitude, toilet.longitude])
+                                .addTo(map)
+                                .bindPopup('Toilet ID: ' + toilet.toilet_id);
+
+                            marker.on('click', function() {
+                                window.location.href = '/toilet/' + toilet.toilet_id;
+                            });
+
+                            markers[toilet.toilet_id] = marker;
+                        }
+                    });
+                    lastLoadedId = data[data.length - 1].toilet_id;
+                }
+                loading = false;
+            })
+            .catch(error => {
+                console.error('Error fetching toilet data:', error);
+                loading = false;
+            });
+    }
+
+    fetchToiletsChunk();
+
+    map.on('moveend', function() {
+        fetchToiletsChunk();
+    });
 </script>
+
 {% endblock %}
