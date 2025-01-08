@@ -75,6 +75,22 @@
     </a>
 </div>
 
+{% if rated[0] %}
+<div class="rated-banner">
+    <h2 class="rated-title">{{rated[1]}}</h2>
+    <a href="/explore">keep exploring here!</a>
+    <div class="rated-close-btn">
+        <span class="material-symbols-rounded" onmousedown="disableRatedWindow()">close</span>
+    </div>
+</div>
+
+<script>
+    function disableRatedWindow(){
+        document.querySelector(".rated-banner").style.display = "none";
+    }
+</script>
+{% endif %}
+
 {% if not session["logged_in"] %}
 <div class="get-started">
     <div class="box-text">So, what are you waiting for? Get started now!</div>

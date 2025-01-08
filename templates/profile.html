@@ -44,11 +44,9 @@
     </div>
 </div>
 
-<!-- Leaflet map setup -->
 <script>
-    // Initialize the map with the dynamic center
-    var map = L.map('map').setView([{{ avg_lat }}, {{ avg_lon }}], 13); // Set dynamic center based on average lat/lon
-
+    // europe center as on explore
+    var map = L.map('map').setView([51.1657, 10.4515], 3);
     // Add tile layer to the map (OpenStreetMap by default)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

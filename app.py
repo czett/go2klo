@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, url_for, jsonify
-import funcs, re
+import funcs, re, random
 from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
@@ -40,7 +40,11 @@ def add_notification(notficiation: dict) -> None:
 @app.route("/")
 def startpoint():
     check_cookie_status()
-    return render_template("index.html", session=session)
+    rated = (False, "") # normie case :3
+    if session.get("rated"):
+        rated = session["rated"]
+    session["rated"] = (False, "")
+    return render_template("index.html", session=session, rated=rated)
 
 @app.route("/login")
 def login():
@@ -135,6 +139,8 @@ def finish_rating():
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
     if response[0] == True:
+        msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
+        session["rated"] = (True, random.choice(msgs))
         return redirect("/")
     else:
         return render_template("rate.html", msg=response[1], session=session)
@@ -162,6 +168,7 @@ def toilet(tid):
     info = funcs.get_toilet_details(tid)
     info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
+
     return render_template("toilet.html", toilet=info, session=session)
 
 @app.route("/profile/<int:pid>")
@@ -235,16 +242,16 @@ def clear_notifications():
 
     return redirect("/")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
 @app.route("/error/<code>")
 def error(code):
     return render_template("error.html", code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

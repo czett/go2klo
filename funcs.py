@@ -171,26 +171,26 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     finally:
         conn.close()
 
-# def get_all_toilets():
-#     try:
-#         conn = get_db_connection()
-#         with conn:
-#             with conn.cursor() as cur:
-#                 cur.execute("""
-#                     SELECT 
-#                         t.toilet_id, 
-#                         t.latitude, 
-#                         t.longitude,
-#                         COUNT(r.rating_id) AS rating_count
-#                     FROM toilets t
-#                     LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
-#                     GROUP BY t.toilet_id
-#                 """)
-#                 toilets = cur.fetchall()
+def get_all_toilets(): # just for inital clicl on explore, to be concise the cards below map. gotta fix actually-..
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT 
+                        t.toilet_id, 
+                        t.latitude, 
+                        t.longitude,
+                        COUNT(r.rating_id) AS rating_count
+                    FROM toilets t
+                    LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
+                    GROUP BY t.toilet_id
+                """)
+                toilets = cur.fetchall()
 
-#                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
-#     except Exception as e:
-#         return f"Error: {e}"
+                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+    except Exception as e:
+        return f"Error: {e}"
     
 def get_toilets_chunk(start_id, limit):
     try:

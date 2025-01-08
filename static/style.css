@@ -719,6 +719,29 @@ input[type="range"]::-webkit-slider-thumb {
     margin-bottom: 1vh;
 }
 
+/* banner after rating */
+
+.rated-banner{
+    position: fixed;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: 35%;
+    aspect-ratio: 3;
+    background-color: var(--bg);
+    border: 2px solid var(--ac);
+    border-radius: var(--brad);
+    box-sizing: border-box;
+    padding: 1vw 2vw;
+    z-index: 10000;
+}
+
+.rated-banner .rated-close-btn{
+    position: absolute;
+    inset: 1vh 1vh auto auto;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
@@ -812,6 +835,11 @@ input[type="range"]::-webkit-slider-thumb {
         bottom: 5vh;
         aspect-ratio: 3;
         padding: 4vw;
+    }
+
+    .rated-banner{
+        width: 50%;
+        aspect-ratio: 2;
     }
 }
 
@@ -917,5 +945,10 @@ input[type="range"]::-webkit-slider-thumb {
     .cookie-banner{
         width: calc(100vw - 2*var(--rlpad));
         aspect-ratio: 2;
+    }
+
+    .rated-banner{
+        width: 85%;
+        padding: 1vh 2vh;
     }
 }
