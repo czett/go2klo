@@ -37,6 +37,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 - Trending toilets?
 - Discover the best-rated toilets with our *Royal Flush Rankings*.  
+- Limiting leaderboard to like Top-50
 
 ## 🤔 Why go2klo?  
 
