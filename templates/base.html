@@ -36,6 +36,13 @@
             {% else %}
                 <a href="/myprofile" class="link">{{ts["nav_profile"]}}</a>
             {% endif%}
+
+            <div class="lang-switch">
+                {% set lang = session["lang"] %}
+                <a href="/switchlang">
+                    <img src="{{ url_for('static', filename='icons/' + lang + '.svg') }}" alt="{{ lang }}">
+                </a>
+            </div>
         </div>
     </div>
     {% endblock %}

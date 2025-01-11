@@ -21,7 +21,7 @@ def check_cookie_status():
             return True
     else:
         session["cookies"] = False
-        session["lang"] = "german"
+        session["lang"] = "english"
         return False
     
     return True
@@ -89,6 +89,16 @@ def process_login():
 @app.route("/accept-cookies")
 def accept_cookies(): 
     session["cookies"] = True
+    session.modified = True   
+    return redirect("/")
+
+@app.route("/switchlang")
+def switchlang(): 
+    if session["lang"] == "german":
+        session["lang"] = "english"
+    else:
+        session["lang"] = "german"
+
     session.modified = True   
     return redirect("/")
 
