@@ -4,11 +4,11 @@
 
 <div class="rating-form">
     <form action="/rate/process" enctype="multipart/form-data" method="post">
-        <h2 class="title">Rate your toilet</h2>
+        <h2 class="title">{{ts["title"]}}</h2>
 
-        <input type="text" name="location_query" required placeholder="Describe your toilet: address or name">
+        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}">
     
-        <button type="submit">Submit rating</button>
+        <button type="submit">{{ts["submit"]}}</button>
     </form>
 </div>
 

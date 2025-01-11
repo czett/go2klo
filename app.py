@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, url_for, jsonify
-import funcs, re, random
+import funcs, re, random, json
 from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
@@ -21,6 +21,7 @@ def check_cookie_status():
             return True
     else:
         session["cookies"] = False
+        session["lang"] = "german"
         return False
     
     return True
@@ -37,18 +38,34 @@ def add_notification(notficiation: dict) -> None:
     session["notifications"] = current_notifications
     session.update()
 
+def get_texts(lang:str, template:str) -> dict:
+    with open("static/langs/langs.json", "r", encoding="utf-8") as file:
+        content = json.load(file)["langs"]
+    
+    req_content = content[lang][template]
+    base = content[lang]["base"]
+    req_content.update(base)
+
+    return req_content
+
 @app.route("/")
 def startpoint():
     check_cookie_status()
+    
     rated = (False, "") # normie case :3
     if session.get("rated"):
         rated = session["rated"]
+
+    ts = get_texts(session["lang"], "index")
+
     session["rated"] = (False, "")
-    return render_template("index.html", session=session, rated=rated)
+    return render_template("index.html", session=session, rated=rated, ts=ts)
 
 @app.route("/login")
 def login():
-    return render_template("logreg.html", action="login", msg=None, session=session)
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+    return render_template("logreg.html", action="login", msg=None, ts=ts, session=session)
 
 @app.route("/login/process", methods=["POST"])
 def process_login():    
@@ -76,8 +93,10 @@ def accept_cookies():
     return redirect("/")
 
 @app.route("/register")
-def register():    
-    return render_template("logreg.html", action="register", msg=None, session=session)
+def register():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+    return render_template("logreg.html", action="register", ts=ts, msg=None, session=session)
 
 @app.route("/register/process", methods=["POST"])
 def process_register():    
@@ -108,10 +127,13 @@ def logout():
 
 @app.route("/rate")
 def rate():
+    check_cookie_status()
     if not check_login_status():
         return redirect("/")
+    
+    ts = get_texts(session["lang"], "get_location")
 
-    return render_template("get_location.html", session=session)
+    return render_template("get_location.html", session=session, ts=ts)
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
@@ -122,8 +144,9 @@ def process_rating():
     lat, lng = funcs.get_coordinates(query)
 
     session["rating_coords"] = (lat, lng)
+    ts = get_texts(session["lang"], "rate")
 
-    return render_template("rate.html", lat=lat, lng=lng, msg=None, session=session)
+    return render_template("rate.html", lat=lat, lng=lng, ts=ts, msg=None, session=session)
 
 @app.route("/rate/finish", methods=["POST"])
 def finish_rating():
@@ -147,8 +170,10 @@ def finish_rating():
     
 @app.route("/explore")
 def explore():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "explore")
     toilets = funcs.get_all_toilets()
-    return render_template("explore.html", toilets=toilets, session=session)
+    return render_template("explore.html", toilets=toilets, ts=ts, session=session)
 
 # old, from before chunking below :)
 # @app.route("/api/toilets")
@@ -165,14 +190,18 @@ def toilets_api(): # thanks GPT here :o
 
 @app.route("/toilet/<tid>")
 def toilet(tid):
+    check_cookie_status()
     info = funcs.get_toilet_details(tid)
     info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
 
-    return render_template("toilet.html", toilet=info, session=session)
+    ts = get_texts(session["lang"], "toilet")
+
+    return render_template("toilet.html", toilet=info, ts=ts, session=session)
 
 @app.route("/profile/<int:pid>")
 def profile(pid):
+    check_cookie_status()
     # if not funcs.check_user_exists(pid):
     #     return redirect("/")
 
@@ -205,7 +234,9 @@ def profile(pid):
         else:
             own = False
 
-    return render_template("profile.html", ratings=ratings, session=session, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
+    ts = get_texts(session["lang"], "profile")
+
+    return render_template("profile.html", ratings=ratings, ts=ts, session=session, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -229,7 +260,8 @@ def my_profile():
 @app.route("/leaderboard")
 def leaderboard():    
     leaderboard = funcs.get_users_sorted_by_ratings()
-    return render_template("leaderboard.html", leaderboard=leaderboard, session=session)
+    ts = get_texts(session["lang"], "leaderboard")
+    return render_template("leaderboard.html", ts=ts, leaderboard=leaderboard, session=session)
 
 @app.route("/clear-notifications")
 def clear_notifications():
@@ -251,7 +283,8 @@ def clear_notifications():
 
 @app.route("/error/<code>")
 def error(code):
-    return render_template("error.html", code=f"error {code} :(")
+    ts = get_texts(session["lang"], "error")
+    return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
     app.run(debug=True, port=7000)

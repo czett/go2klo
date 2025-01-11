@@ -5,11 +5,11 @@
 {% if not session["logged_in"] %}
 <div class="username-warning">
     <span class="material-symbols-rounded">warning</span>
-    <h2>If you registered with spaces in your name, try logging in without them. They were now removed in the database. For example: "Joe Public" turns into "JoePublic"</h2>
+    <h2>{{ts["user_warning"]}}</h2>
 </div>
 <div class="banner">
-    <div class="title-text">Scared of toilets? Not anymore!</div>
-    <div class="bottom-text">Join go2klo now to rate toilets and always know where to go</div>
+    <div class="title-text">{{ts["banner_title"]}}</div>
+    <div class="bottom-text">{{ts["banner_bottom"]}}</div>
     <div class="icon">
         <span class="material-symbols-rounded">wc</span>
     </div>
@@ -18,41 +18,41 @@
 
 {% if session["logged_in"] %}
 <div class="banner">
-    <div class="title-text">Got something to share?</div>
-    <div class="bottom-text"><a href="/rate">Start rating</a> toilets now or explore nearby ones <a href="/explore">here</a>!</div>
+    <div class="title-text">{{ts["li_banner_title"]}}</div>
+    <div class="bottom-text">{{ts["li_banner_bottom"]}}</div>
     <div class="icon">
         <span class="material-symbols-rounded">share_location</span>
     </div>
 </div>
 {% endif %}
 
-<div class="benefit-header">Why should you use go2klo?</div>
+<div class="benefit-header">{{ts["benefit_header"]}}</div>
 
 <div class="benefit-cards">
     <div class="card">
         <div class="card-icon">
             <span class="material-symbols-rounded">warning</span>
         </div>
-        <div class="card-title">Crisis Prevention</div>
-        <div class="card-text">No more praying to the porcelain gods in a horror-movie restroom - go2klo is the guardian angel of desperate bladders everywhere.</div>
+        <div class="card-title">{{ts["card_1_title"]}}</div>
+        <div class="card-text">{{ts["card_1_text"]}}</div>
     </div>
     <div class="card">
         <div class="card-icon">
             <span class="material-symbols-rounded">map</span>
         </div>
-        <div class="card-title">Toilet Tourism</div>
-        <div class="card-text">Discover hidden gems of the loo world, from throne-like seats to bathrooms with views. Who knew “Best Flush” could be a thing?</div>
+        <div class="card-title">{{ts["card_2_title"]}}</div>
+        <div class="card-text">{{ts["card_2_text"]}}</div>
     </div>
     <div class="card">
         <div class="card-icon">
             <span class="material-symbols-rounded">star</span>
         </div>
-        <div class="card-title">Yelp for Your Rear End</div>
-        <div class="card-text">Finally, an app that takes your bottom's comfort as seriously as it deserves. Crowdsourced toilet wisdom for the win!</div>
+        <div class="card-title">{{ts["card_3_title"]}}</div>
+        <div class="card-text">{{ts["card_3_text"]}}</div>
     </div>
 </div>
 
-<div class="benefit-header">Explore go2klo!</div>
+<div class="benefit-header">{{ts["explore_header"]}}</div>
 
 <div class="benefit-cards">
     <a href="/leaderboard" style="text-decoration: none;">
@@ -60,8 +60,8 @@
             <div class="card-icon">
                 <span class="material-symbols-rounded">leaderboard</span>
             </div>
-            <div class="card-title">Leaderboard</div>
-            <div class="card-text">The leaderboard showcases the most active users in the community, ranked by the number of ratings they’ve contributed. Compete with others to climb the ranks and earn achievements as you share your reviews!</div>
+            <div class="card-title">{{ts["leaderboard"]}}</div>
+            <div class="card-text">{{ts["leaderboard_desc"]}}</div>
         </div>
     </a>
     <a href="/explore" style="text-decoration: none;">
@@ -69,8 +69,8 @@
             <div class="card-icon">
                 <span class="material-symbols-rounded">public</span>
             </div>
-            <div class="card-title">Explore the map</div>
-            <div class="card-text">The exploring map allows you to discover toilets near your location, complete with user reviews and ratings. Navigate effortlessly to find the cleanest and most private spots around you!</div>
+            <div class="card-title">{{ts["explore"]}}</div>
+            <div class="card-text">{{ts["explore_desc"]}}</div>
         </div>
     </a>
 </div>
@@ -78,7 +78,7 @@
 {% if rated[0] %}
 <div class="rated-banner">
     <h2 class="rated-title">{{rated[1]}}</h2>
-    <a href="/explore">keep exploring here!</a>
+    <a href="/explore">{{ts["rated_banner"]}}</a>
     <div class="rated-close-btn">
         <span class="material-symbols-rounded" onmousedown="disableRatedWindow()">close</span>
     </div>
@@ -93,10 +93,10 @@
 
 {% if not session["logged_in"] %}
 <div class="get-started">
-    <div class="box-text">So, what are you waiting for? Get started now!</div>
+    <div class="box-text">{{ts["cta_banner"]}}</div>
     <div class="action-btns">
-        <a href="/login"><button>Login</button></a>
-        <a href="/register"><button>Register</button></a>
+        <a href="/login"><button>{{ts["login"]}}</button></a>
+        <a href="/register"><button>{{ts["register"]}}</button></a>
     </div>
     <!-- <div class="icon">
         <span class="material-symbols-rounded">switch_access_shortcut</span>

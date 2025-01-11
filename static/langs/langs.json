@@ -1,0 +1,212 @@
+{
+    "langs": {
+        "english": {
+            "index": {
+                "user_warning": "If you registered with spaces in your name, try logging in without them. They were now removed in the database. For example: 'Joe Public' turns into 'JoePublic'",
+                "banner_title": "Scared of toilets? Not anymore!",
+                "banner_bottom": "Join go2klo now to rate toilets and always know where to go",
+                "li_banner_title": "Got something to share?",
+                "li_banner_bottom": "Start rating toilets now or explore nearby ones!",
+                "benefit_header": "Why should you use go2klo?",
+                "card_1_title": "Crisis Prevention",
+                "card_1_text": "No more praying to the porcelain gods in a horror-movie restroom - go2klo is the guardian angel of desperate bladders everywhere.",
+                "card_2_title": "Toilet Tourism",
+                "card_2_text": "Discover hidden gems of the loo world, from throne-like seats to bathrooms with views. Who knew 'Best Flush' could be a thing?",
+                "card_3_title": "Yelp for Your Rear End",
+                "card_3_text": "Finally, an app that takes your bottom's comfort as seriously as it deserves. Crowdsourced toilet wisdom for the win!",
+                "explore_header": "Explore go2klo!",
+                "leaderboard": "Leaderboard",
+                "leaderboard_desc": "The leaderboard showcases the most active users in the community, ranked by the number of ratings they’ve contributed. Compete with others to climb the ranks and earn achievements as you share your reviews!",
+                "explore": "Explore the map",
+                "explore_desc": "The exploring map allows you to discover toilets near your location, complete with user reviews and ratings. Navigate effortlessly to find the cleanest and most private spots around you!",
+                "rated_banner": "keep exploring here!",
+                "cta_banner": "So, what are you waiting for? Get started now!",
+                "login": "Login",
+                "register": "Register"
+            },
+            "base": {
+                "nav_logo": "Home",
+                "nav_explore": "Explore",
+                "nav_rate": "Rate",
+                "nav_profile": "Profile",
+                "register": "Register",
+                "notifications": "notifications",
+                "cookie_accept": "Accept",
+                "cookie_title": "No Cookies, No Flush",
+                "cookie_msg": "By staying, you agree to our essential cookies and Google Fonts. Honestly, I wouldn’t even know how to do anything sneaky!"
+            },
+            "error": {
+                "comment_1": "I'll try to code better next time around :)",
+                "comment_2": "good thing this is early access :o",
+                "back": "go back home"
+            },
+            "explore" : {
+                "title": "Map of rated toilets",
+                "tip": "tip: click a pin to get to its ratings",
+                "toilet": "Toilet",
+                "ratings": "Ratings",
+                "coords": "Coordinates"
+            },
+            "get_location": {
+                "title": "Rate your toilet",
+                "submit": "Submit rating",
+                "input_placeholder": "Describe your toilet: address or name"
+            },
+            "leaderboard": {
+                "title": "Who's the current toilet master?",
+                "bottom": "Check the leaderboard below!",
+                "leaderboard": "Leaderboard"
+            },
+            "logreg": {
+                "login_title": "Log into go2klo",
+                "register_title": "Register into go2klo",
+                "username": "Enter your username",
+                "password": "Enter your password",
+                "login": "Login",
+                "register": "Register",
+                "rather_register": "I'd rather register",
+                "rather_login": "I'd rather login",
+                "public": "public"
+            },
+            "profile": {
+                "has": "has",
+                "ratings": "ratings",
+                "ratings_title": "Ratings on go2klo",
+                "toilet": "Toilet",
+                "cleanliness": "Cleanliness",
+                "supplies": "Supplies",
+                "privacy": "Privacy",
+                "comment": "Comment",
+                "trophy_case": "Trophy Case"
+            },
+            "rate": {
+                "title": "Rate your toilet",
+                "wrong_1": "Wrong geo-pin?",
+                "try_again_1": "Try again",
+                "try_again_2": "by using a new query",
+                "rate_out_of_5": "Rate out of five:",
+                "cleanliness": "Cleanliness",
+                "supplies": "Supplies",
+                "privacy": "Privacy",
+                "comment": "Leave a comment if you like:",
+                "comment_placeholder": "optional comment",
+                "submit": "Submit rating"
+            },
+            "toilet": {
+                "title": "Details - Toilet #",
+                "address": "Address",
+                "location": "Location",
+                "latitude": "Latitude",
+                "longitude": "Longitude",
+                "cleanliness": "Cleanliness",
+                "supplies": "Supplies",
+                "privacy": "Privacy",
+                "comment": "Comment"
+            }
+        },
+        "german": {
+            "index": {
+                "user_warning": "Falls du dich mit Leerzeichen im Namen registriert hast, versuch dich ohne diese einzuloggen. Sie wurden in der Datenbank entfernt. Beispiel: 'Joe Public' wird zu 'JoePublic'.",
+                "banner_title": "Angst vor Toiletten? Nicht mehr!",
+                "banner_bottom": "Tritt jetzt go2klo bei, um Toiletten zu bewerten und immer zu wissen, wohin du gehen kannst.",
+                "li_banner_title": "Was zu teilen?",
+                "li_banner_bottom": "Beginne jetzt Toiletten zu bewerten oder entdecke welche in deiner Nähe!",
+                "benefit_header": "Warum solltest du go2klo nutzen?",
+                "card_1_title": "Krisenprävention",
+                "card_1_text": "Nie mehr beten zu den Porzellangöttern in einem Horrorkabinett – go2klo ist der Schutzengel für verzweifelte Blasen überall.",
+                "card_2_title": "Toilettentourismus",
+                "card_2_text": "Entdecke versteckte Juwelen der Klo-Welt, von thronartigen Sitzen bis zu Toiletten mit Aussicht. Wer hätte gedacht, dass es 'Beste Spülung' geben könnte?",
+                "card_3_title": "Yelp für dein Hinterteil",
+                "card_3_text": "Endlich eine App, die den Komfort deines Hinterteils so ernst nimmt, wie es sein sollte. Schwarmintelligenz für Toiletten – zum Sieg!",
+                "explore_header": "Entdecke go2klo!",
+                "leaderboard": "Bestenliste",
+                "leaderboard_desc": "Die Bestenliste zeigt die aktivsten Nutzer der Community, basierend auf der Anzahl der abgegebenen Bewertungen. Miss dich mit anderen, um die Ränge zu erklimmen und Erfolge zu erzielen, während du deine Rezensionen teilst!",
+                "explore": "Karte erkunden",
+                "explore_desc": "Die Erkundungskarte ermöglicht es dir, Toiletten in deiner Nähe zu entdecken – komplett mit Nutzerbewertungen und Bewertungen. Navigiere mühelos zu den saubersten und privatesten Orten um dich herum!",
+                "rated_banner": "Erkunde hier weiter!",
+                "cta_banner": "Also, worauf wartest du? Leg jetzt los!",
+                "login": "Einloggen",
+                "register": "Registrieren"
+            },
+            "base": {
+                "nav_logo": "Startseite",
+                "nav_explore": "Entdecken",
+                "nav_rate": "Bewerten",
+                "nav_profile": "Profil",
+                "register": "Registrieren",
+                "notifications": "Benachrichtigungen",
+                "cookie_accept": "Klaro",
+                "cookie_title": "Keine Cookies, kein Spülgang",
+                "cookie_msg": "Indem du bleibst, stimmst du unseren essentiellen Cookies und Google Fonts zu. Ehrlich gesagt, ich wüsste nicht mal, wie man etwas Heimliches macht!"
+            },
+            "error": {
+                "comment_1": "Ich werde das nächste Mal besser programmieren :)",
+                "comment_2": "Gut, dass das hier Early Access ist :o",
+                "back": "Zurück zur Startseite"
+            },
+            "explore" : {
+                "title": "Karte bewerteter Toiletten",
+                "tip": "Tipp: Klicke auf eine Markierung, um die Bewertungen zu sehen",
+                "toilet": "Toilette",
+                "ratings": "Bewertungen",
+                "coords": "Koordinaten"
+            },
+            "get_location": {
+                "title": "Bewerte deine Toilette",
+                "submit": "Bewertung abschicken",
+                "input_placeholder": "Beschreibe deine Toilette: Adresse oder Name"
+            },
+            "leaderboard": {
+                "title": "Wer ist der aktuelle Klo-Meister?",
+                "bottom": "Schau dir die Bestenliste unten an!",
+                "leaderboard": "Bestenliste"
+            },
+            "logreg": {
+                "login_title": "Logge dich bei go2klo ein",
+                "register_title": "Registriere dich bei go2klo",
+                "username": "Gib deinen Benutzernamen ein",
+                "password": "Gib dein Passwort ein",
+                "login": "Einloggen",
+                "register": "Registrieren",
+                "rather_register": "Ich möchte mich lieber registrieren",
+                "rather_login": "Ich möchte mich lieber einloggen",
+                "public": "öffentlich"
+            },
+            "profile": {
+                "has": "hat",
+                "ratings": "Bewertungen",
+                "ratings_title": "Bewertungen auf go2klo",
+                "toilet": "Toilette",
+                "cleanliness": "Sauberkeit",
+                "supplies": "Ausstattung",
+                "privacy": "Privatsphäre",
+                "comment": "Kommentar",
+                "trophy_case": "Trophäenschrank"
+            },
+            "rate": {
+                "title": "Bewerte deine Toilette",
+                "wrong_1": "Falscher Geopin?",
+                "try_again_1": "Nochmal versuchen",
+                "try_again_2": "mit einer neuen Eingabe",
+                "rate_out_of_5": "Bewerte mit bis zu fünf Punkten:",
+                "cleanliness": "Sauberkeit",
+                "supplies": "Ausstattung",
+                "privacy": "Privatsphäre",
+                "comment": "Lass einen Kommentar da, wenn du magst:",
+                "comment_placeholder": "optionaler Kommentar",
+                "submit": "Bewertung abschicken"
+            },
+            "toilet": {
+                "title": "Details – Toilette #",
+                "address": "Adresse",
+                "location": "Standort",
+                "latitude": "Breitengrad",
+                "longitude": "Längengrad",
+                "cleanliness": "Sauberkeit",
+                "supplies": "Ausstattung",
+                "privacy": "Privatsphäre",
+                "comment": "Kommentar"
+            }
+        }
+    }
+}

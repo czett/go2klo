@@ -4,11 +4,11 @@
 
 <div class="rating-form">
     <form action="/rate/finish" enctype="multipart/form-data" method="post">
-        <h2 class="title">Rate your toilet</h2>
+        <h2 class="title">{{ts["title"]}}</h2>
 
         <!-- <iframe src="'https://maps.google.com/maps?q=' + {{lat}} + ',' + {{lng}} + '&t=&z=15&ie=UTF8&iwloc=&output=embed'" /> -->
         <iframe src = "https://maps.google.com/maps?q={{lat}},{{lng}}&hl=es;z=14&amp;output=embed"></iframe>
-        <div class="wrong-pin">Wrong geo-pin? <a href="/rate">Try again</a> by using a new query</div>
+        <div class="wrong-pin">{{ts["wrong_1"]}} <a href="/rate">{{ts["try_again_1"]}}</a> {{ts["try_again_2"]}}</div>
     
         {% if msg != None %}
             <div class="rating-msg msg">{{msg}}</div>
@@ -17,21 +17,21 @@
         <!-- <label for="toilet-name">Enter a name for the toilet:</label>
         <input type="text" name="toilet-name" id="toilet-name" placeholder="toilet name"> -->
     
-        <h2 class="subtitle">Rate out of five:</h2>
+        <h2 class="subtitle">{{ts["rate_out_of_5"]}}</h2>
     
-        <label for="cleanliness">Cleanliness (<span id="cleanliness-value">3</span>)</label>
+        <label for="cleanliness">{{ts["cleanliness"]}} (<span id="cleanliness-value">3</span>)</label>
         <input type="range" name="cleanliness" id="cleanliness" min="1" max="5" value="3" oninput="updateValue('cleanliness-value', this.value)">
     
-        <label for="supplies">Supplies (<span id="supplies-value">3</span>)</label>
+        <label for="supplies">{{ts["supplies"]}} (<span id="supplies-value">3</span>)</label>
         <input type="range" name="supplies" id="supplies" min="1" max="5" value="3" oninput="updateValue('supplies-value', this.value)">
     
-        <label for="privacy">Privacy (<span id="privacy-value">3</span>)</label>
+        <label for="privacy">{{ts["privacy"]}} (<span id="privacy-value">3</span>)</label>
         <input type="range" name="privacy" id="privacy" min="1" max="5" value="3" oninput="updateValue('privacy-value', this.value)">
     
-        <label for="comment">Leave a comment if you like:</label>
-        <textarea name="comment" id="comment" placeholder="optional comment here"></textarea>
+        <label for="comment">{{ts["comment"]}}</label>
+        <textarea name="comment" id="comment" placeholder="{{ts['comment_placeholder']}}"></textarea>
     
-        <button type="submit">Submit rating</button>
+        <button type="submit">{{ts["submit"]}}</button>
     </form>
 </div>
 

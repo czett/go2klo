@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="explore-title">Map of rated toilets</h1>
-<div class="map-tip">tip: click a pin to get to its ratings</div>
+<h1 class="explore-title">{{ts["title"]}}</h1>
+<div class="map-tip">{{ts["tip"]}}</div>
 <div id="map" style="height: 400px;"></div>
 
 <div class="toilets-list">
     {% for toilet in toilets %}
     <a href="/toilet/{{toilet['toilet_id']}}">
         <div class="toilet">
-            <div class="name">Toilet {{toilet["toilet_id"]}}</div>
-            <div class="ratings">Ratings: {{toilet["rating_count"]}}</div>
-            <div class="coords">Coordinates: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
+            <div class="name">{{ts["toilet"]}} {{toilet["toilet_id"]}}</div>
+            <div class="ratings">{{ts["ratings"]}}: {{toilet["rating_count"]}}</div>
+            <div class="coords">{{ts["coords"]}}: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
         </div>
     </a>
     {% endfor %}

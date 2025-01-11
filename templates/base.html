@@ -19,8 +19,8 @@
             <span class="material-symbols-rounded menu-icon-span">menu</span>
         </div>
         <div class="links">
-            <a href="/" class="link">Home</a>
-            <a href="/explore" class="link">Explore</a>
+            <a href="/" class="link">{{ts["nav_logo"]}}</a>
+            <a href="/explore" class="link">{{ts["nav_explore"]}}</a>
 
             <a href="/" class="nomobile">
                 <div class="logo">
@@ -28,13 +28,13 @@
                 </div>
             </a>
 
-            <a href="/rate" class="link">Rate</a>
+            <a href="/rate" class="link">{{ts["nav_rate"]}}</a>
             {% if session.logged_in != True %}
                 <a href="/register">
-                    <button class="navbar-cta-btn">register</button>
+                    <button class="navbar-cta-btn">{{ts["register"]}}</button>
                 </a>
             {% else %}
-                <a href="/myprofile" class="link">Profile</a>
+                <a href="/myprofile" class="link">{{ts["nav_profile"]}}</a>
             {% endif%}
         </div>
     </div>
@@ -96,13 +96,13 @@
         {% if session.cookies == False %}
             <div class="cookie-banner">
                 <h1 class="cookie-title">
-                    No Cookies, No Flush
+                    {{ts["cookie_title"]}}
                 </h1>
                 <p class="cookie-subtitle">
-                    By staying, you agree to our essential cookies and Google Fonts. Honestly, I wouldn’t even know how to do anything sneaky!
+                    {{ts["cookie_msg"]}}
                 </p>
                 <a href="/accept-cookies">
-                    <button>Agreed</button>
+                    <button>{{ts["cookie_accept"]}}</button>
                 </a>
             </div>
         {% endif%}

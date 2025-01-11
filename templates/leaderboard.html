@@ -3,15 +3,15 @@
 {% block content %}
 
 <div class="banner">
-    <div class="title-text">Who's the toilet master?</div>
-    <div class="bottom-text">Check the leaderboard below!</div>
+    <div class="title-text">{{ts["title"]}}</div>
+    <div class="bottom-text">{{ts["bottom"]}}</div>
     <div class="icon">
         <span class="material-symbols-rounded">leaderboard</span>
     </div>
 </div>
 
 <div class="leaderboard">
-    <div class="title">Leaderboard</div>
+    <div class="title">{{ts["leaderboard"]}}</div>
     {% for entry in leaderboard %}
         <div class="entry">
             <a href="/profile/{{entry.username}}">

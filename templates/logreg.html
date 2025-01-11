@@ -5,37 +5,37 @@
 <div class="logreg-form">
     {% if action == "login" %}
         <form action="/login/process" enctype="multipart/form-data" method="post">
-            <h2 class="title">Log into go2klo</h2>
+            <h2 class="title">{{ts["login_title"]}}</h2>
             
             {% if msg != None %}
                 <div class="logreg-msg msg">{{msg}}</div>
             {% endif %}
 
-            <label for="username">Enter your username:</label>
+            <label for="username">{{ts["username"]}}:</label>
             <input type="text" name="username" id="username" placeholder="username">
-            <label for="password">Enter your password:</label>
+            <label for="password">{{ts["password"]}}:</label>
             <input type="password" name="password" id="password" placeholder="password">
-            <button type="submit">Login</button>
+            <button type="submit">{{ts["login"]}}</button>
             <a href="/register">
-                <div class="switch-form">I'd rather register</div>
+                <div class="switch-form">{{ts["rather_register"]}}</div>
             </a>
         </form>
     {% endif %}
     {% if action == "register" %}
         <form action="/register/process" enctype="multipart/form-data" method="post">
-            <h2 class="title">Register into go2klo</h2>
+            <h2 class="title">{{ts["register_title"]}}</h2>
 
             {% if msg != None %}
                 <div class="logreg-msg msg">{{msg}}</div>
             {% endif %}
 
-            <label for="username">Enter your username:</label>
-            <input type="text" name="username" id="username" placeholder="public username">
-            <label for="password">Enter your password:</label>
+            <label for="username">{{ts["username"]}}:</label>
+            <input type="text" name="username" id="username" placeholder="{{ts['public']}} username">
+            <label for="password">{{ts["password"]}}:</label>
             <input type="password" name="password" id="password" placeholder="password">
-            <button type="submit">Register</button>
+            <button type="submit">{{ts["register"]}}</button>
             <a href="/login">
-                <div class="switch-form">I'd rather login</div>
+                <div class="switch-form">{{ts["rather_login"]}}</div>
             </a>
         </form>
     {% endif %}

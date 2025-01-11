@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Details - Toilet #{{ toilet.toilet_id }}</h1>
+<h1>{{ts["title"]}}{{ toilet.toilet_id }}</h1>
 
 <!-- Map container -->
 <div id="map"></div>
 
 <!-- Toilet details -->
-<p><strong>Address:</strong> {{toilet.address}} <br> <strong>Location:</strong> Latitude: {{ toilet.latitude }}, Longitude: {{ toilet.longitude }}</p>
+<p><strong>{{ts["address"]}}</strong> {{toilet.address}} <br> <strong>{{ts["location"]}}</strong> {{ts["latitude"]}} {{ toilet.latitude }}, {{ts["longitude"]}} {{ toilet.longitude }}</p>
 
 <!-- Average Ratings -->
 <h2>Average Ratings:</h2>
 <ul>
-    <li><strong>Cleanliness:</strong> {{ toilet.avg_cleanliness | round(2) }}</li>
-    <li><strong>Supplies:</strong> {{ toilet.avg_supplies | round(2) }}</li>
-    <li><strong>Privacy:</strong> {{ toilet.avg_privacy | round(2) }}</li>
+    <li><strong>{{ts["cleanliness"]}}</strong> {{ toilet.avg_cleanliness | round(2) }}</li>
+    <li><strong>{{ts["supplies"]}}</strong> {{ toilet.avg_supplies | round(2) }}</li>
+    <li><strong>{{ts["privacy"]}}</strong> {{ toilet.avg_privacy | round(2) }}</li>
 </ul>
 
 <h2>Ratings:</h2>
@@ -22,10 +22,10 @@
     {% for rating in toilet.ratings %}
         <li>
             <a href="/profile/{{ rating.username }}"><strong>@{{ rating.username }}</strong>:</a>
-            Cleanliness: {{ rating.cleanliness }},
-            Supplies: {{ rating.supplies }},
-            Privacy: {{ rating.privacy }},
-            Comment: "{{ rating.comment }}"
+            {{ts["cleanliness"]}}: {{ rating.cleanliness }},
+            {{ts["supplies"]}}: {{ rating.supplies }},
+            {{ts["privacy"]}}: {{ rating.privacy }},
+            {{ts["comment"]}}: "{{ rating.comment }}"
         </li>
     {% endfor %}
 </ul>
