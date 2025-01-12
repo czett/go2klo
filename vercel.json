@@ -6,7 +6,7 @@
     "routes": [
         { "src": "/(.*)", "dest": "app.py" },
         {
-            "src": "/styles.css",
+            "src": "static/style.css",
             "headers": {
                 "Cache-Control": "no-cache, no-store, must-revalidate"
             }
