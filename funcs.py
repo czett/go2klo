@@ -413,6 +413,7 @@ def get_users_sorted_by_ratings():
                     LEFT JOIN ratings r ON u.username = r.username
                     GROUP BY u.username
                     ORDER BY rating_count DESC
+                    LIMIT 50
                 """)
                 users = cur.fetchall()
 
