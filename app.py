@@ -93,11 +93,14 @@ def accept_cookies():
     return redirect("/")
 
 @app.route("/switchlang")
-def switchlang(): 
-    if session["lang"] == "german":
-        session["lang"] = "english"
+def switchlang():
+    langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"]
+    clang = session["lang"]
+
+    if clang != langs[-1]:
+        session["lang"] = langs[1 + langs.index(clang)] 
     else:
-        session["lang"] = "german"
+        session["lang"] = langs[0]
 
     session.modified = True   
     return redirect("/")
