@@ -761,6 +761,13 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
 }
 
+/* disabled button, in context: form with invalid location */
+
+button:disabled{
+    filter: saturate(0);
+    cursor: not-allowed;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
