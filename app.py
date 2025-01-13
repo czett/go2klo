@@ -119,8 +119,8 @@ def process_register():
 
         if not username.isalpha(): # only letters
             return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session)
-
-		username = username.lower()
+            
+        username = username.lower()
 
         if username and password:
             response = funcs.register(username, password)
