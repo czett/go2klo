@@ -119,6 +119,8 @@ def process_register():
 
         if not username.isalpha(): # only letters
             return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session)
+            
+        username = username.lower()
 
         if username and password:
             response = funcs.register(username, password)
@@ -287,12 +289,12 @@ def clear_notifications():
 
     return redirect("/")
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     code = 500
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#     return redirect(f"/error/{code}")
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
 
 @app.route("/error/<code>")
 def error(code):
