@@ -51,4 +51,4 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - icon-icons and Google Fonts for icons and logos
 - flag-icons for language switcher from [flagicons.lipis.dev](https://flagicons.lipis.dev/) <3
 
-[go2klo](https://go2klo.vercel.app/), dev'ed 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.com/), dev'ed 11/24 (idea and prototype 10/2022)
