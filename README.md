@@ -26,6 +26,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Notification system, including pushing new ones and marking old ones as read.
 - Leaderboard of users with most ratings
 - Chunk Loading for explore page!
+- In Google Index since 15th January, 2025
 
 ## 🛠️ Tech Stack  
 
