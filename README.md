@@ -21,7 +21,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Comment on toilets that are closed, under construction, or just plain terrifying.
 
 ### 💻 Miscellaneous
-- Mutliple languages (German and English as of now).
+- Mutliple languages (9 in total)
 - Responsive design, conveniently usable on mobile now.
 - Notification system, including pushing new ones and marking old ones as read.
 - Leaderboard of users with most ratings
