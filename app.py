@@ -144,7 +144,7 @@ def logout():
 def rate():
     check_cookie_status()
     if not check_login_status():
-        return redirect("/")
+        return redirect("/login")
     
     ts = get_texts(session["lang"], "get_location")
 
