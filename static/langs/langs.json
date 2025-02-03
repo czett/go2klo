@@ -102,6 +102,11 @@
                 "supplies": "Supplies",
                 "privacy": "Privacy",
                 "comment": "Comment"
+            },
+            "trending": {
+                "title": "Which loo is the talk of the town?",
+                "subtitle": "Check out the most rated toilets below!",
+                "leaderboard": "Leaderboard"
             }
         }, "german": {
             "index": {
@@ -205,6 +210,11 @@
                 "supplies": "Ausstattung",
                 "privacy": "Privatsphäre",
                 "comment": "Kommentar"
+            },
+            "trending": {
+                "title": "Welche Toilette ist gerade im Gespräch?",
+                "subtitle": "Schau dir die am meisten bewerteten Toiletten unten an!",
+                "leaderboard": "Bestenliste"
             }
         }, "bulgarian": {
             "index": {
@@ -308,6 +318,11 @@
                 "supplies": "Консумативи",
                 "privacy": "Поверителност",
                 "comment": "Коментар"
+            },
+            "trending": {
+                "title": "Коя тоалетна е най-обсъждана?",
+                "subtitle": "Вижте най-оценените тоалетни по-долу!",
+                "leaderboard": "Класация"
             }
         }, "french": {
             "index": {
@@ -411,6 +426,11 @@
                 "supplies": "Fournitures",
                 "privacy": "Intimité",
                 "comment": "Commentaire"
+            },
+            "trending": {
+                "title": "Quelle toilette fait parler d'elle ?",
+                "subtitle": "Découvrez les toilettes les plus notées ci-dessous !",
+                "leaderboard": "Classement"
             }
         }, "spanish": {
             "index": {
@@ -514,6 +534,11 @@
                 "supplies": "Suministros",
                 "privacy": "Privacidad",
                 "comment": "Comentario"
+            },
+            "trending": {
+                "title": "¿Qué baño es el tema de conversación?",
+                "subtitle": "¡Consulta los baños más calificados a continuación!",
+                "leaderboard": "Tabla de clasificación"
             }
         }, "italian": {
             "index": {
@@ -617,6 +642,11 @@
                 "supplies": "Forniture",
                 "privacy": "Privacy",
                 "comment": "Commento"
+            },
+            "trending": {
+                "title": "Tendenze Bagni",
+                "subtitle": "Dai un'occhiata ai bagni più valutati qui sotto!",
+                "leaderboard": "Classifica"
             }
         }, "norwegian": {
             "index": {
@@ -720,6 +750,11 @@
                 "supplies": "Forsyninger",
                 "privacy": "Privatliv",
                 "comment": "Kommentar"
+            },
+            "trending": {
+                "title": "Trender Toaletter",
+                "subtitle": "Sjekk ut de mest vurderte toalettene nedenfor!",
+                "leaderboard": "Leaderboard"
             }
         }, "austrian": {
             "index": {
@@ -823,6 +858,11 @@
                 "supplies": "Ausstattung",
                 "privacy": "Privatsphäre",
                 "comment": "Kommentar"
+            },
+            "trending": {
+                "title": "Welches Klo ist gerade der Renner?",
+                "subtitle": "Schau dir die meistbewerteten Toiletten unten an!",
+                "leaderboard": "Bestenliste"
             }
         }, "albanian": {
             "index": {
@@ -926,6 +966,11 @@
                 "supplies": "Furnizime",
                 "privacy": "Privatësia",
                 "comment": "Koment"
+            },
+            "trending": {
+                "title": "Cili tualet është më i përfoluri?",
+                "subtitle": "Shiko tualetet më të vlerësuara më poshtë!",
+                "leaderboard": "Tabela e Liderëve"
             }
         }
     }

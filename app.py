@@ -284,7 +284,7 @@ def leaderboard():
 @app.route("/trending")
 def trending():    
     leaderboard = funcs.get_top_10_toilets()
-    ts = get_texts(session["lang"], "leaderboard")
+    ts = get_texts(session["lang"], "trending")
     return render_template("trends.html", ts=ts, leaderboard=leaderboard, session=session)
 
 @app.route("/clear-notifications")
