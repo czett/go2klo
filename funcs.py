@@ -514,3 +514,23 @@ def get_top_10_toilets():
         return {"error": str(e)}
     finally:
         conn.close()
+
+def convert_ratings_usernames_to_lowercase():
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT rating_id, username FROM ratings")
+                ratings = cur.fetchall()
+                
+                for rating_id, username in ratings:
+                    lower_username = username.lower()
+                    cur.execute(
+                        "UPDATE ratings SET username = %s WHERE rating_id = %s",
+                        (lower_username, rating_id)
+                    )
+        return True, "Ratings usernames converted to lowercase successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
