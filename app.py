@@ -122,6 +122,9 @@ def process_register():
             
         username = username.lower()
 
+        if len(username) > 20:
+            return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session)
+
         if username and password:
             response = funcs.register(username, password)
             if response[0] == True:
@@ -144,7 +147,7 @@ def logout():
 def rate():
     check_cookie_status()
     if not check_login_status():
-        return redirect("/")
+        return redirect("/login")
     
     ts = get_texts(session["lang"], "get_location")
 
@@ -277,6 +280,12 @@ def leaderboard():
     leaderboard = funcs.get_users_sorted_by_ratings()
     ts = get_texts(session["lang"], "leaderboard")
     return render_template("leaderboard.html", ts=ts, leaderboard=leaderboard, session=session)
+
+@app.route("/trending")
+def trending():    
+    leaderboard = funcs.get_top_10_toilets()
+    ts = get_texts(session["lang"], "trending")
+    return render_template("trends.html", ts=ts, leaderboard=leaderboard, session=session)
 
 @app.route("/clear-notifications")
 def clear_notifications():

@@ -469,3 +469,68 @@ def get_country_from_coordinates(lat, lon):
     except Exception as e:
         print(f"Error fetching country: {e}")
     return "unknown"
+
+def convert_usernames_to_lowercase():
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT user_id, username FROM users")
+                users = cur.fetchall()
+                
+                for user_id, username in users:
+                    lower_username = username.lower()
+                    cur.execute(
+                        "UPDATE users SET username = %s WHERE user_id = %s",
+                        (lower_username, user_id)
+                    )
+        return True, "Usernames converted to lowercase successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def get_top_10_toilets():
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT 
+                        t.toilet_id, 
+                        t.latitude, 
+                        t.longitude,
+                        COUNT(r.rating_id) AS rating_count
+                    FROM toilets t
+                    LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
+                    GROUP BY t.toilet_id
+                    ORDER BY rating_count DESC
+                    LIMIT 10
+                """)
+                toilets = cur.fetchall()
+
+                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def convert_ratings_usernames_to_lowercase():
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT rating_id, username FROM ratings")
+                ratings = cur.fetchall()
+                
+                for rating_id, username in ratings:
+                    lower_username = username.lower()
+                    cur.execute(
+                        "UPDATE ratings SET username = %s WHERE rating_id = %s",
+                        (lower_username, rating_id)
+                    )
+        return True, "Ratings usernames converted to lowercase successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()

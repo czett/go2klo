@@ -4,7 +4,7 @@
 
 <div class="banner">
     <div class="title-text">{{ts["title"]}}</div>
-    <div class="bottom-text">{{ts["bottom"]}}</div>
+    <div class="bottom-text">{{ts["subtitle"]}}</div>
     <div class="icon">
         <span class="material-symbols-rounded">leaderboard</span>
     </div>
@@ -14,8 +14,8 @@
     <div class="title">{{ts["leaderboard"]}}</div>
     {% for entry in leaderboard %}
         <div class="entry">
-            <a href="/profile/{{entry.username}}">
-                <div class="username">{{loop.index}}. @{{entry.username}}</div>
+            <a href="/toilet/{{entry['toilet_id']}}">
+                <div class="username">{{ loop.index }}. Toilet #{{entry["toilet_id"]}}</div>
             </a>
             <div class="ratings">{{entry.rating_count}}</div>
         </div>
