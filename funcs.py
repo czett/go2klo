@@ -469,3 +469,23 @@ def get_country_from_coordinates(lat, lon):
     except Exception as e:
         print(f"Error fetching country: {e}")
     return "unknown"
+
+def convert_usernames_to_lowercase():
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT user_id, username FROM users")
+                users = cur.fetchall()
+                
+                for user_id, username in users:
+                    lower_username = username.lower()
+                    cur.execute(
+                        "UPDATE users SET username = %s WHERE user_id = %s",
+                        (lower_username, user_id)
+                    )
+        return True, "Usernames converted to lowercase successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()

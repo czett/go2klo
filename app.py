@@ -122,6 +122,9 @@ def process_register():
             
         username = username.lower()
 
+        if len(username) > 20:
+            return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session)
+
         if username and password:
             response = funcs.register(username, password)
             if response[0] == True:
