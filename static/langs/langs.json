@@ -22,7 +22,9 @@
                 "rated_banner": "keep exploring here!",
                 "cta_banner": "So, what are you waiting for? Get started now!",
                 "login": "Login",
-                "register": "Register"
+                "register": "Register",
+                "trending": "Trending Toilets",
+                "trending_desc": "Discover the toilets that are making a splash! Who knew porcelain could be so popular? Dive into the top-rated loos below!"
             },
             "base": {
                 "nav_logo": "Home",
@@ -130,7 +132,9 @@
                 "rated_banner": "Erkunde hier weiter!",
                 "cta_banner": "Also, worauf wartest du? Leg jetzt los!",
                 "login": "Einloggen",
-                "register": "Registrieren"
+                "register": "Registrieren",
+                "trending": "Trendende Toiletten",
+                "trending_desc": "Entdecke die Toiletten, die für Aufsehen sorgen! Wer hätte gedacht, dass Porzellan so beliebt sein könnte? Tauche hier in die am besten bewerteten Klos ein!"
             },
             "base": {
                 "nav_logo": "Startseite",
@@ -238,7 +242,9 @@
                 "rated_banner": "разглеждайте още тук!",
                 "cta_banner": "Какво чакате? Започнете сега!",
                 "login": "Вход",
-                "register": "Регистрация"
+                "register": "Регистрация",
+                "trending": "Тенденции в тоалетните",
+                "trending_desc": "Открийте тоалетните, които правят впечатление! Кой би предположил, че порцеланът може да бъде толкова популярен? Заплътете в най-високо оценените тоалетни по-долу!"
             },
             "base": {
                 "nav_logo": "Начало",
@@ -346,7 +352,9 @@
                 "rated_banner": "continuez à explorer ici !",
                 "cta_banner": "Alors, qu'attendez-vous ? Lancez-vous maintenant !",
                 "login": "Connexion",
-                "register": "Inscription"
+                "register": "Inscription",
+                "trending": "Toilettes tendance",
+                "trending_desc": "Découvrez les toilettes qui font sensation ! Qui aurait cru que la porcelaine pouvait être si populaire ? Plongez dans les toilettes les mieux notées ci-dessous !"
             },
             "base": {
                 "nav_logo": "Accueil",
@@ -454,7 +462,9 @@
                 "rated_banner": "¡sigue explorando aquí!",
                 "cta_banner": "Entonces, ¿qué estás esperando? ¡Comienza ahora!",
                 "login": "Iniciar sesión",
-                "register": "Registrarse"
+                "register": "Registrarse",
+                "trending": "Baños de Tendencia",
+                "trending_desc": "¡Descubre los baños que están causando sensación! ¿Quién hubiera pensado que la porcelana podría ser tan popular? ¡Sumérgete en los baños mejor calificados a continuación!"
             },
             "base": {
                 "nav_logo": "Inicio",
@@ -562,7 +572,9 @@
                 "rated_banner": "continua a esplorare qui!",
                 "cta_banner": "Allora, cosa stai aspettando? Inizia subito!",
                 "login": "Accedi",
-                "register": "Registrati"
+                "register": "Registrati",
+                "trending": "Bagni in Tendenza",
+                "trending_desc": "Scopri i bagni che stanno facendo tendenza! Chi avrebbe mai pensato che la porcellana potesse essere così popolare? Tuffati nei bagni meglio valutati qui sotto!"
             },
             "base": {
                 "nav_logo": "Home",
@@ -670,7 +682,9 @@
                 "rated_banner": "fortsett å utforske her!",
                 "cta_banner": "Så, hva venter du på? Kom i gang nå!",
                 "login": "Logg inn",
-                "register": "Registrer"
+                "register": "Registrer",
+                "trending": "Trendende toaletter",
+                "trending_desc": "Oppdag toaletter som gjør inntrykk! Hvem visste at porselen kunne være så populært? Dykk ned i de best rangerte toalettene nedenfor!"
             },
             "base": {
                 "nav_logo": "Hjem",
@@ -778,7 +792,9 @@
                 "rated_banner": "Bleib dran und schau weiter!",
                 "cta_banner": "Na, was wartest noch? Komm und leg los, es gibt Klos zu bewerten!",
                 "login": "Einloggen",
-                "register": "Registrieren"
+                "register": "Registrieren",
+                "trending": "Trendige Toiiletten",
+                "trending_desc": "Entdeck die Klos, die grad voll im Trend sind! Wer hätt's gedacht, dass Porzellan so beliebt sein kann? Tauch ein in die besten Klos unten!"
             },
             "base": {
                 "nav_logo": "Startseite",
@@ -886,7 +902,9 @@
                 "rated_banner": "vazhdo eksplorimin këtu!",
                 "cta_banner": "Pra, çfarë po pret? Filloni tani!",
                 "login": "Kyçu",
-                "register": "Regjistrohu"
+                "register": "Regjistrohu",
+                "trending": "Tualetet e Trendit",
+                "trending_desc": "Zbuloni tualetet që po bëjnë sensacion! Kush do të kishte menduar që porcelani mund të ishte kaq i popullarizuar? Zhytuni në tualetet më të vlerësuara më poshtë!"
             },
             "base": {
                 "nav_logo": "Kryefaqja",
