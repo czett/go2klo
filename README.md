@@ -37,8 +37,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features/planned improvements
 
-- Trending toilets?
 - Discover the best-rated toilets with our *Royal Flush Rankings*.
+- QOL improvement -> showing toilet location as often as possible (currently not possible due to computational difficulties/inefficient ideas of mine)
 
 ## 🤔 Why go2klo?  
 
