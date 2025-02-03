@@ -281,6 +281,12 @@ def leaderboard():
     ts = get_texts(session["lang"], "leaderboard")
     return render_template("leaderboard.html", ts=ts, leaderboard=leaderboard, session=session)
 
+@app.route("/trending")
+def trending():    
+    leaderboard = funcs.get_top_10_toilets()
+    ts = get_texts(session["lang"], "leaderboard")
+    return render_template("trends.html", ts=ts, leaderboard=leaderboard, session=session)
+
 @app.route("/clear-notifications")
 def clear_notifications():
     if not check_login_status():
@@ -305,4 +311,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

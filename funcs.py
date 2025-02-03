@@ -489,3 +489,28 @@ def convert_usernames_to_lowercase():
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def get_top_10_toilets():
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT 
+                        t.toilet_id, 
+                        t.latitude, 
+                        t.longitude,
+                        COUNT(r.rating_id) AS rating_count
+                    FROM toilets t
+                    LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
+                    GROUP BY t.toilet_id
+                    ORDER BY rating_count DESC
+                    LIMIT 10
+                """)
+                toilets = cur.fetchall()
+
+                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
