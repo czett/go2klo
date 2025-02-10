@@ -40,11 +40,20 @@
                 <a href="/myprofile" class="link">{{ts["nav_profile"]}}</a>
             {% endif%}
 
+            {% set langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"] %}
             <div class="lang-switch">
-                {% set lang = session["lang"] %}
-                <a href="/switchlang">
-                    <img src="{{ url_for('static', filename='icons/' + lang + '.svg') }}" alt="{{ lang }}">
-                </a>
+                {% set lang = session.lang %}
+                <img class="current-lang" src="{{ url_for('static', filename='icons/' + lang + '.svg') }}" alt="{{ l }}">
+            
+                <div class="lang-list">
+                    {% for l in langs %}
+                        {% if l != lang %}
+                            <a href="/switchlang/{{l}}">
+                                <img src="{{ url_for('static', filename='icons/' + l + '.svg') }}" alt="{{ l }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
@@ -125,10 +134,12 @@
 
             if (iconBtn.dataset.collapsed == "1"){
                 document.querySelector(".links").style.visibility = "visible";
+                document.querySelector(".lang-list").style.visibility = "visible";
                 document.querySelector(".menu-icon-span").style.rotate = "90deg";
                 iconBtn.dataset.collapsed = "0";
             }else{
                 document.querySelector(".links").style.visibility = "hidden";
+                document.querySelector(".lang-list").style.visibility = "hidden";
                 document.querySelector(".menu-icon-span").style.rotate = "0deg";
                 iconBtn.dataset.collapsed = "1";
             }
