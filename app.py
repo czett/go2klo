@@ -118,34 +118,35 @@ def register():
 def process_register():
     check_cookie_status()
     ts = get_texts(session["lang"], "logreg")
-    # try:
-    username = request.form["username"]
-    password = request.form["password"]
+    
+    try:
+        username = request.form["username"]
+        password = request.form["password"]
 
-    if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
-        return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
-    elif not re.match("^[A-Za-z0-9_]*$", password):
-        return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
-    elif len(username) < 3 or len(username) > 20:
-        return render_template("logreg.html", action="register", msg="Username too short or too long! (min. 3, max. 20 characters)", session=session, ts=ts)
-    elif len(password) < 6:
-        return render_template("logreg.html", action="register", msg="Password too short! (min. 6 characters)", session=session, ts=ts)
-        
-    username = username.lower()
+        if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
+        elif not re.match("^[A-Za-z0-9_]*$", password):
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
+        elif len(username) < 3 or len(username) > 20:
+            return render_template("logreg.html", action="register", msg="Username too short or too long! (min. 3, max. 20 characters)", session=session, ts=ts)
+        elif len(password) < 6:
+            return render_template("logreg.html", action="register", msg="Password too short! (min. 6 characters)", session=session, ts=ts)
+            
+        username = username.lower()
 
-    if len(username) > 20:
-        return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
+        if len(username) > 20:
+            return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
 
-    if username and password:
-        response = funcs.register(username, password)
-        if response[0] == True:
-            session["user"] = username
-            session["logged_in"] = True
-            return redirect("/")
-        else:
-            return render_template("logreg.html", action="register", msg=response[1], session=session, ts=ts)
-    # except:
-    #     return redirect("/explore")
+        if username and password:
+            response = funcs.register(username, password)
+            if response[0] == True:
+                session["user"] = username
+                session["logged_in"] = True
+                return redirect("/")
+            else:
+                return render_template("logreg.html", action="register", msg=response[1], session=session, ts=ts)
+    except:
+        return redirect("/explore")
     
     return "Congrats, you worked around my code :)"
 
@@ -203,12 +204,6 @@ def explore():
     ts = get_texts(session["lang"], "explore")
     toilets = funcs.get_all_toilets()
     return render_template("explore.html", toilets=toilets, ts=ts, session=session)
-
-# old, from before chunking below :)
-# @app.route("/api/toilets")
-# def toilets_api():
-#     toilets = funcs.get_all_toilets()
-#     return toilets
 
 @app.route("/api/toilets")
 def toilets_api(): # thanks GPT here :o
@@ -309,17 +304,17 @@ def clear_notifications():
 
     return redirect("/")
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     code = 500
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#     return redirect(f"/error/{code}")
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
 
-# @app.route("/error/<code>")
-# def error(code):
-#     ts = get_texts(session["lang"], "error")
-#     return render_template("error.html", ts=ts, code=f"error {code} :(")
+@app.route("/error/<code>")
+def error(code):
+    ts = get_texts(session["lang"], "error")
+    return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
     app.run(debug=True, port=7000)
