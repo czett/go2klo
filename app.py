@@ -108,6 +108,19 @@ def switchlang():
     session.modified = True   
     return redirect("/")
 
+@app.route("/switchlang/<lang>")
+def switchlang_picked(lang):
+    langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"]
+    # clang = session["lang"]
+
+    if lang in langs:
+        session["lang"] = lang
+    else:
+        return redirect("/error/404")
+
+    session.modified = True   
+    return redirect("/")
+
 @app.route("/register")
 def register():
     check_cookie_status()

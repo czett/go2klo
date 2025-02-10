@@ -760,8 +760,9 @@ input[type="range"]::-webkit-slider-thumb {
     transform: translateY(-50%);
     aspect-ratio: 1;
     width: 3vh;
-    cursor: pointer;
     display: flex;
+    /* cursor: pointer;
+    display: flex;*/
     justify-content: center;
     align-items: center;
 }
@@ -769,6 +770,25 @@ input[type="range"]::-webkit-slider-thumb {
 .lang-switch a{
     font-size: 2rem;
     width: 100%;
+}
+
+.lang-switch:hover .lang-list{
+    visibility: visible;
+}
+
+.lang-switch .lang-list{
+    padding-top: .2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    position: absolute;
+    inset: auto auto 0 50%;
+    transform: translate(-50%, 100%);
+    z-index: 1000;
+    width: 3vh;
+    gap: .2vh;
+    visibility: hidden;
 }
 
 /* disabled button, in context: form with invalid location */
@@ -803,7 +823,7 @@ button:disabled{
 
     .notifications-box{
         max-width: 30%;
-        inset: auto 2vw 8vw auto;
+        inset: auto auto 9vw 2vw;
     }
 
     .toilets-list .toilet{
@@ -847,7 +867,7 @@ button:disabled{
     
     .notifications-box{
         max-width: 30%;
-        inset: auto 2vw 11vw auto;
+        inset: auto auto 11vw 2vw;
     }
     
     .toilets-list{
@@ -1004,5 +1024,29 @@ button:disabled{
 
     .lang-switch{
         position: static;
+        width: auto;
+        border: none;
+        aspect-ratio: auto;
+        display: block;
+    }
+
+    .current-lang{
+        display: none;
+    }
+
+    .lang-list{
+        position: static !important;
+        flex-direction: row !important;
+        transform: translate(0, 0) !important;
+        width: 50vw !important;
+        gap: 1.5vw !important;
+    }
+
+    .lang-list a{
+        flex: 1;
+    }
+
+    .lang-list a img{
+        width: 100%;
     }
 }
