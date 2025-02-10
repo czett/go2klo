@@ -412,6 +412,7 @@ def get_users_sorted_by_ratings():
                     FROM users u
                     LEFT JOIN ratings r ON u.username = r.username
                     GROUP BY u.username
+                    HAVING COUNT(r.rating_id) > 0
                     ORDER BY rating_count DESC
                     LIMIT 50
                 """)
