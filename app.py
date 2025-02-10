@@ -115,6 +115,8 @@ def switchlang_picked(lang):
 
     if lang in langs:
         session["lang"] = lang
+    else:
+        return redirect("/error/404")
 
     session.modified = True   
     return redirect("/")
