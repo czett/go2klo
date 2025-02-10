@@ -822,7 +822,7 @@ button:disabled{
 
     .notifications-box{
         max-width: 30%;
-        inset: auto 2vw 8vw auto;
+        inset: auto auto 9vw 2vw;
     }
 
     .toilets-list .toilet{
@@ -866,7 +866,7 @@ button:disabled{
     
     .notifications-box{
         max-width: 30%;
-        inset: auto 2vw 11vw auto;
+        inset: auto auto 11vw 2vw;
     }
     
     .toilets-list{
