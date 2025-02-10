@@ -69,6 +69,9 @@ def login():
 
 @app.route("/login/process", methods=["POST"])
 def process_login():    
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+
     try:
         username = request.form["username"]
         password = request.form["password"]
@@ -80,7 +83,7 @@ def process_login():
                 session["logged_in"] = True
                 return redirect("/")
             else:
-                return render_template("logreg.html", action="login", msg=response[1], session=session)
+                return render_template("logreg.html", action="login", msg=response[1], session=session, ts=ts)
     except:
         return redirect("/")
 
@@ -112,18 +115,27 @@ def register():
     return render_template("logreg.html", action="register", ts=ts, msg=None, session=session)
 
 @app.route("/register/process", methods=["POST"])
-def process_register():    
+def process_register():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+    
     try:
         username = request.form["username"]
         password = request.form["password"]
 
-        if not username.isalpha(): # only letters
-            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session)
+        if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
+        elif not re.match("^[A-Za-z0-9_]*$", password):
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
+        elif len(username) < 3 or len(username) > 20:
+            return render_template("logreg.html", action="register", msg="Username too short or too long! (min. 3, max. 20 characters)", session=session, ts=ts)
+        elif len(password) < 6:
+            return render_template("logreg.html", action="register", msg="Password too short! (min. 6 characters)", session=session, ts=ts)
             
         username = username.lower()
 
         if len(username) > 20:
-            return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session)
+            return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
 
         if username and password:
             response = funcs.register(username, password)
@@ -132,9 +144,9 @@ def process_register():
                 session["logged_in"] = True
                 return redirect("/")
             else:
-                return render_template("logreg.html", action="register", msg=response[1], session=session)
+                return render_template("logreg.html", action="register", msg=response[1], session=session, ts=ts)
     except:
-        return redirect("/")
+        return redirect("/explore")
     
     return "Congrats, you worked around my code :)"
 
@@ -192,12 +204,6 @@ def explore():
     ts = get_texts(session["lang"], "explore")
     toilets = funcs.get_all_toilets()
     return render_template("explore.html", toilets=toilets, ts=ts, session=session)
-
-# old, from before chunking below :)
-# @app.route("/api/toilets")
-# def toilets_api():
-#     toilets = funcs.get_all_toilets()
-#     return toilets
 
 @app.route("/api/toilets")
 def toilets_api(): # thanks GPT here :o

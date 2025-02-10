@@ -264,8 +264,10 @@ body, html {
     position: absolute;
     inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);
-    /* background-color: green; */
-    aspect-ratio: 0.75; /* revise */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 0.8; /* revise */ /* nuh uh it works just fine */
     width: 25%;
 }
 
@@ -275,6 +277,7 @@ body, html {
     align-items: center;
     padding: 2vh 0;
     gap: 1vh;
+    width: 100%;
 }
 
 .logreg-form .title{
@@ -462,6 +465,11 @@ input[type="range"]::-webkit-slider-thumb {
 .toilets-list .toilet .name{
     font-size: 2rem;
     font-weight: 600;
+}
+
+.at-mention{
+    font-weight: 600;
+    text-decoration: underline;
 }
 
 /* user profile */
@@ -788,10 +796,6 @@ button:disabled{
     .rating-form{
         width: 75%;
     }
-    
-    .rating-form form{
-        width: 100%;
-    }
 
     .logreg-form{
         width: 50%;
@@ -874,9 +878,22 @@ button:disabled{
         inset: .5vh .5vh auto auto;
         transform: translateY(0);
     }
+
+    .error-box{
+        width: 85%;
+    }
+    
+    .error-box .code{
+        font-size: 3rem;
+    }
+    
+    /* .error-box .error-comment{
+        text-align: center;
+        margin-bottom: 1vh;
+    } */
 }
 
-@media (width < 700px){
+@media (width < 850px){
     .nomobile{
         display: none;
     }
