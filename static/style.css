@@ -760,8 +760,6 @@ input[type="range"]::-webkit-slider-thumb {
     aspect-ratio: 1;
     width: 3vh;
     display: flex;
-    /* cursor: pointer;
-    display: flex;*/
     justify-content: center;
     align-items: center;
 }
