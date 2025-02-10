@@ -263,8 +263,10 @@ body, html {
     position: absolute;
     inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);
-    /* background-color: green; */
-    aspect-ratio: 0.75; /* revise */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 0.75; /* revise */ /* nuh uh it works just fine */
     width: 25%;
 }
 
@@ -274,6 +276,7 @@ body, html {
     align-items: center;
     padding: 2vh 0;
     gap: 1vh;
+    width: 100%;
 }
 
 .logreg-form .title{
@@ -787,10 +790,6 @@ button:disabled{
     .rating-form{
         width: 75%;
     }
-    
-    .rating-form form{
-        width: 100%;
-    }
 
     .logreg-form{
         width: 50%;
@@ -875,7 +874,7 @@ button:disabled{
     }
 }
 
-@media (width < 700px){
+@media (width < 850px){
     .nomobile{
         display: none;
     }
