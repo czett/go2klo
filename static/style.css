@@ -266,7 +266,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    aspect-ratio: 0.75; /* revise */ /* nuh uh it works just fine */
+    aspect-ratio: 0.8; /* revise */ /* nuh uh it works just fine */
     width: 25%;
 }
 
