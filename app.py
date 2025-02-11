@@ -181,6 +181,7 @@ def rate():
     
     ts = get_texts(session["lang"], "get_location")
 
+	return redirect("/error/bjarne")
     return render_template("get_location.html", session=session, ts=ts)
 
 @app.route("/rate/process", methods=["POST"])
