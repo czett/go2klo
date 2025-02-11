@@ -213,6 +213,9 @@ def finish_rating():
     
     comment = profanity.censor(comment)
 
+    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s]*$", comment, re.UNICODE):  
+        return render_template("rate.html", msg="Invalid chars in comment", session=session)
+
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
     if response[0] == True:
