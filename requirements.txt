@@ -11,3 +11,4 @@ geopy==2.3.0
 psycopg[binary]
 requests
 python-dotenv
+better_profanity
