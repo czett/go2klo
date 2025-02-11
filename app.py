@@ -158,7 +158,7 @@ def process_register_auth():
         code = request.form["authcode"]
         if int(code) == int(auth_code):
             username, password, email = session["creds"]
-            response = funcs.register(username, password)
+            response = funcs.register(username, password, email)
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True

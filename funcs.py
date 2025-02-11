@@ -53,19 +53,19 @@ def send_verification_email(recipient_email, auth_code):
 def get_db_connection():
     return psycopg.connect(**DB_CONFIG)
 
-def register(username: str, password: str):
+def register(username: str, password: str, email: str):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO users (username, password) VALUES (%s, %s)",
-                    (username, hashed_password.decode()),
+                    "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
+                    (username, hashed_password.decode(), email),
                 )
         return True, "Success"
     except psycopg.errors.UniqueViolation:
-        return False, "Username already exists"
+        return False, "Username or email already exists"
     except Exception as e:
         return False, f"Error: {e}"
     finally:
