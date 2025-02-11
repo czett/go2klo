@@ -206,6 +206,8 @@ def finish_rating():
     privacy = request.form["privacy"]
     comment = request.form["comment"]
     user = session["user"]
+    
+    comment = profanity.censor_text(comment)
 
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
