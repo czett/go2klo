@@ -7,7 +7,10 @@ from math import radians, sin, cos, sqrt, atan2
 import json
 import app
 import os
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
+import random
 
 try:
     load_dotenv()
@@ -22,22 +25,62 @@ DB_CONFIG = {
     "port": os.getenv("DB_PORT")
 }
 
+api_key = os.getenv("MAIL")
+configuration = sib_api_v3_sdk.Configuration()
+configuration.api_key["api-key"] = api_key
+api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
+def generate_auth_code():
+    return ''.join([str(random.randint(0, 9)) for _ in range(6)])
+
+def send_verification_email(recipient_email, auth_code):
+    sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
+    to = [{"email": recipient_email, "name": recipient_email}]
+    
+    email_data = sib_api_v3_sdk.SendSmtpEmail(
+        to=to,
+        sender=sender,
+        template_id=1,
+        params={"auth_code": auth_code}
+    )
+    
+    try:
+        api_instance.send_transac_email(email_data)
+        return True, f"Verification email sent to {recipient_email}"
+    except ApiException as e:
+        return False, f"Error sending email: {e}"
+
 def get_db_connection():
     return psycopg.connect(**DB_CONFIG)
 
-def register(username: str, password: str):
+def register(username: str, password: str, email: str):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO users (username, password) VALUES (%s, %s)",
-                    (username, hashed_password.decode()),
+                    "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
+                    (username, hashed_password.decode(), email),
                 )
         return True, "Success"
     except psycopg.errors.UniqueViolation:
-        return False, "Username already exists"
+        return False, "Username or email already exists"
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def check_username_or_email_exists(username: str, email: str):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM users WHERE username = %s OR email = %s", (username, email))
+            user = cur.fetchone()
+            if user:
+                return True, "Username or email already exists"
+            else:
+                return False, "Username and email are available"
     except Exception as e:
         return False, f"Error: {e}"
     finally:
