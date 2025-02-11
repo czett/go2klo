@@ -202,7 +202,7 @@ def process_register():
             return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
 
         if username and password:
-            if funcs.check_username_or_email_exists(username, email):
+            if funcs.check_username_or_email_exists(username, email)[0]:
                 return render_template("logreg.html", action="register", msg="Username or email already taken!", session=session, ts=ts)
             return redirect("/register/auth")
     except:
