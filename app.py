@@ -134,6 +134,45 @@ def register():
     ts = get_texts(session["lang"], "logreg")
     return render_template("logreg.html", action="register", ts=ts, msg=None, session=session)
 
+@app.route("/register/auth")
+def register_auth():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+    auth_code = funcs.generate_auth_code()
+
+    if not session.get("auth_code"):
+        session["auth_code"] = auth_code
+
+    username, password, email = session["creds"]
+    funcs.send_verification_email(email, auth_code)
+
+    return render_template("auth.html", ts=ts, session=session, msg=None)
+
+@app.route("/register/auth/check", methods=["POST"])
+def process_register_auth():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+    auth_code = session["auth_code"]
+
+    try:
+        code = request.form["authcode"]
+        if int(code) == int(auth_code):
+            username, password, email = session["creds"]
+            response = funcs.register(username, password)
+            if response[0] == True:
+                session["user"] = username
+                session["logged_in"] = True
+                session.permanent = True
+                return redirect("/")
+            else:
+                return render_template("logreg.html", action="register", ts=ts, msg=response[1], session=session)
+        else:
+            return render_template("auth.html", ts=ts, session=session, msg=f"{code}, {auth_code} Invalid code! Try again.")
+    except:
+        return redirect("/explore")
+
+    return "Congrats, you worked around my code :)"
+
 @app.route("/register/process", methods=["POST"])
 def process_register():
     check_cookie_status()
@@ -142,6 +181,8 @@ def process_register():
     try:
         username = request.form["username"]
         password = request.form["password"]
+        email = request.form["email"]
+        session["creds"] = (username, password, email)
 
         if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
             return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
@@ -161,14 +202,7 @@ def process_register():
             return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
 
         if username and password:
-            response = funcs.register(username, password)
-            if response[0] == True:
-                session["user"] = username
-                session["logged_in"] = True
-                session.permanent = True
-                return redirect("/")
-            else:
-                return render_template("logreg.html", action="register", msg=response[1], session=session, ts=ts)
+            return redirect("/register/auth")
     except:
         return redirect("/explore")
     
