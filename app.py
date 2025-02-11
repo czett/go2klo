@@ -77,6 +77,7 @@ def process_login():
         password = request.form["password"]
 
         if username and password:
+            username = username.lower()
             response = funcs.login(username, password)
             if response[0] == True:
                 session["user"] = username
