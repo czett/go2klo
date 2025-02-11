@@ -211,6 +211,7 @@ def finish_rating():
     comment = request.form["comment"]
     user = session["user"]
     
+    profanity.load_censor_words()
     comment = profanity.censor(comment)
 
     if not re.match(r"^[\w!?,.;:\-()=$€£/%\s]*$", comment, re.UNICODE):  
