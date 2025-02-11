@@ -78,6 +78,9 @@ def process_login():
         username = request.form["username"]
         password = request.form["password"]
 
+        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username):  # Prevents SQL injection
+            return render_template("logreg.html", action="login", msg="Invalid username!", session=session, ts=ts)
+
         if username and password:
             username = username.lower()
             response = funcs.login(username, password)

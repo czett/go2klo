@@ -24,7 +24,7 @@
             {{ts["cleanliness"]}}: {{ rating.cleanliness }},
             {{ts["supplies"]}}: {{ rating.supplies }},
             {{ts["privacy"]}}: {{ rating.privacy }},
-            {{ts["comment"]}}: "{{ rating.comment }}"
+            {{ts["comment"]}}: "{% if '@' in rating.comment %}{{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}{% else %}{{ rating.comment }}{% endif %}"
         </li>
         {% endfor %}
     </ul>

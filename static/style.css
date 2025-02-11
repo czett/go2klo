@@ -313,9 +313,9 @@ body, html {
     color: var(--ac);
 }
 
-.logreg-form form label:last-of-type{
+/* .logreg-form form label:last-of-type{
     margin-top: 2vh;
-}
+} */
 
 .logreg-form form label{
     font-size: 1.4rem;

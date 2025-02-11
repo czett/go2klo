@@ -68,7 +68,8 @@
                 "register": "Register",
                 "rather_register": "I'd rather register",
                 "rather_login": "I'd rather login",
-                "public": "public"
+                "public": "public",
+                "email": "Enter your email"
             },
             "profile": {
                 "has": "has",
@@ -178,7 +179,8 @@
                 "register": "Registrieren",
                 "rather_register": "Ich möchte mich lieber registrieren",
                 "rather_login": "Ich möchte mich lieber einloggen",
-                "public": "öffentlich"
+                "public": "öffentlich",
+                "email": "Gib deine E-Mail-Adresse ein"
             },
             "profile": {
                 "has": "hat",
@@ -288,7 +290,8 @@
                 "register": "Регистрация",
                 "rather_register": "Предпочитам да се регистрирам",
                 "rather_login": "Предпочитам да вляза",
-                "public": "публичен"
+                "public": "публичен",
+                "email": "Въведете вашия имейл"
             },
             "profile": {
                 "has": "има",
@@ -398,7 +401,8 @@
                 "register": "Inscription",
                 "rather_register": "Je préfère m'inscrire",
                 "rather_login": "Je préfère me connecter",
-                "public": "public"
+                "public": "public",
+                "email": "Entrez votre email"
             },
             "profile": {
                 "has": "a",
@@ -508,7 +512,8 @@
                 "register": "Registrarse",
                 "rather_register": "Prefiero registrarme",
                 "rather_login": "Prefiero iniciar sesión",
-                "public": "público"
+                "public": "público",
+                "email": "Ingresa tu correo electrónico"
             },
             "profile": {
                 "has": "tiene",
@@ -618,7 +623,8 @@
                 "register": "Registrati",
                 "rather_register": "Preferisco registrarmi",
                 "rather_login": "Preferisco accedere",
-                "public": "pubblico"
+                "public": "pubblico",
+                "email": "Inserisci la tua email"
             },
             "profile": {
                 "has": "ha",
@@ -728,7 +734,8 @@
                 "register": "Registrer",
                 "rather_register": "Jeg vil heller registrere meg",
                 "rather_login": "Jeg vil heller logge inn",
-                "public": "offentlig"
+                "public": "offentlig",
+                "email": "Skriv inn e-postadressen din"
             },
             "profile": {
                 "has": "har",
@@ -838,7 +845,8 @@
                 "register": "Registrieren",
                 "rather_register": "Ich will lieber registriern",
                 "rather_login": "Ich will lieber einloggen",
-                "public": "öffentlich"
+                "public": "öffentlich",
+                "email": "Gib deine E-Mail-Adresse ein"
             },
             "profile": {
                 "has": "hat",
