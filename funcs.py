@@ -31,7 +31,9 @@ configuration.api_key["api-key"] = api_key
 api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
 def generate_auth_code():
-    return ''.join([str(random.randint(0, 9)) for _ in range(6)])
+    first_digit = str(random.randint(1, 9))
+    remaining_digits = ''.join([str(random.randint(0, 9)) for _ in range(5)])
+    return first_digit + remaining_digits
 
 def send_verification_email(recipient_email, auth_code):
     sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
