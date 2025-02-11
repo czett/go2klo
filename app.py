@@ -189,6 +189,10 @@ def process_rating():
         return redirect("/")
 
     query = request.form["location_query"]
+    
+    if profanity.contains_profanity(query):
+        return redirect("/rate")
+    
     lat, lng = funcs.get_coordinates(query)
 
     session["rating_coords"] = (lat, lng)
