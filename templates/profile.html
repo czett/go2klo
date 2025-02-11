@@ -4,8 +4,8 @@
 
 <div class="user-profile">
     <div class="banner">
-        <div class="title-text">@{{name}}</div>
-        <div class="bottom-text">@{{name}} {{ts["has"]}} {{ratings|length}} {{ts["ratings"]}}</div>
+        <div class="title-text">@{{session["username_" + pid]}}</div>
+        <div class="bottom-text">@{{session["username_" + pid]}} {{ts["has"]}} {{session["user_ratings_" + pid]|length}} {{ts["ratings"]}}</div>
         <div class="icon">
             {% if own %}
             <a href="/logout"><span class="material-symbols-rounded">logout</span></a>
@@ -15,10 +15,10 @@
         </div>
     </div>
 
-    {% if ratings|length > 0 %}
+    {% if session["user_ratings_" + pid]|length > 0 %}
     <h2 class="ratings-header">{{ts["ratings_title"]}}:</h2>
     <ul class="users-ratings">
-        {% for rating in ratings %}
+        {% for rating in session["user_ratings_" + pid] %}
         <li class="rating">
             <a href="/toilet/{{ rating.toilet_id }}"><strong>{{ts["toilet"]}} #{{ rating.toilet_id }}:</strong></a>
             {{ts["cleanliness"]}}: {{ rating.cleanliness }},
@@ -35,7 +35,7 @@
     <div class="trophy-case-title">{{ts["trophy_case"]}}</div>
 
     <div class="trophy-case">
-        {% for trophy in achievements %}
+        {% for trophy in session["user_achievements_" + pid] %}
         <div class="trophy">
             <img src="{{ url_for('static', filename='icons/' + trophy + '.png') }}">
             <div class="name">{{trophy | replace("_", " ")}}</div>
@@ -53,7 +53,7 @@
     }).addTo(map);
 
     // Add markers for each toilet
-    {% for rating in ratings %}
+    {% for rating in session["user_ratings_" + pid] %}
     L.marker([{{ rating.latitude }}, {{ rating.longitude }}])
         .addTo(map)
         .bindPopup("<b>Toilet #{{ rating.toilet_id }}</b><br>Cleanliness: {{ rating.cleanliness }}<br>Supplies: {{ rating.supplies }}<br>Privacy: {{ rating.privacy }}<br>Comment: {{ rating.comment }}")

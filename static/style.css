@@ -774,6 +774,10 @@ input[type="range"]::-webkit-slider-thumb {
     visibility: visible;
 }
 
+.lang-list:hover{
+    visibility: visible;
+}
+
 .lang-switch .lang-list{
     padding-top: .2vh;
     display: flex;
