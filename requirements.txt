@@ -12,4 +12,4 @@ psycopg[binary]==3.1.8
 requests==2.31.0
 python-dotenv==1.0.0
 better_profanity==0.6.0
-sib_api_v3_sdk==8.5.0
+sib_api_v3_sdk==7.6.0
