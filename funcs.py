@@ -71,6 +71,21 @@ def register(username: str, password: str, email: str):
     finally:
         conn.close()
 
+def check_username_or_email_exists(username: str, email: str):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM users WHERE username = %s OR email = %s", (username, email))
+            user = cur.fetchone()
+            if user:
+                return True, "Username or email already exists"
+            else:
+                return False, "Username and email are available"
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
 def login(username: str, password: str):
     username = username.replace(" ", "")
     conn = get_db_connection()
