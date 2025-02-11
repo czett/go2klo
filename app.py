@@ -215,6 +215,8 @@ def process_rating():
 def finish_rating():
     if not check_login_status():
         return redirect("/")
+    
+    ts = get_texts(session["lang"], "rate")
 
     cleanliness = request.form["cleanliness"]
     supplies = request.form["supplies"]
@@ -226,7 +228,7 @@ def finish_rating():
     comment = profanity.censor(comment)
 
     if not re.match(r"^[\w!?,.;:\-()=$€£/%\s]*$", comment, re.UNICODE):  
-        return render_template("rate.html", msg="Invalid chars in comment", session=session)
+        return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
@@ -390,4 +392,4 @@ def clear_notifications():
 #     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
