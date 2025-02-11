@@ -12,7 +12,7 @@
 
 <div class="leaderboard">
     <div class="title">{{ts["leaderboard"]}}</div>
-    {% for entry in leaderboard %}
+    {% for entry in session.trends %}
         <div class="entry">
             <a href="/toilet/{{entry['toilet_id']}}">
                 <div class="username">{{ loop.index }}. Toilet #{{entry["toilet_id"]}}</div>

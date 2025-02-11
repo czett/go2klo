@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, session, request, url_for, jsonify
 import funcs, re, random, json
 from werkzeug.exceptions import HTTPException
+from datetime import datetime
 from better_profanity import profanity
 
 app = Flask(__name__)
@@ -83,6 +84,7 @@ def process_login():
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
+                session.permanent = True
                 return redirect("/")
             else:
                 return render_template("logreg.html", action="login", msg=response[1], session=session, ts=ts)
@@ -160,6 +162,7 @@ def process_register():
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
+                session.permanent = True
                 return redirect("/")
             else:
                 return render_template("logreg.html", action="register", msg=response[1], session=session, ts=ts)
@@ -178,10 +181,18 @@ def rate():
     check_cookie_status()
     if not check_login_status():
         return redirect("/login")
-    
+
     ts = get_texts(session["lang"], "get_location")
 
-    return render_template("get_location.html", session=session, ts=ts)
+    if not session.get("cooldown"):
+        session["cooldown"] = 0
+    else:
+        cooldown_time = 180
+        if datetime.now().timestamp() - session["cooldown"] < cooldown_time:
+            cooldown_msg = "You have to wait " + str(int(cooldown_time/60)) + " minutes between ratings! Currently you have to wait for " + str(cooldown_time - int(datetime.now().timestamp() - session["cooldown"])) + " seconds."
+            return render_template("get_location.html", session=session, ts=ts, msg=cooldown_msg)
+
+    return render_template("get_location.html", session=session, ts=ts, msg=None)
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
@@ -222,6 +233,15 @@ def finish_rating():
     if response[0] == True:
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
         session["rated"] = (True, random.choice(msgs))
+
+        # clear trends and leaderboard
+        if session.get("trends"): 
+            session.pop("trends")
+        if session.get("leaderboard"):
+            session.pop("leaderboard")
+
+        session["cooldown"] = datetime.now().timestamp()
+
         return redirect("/")
     else:
         return render_template("rate.html", msg=response[1], session=session)
@@ -254,25 +274,42 @@ def toilet(tid):
 @app.route("/profile/<int:pid>")
 def profile(pid):
     check_cookie_status()
-    # if not funcs.check_user_exists(pid):
-    #     return redirect("/")
-
     pid = int(pid)
-    
-    ratings = funcs.get_user_ratings(pid)
-    uname = funcs.get_username_by_user_id(pid)
 
-    user_achievements = funcs.get_achievements_by_user_id(pid)[1]
-
-    # return str(ratings)
-
-    # Calculate the average latitude and longitude for all rated toilets
-    if ratings != []:
-        avg_lat = sum(rating['latitude'] for rating in ratings) / len(ratings)
-        avg_lon = sum(rating['longitude'] for rating in ratings) / len(ratings)
+    if not session.get(f"username_{pid}"):
+        uname = funcs.get_username_by_user_id(pid)
+        session[f"username_{pid}"] = uname
     else:
-        # Default center if no ratings
-        avg_lat, avg_lon = 51.505, -0.09 # default is uk or so
+        uname = session[f"username_{pid}"]
+
+    if not session.get(f"user_achievements_{pid}"):
+        user_achievements = funcs.get_achievements_by_user_id(pid)[1]
+        session[f"user_achievements_{pid}"] = user_achievements
+    else:
+        user_achievements = session[f"user_achievements_{pid}"]
+    
+    cached_ratings_keys = [key for key in session.keys() if key.startswith("user_ratings_")]
+    if len(cached_ratings_keys) >= 2:
+        # Delete one user's ratings (the first one in the list) as too many ratings are cached
+        for key in cached_ratings_keys:
+            if key != f"user_ratings_{pid}":
+                session.pop(key)
+                print("Deleted cached ratings of user", key)
+                break
+    if not session.get(f"user_ratings_{pid}"):
+        ratings = funcs.get_user_ratings(pid)
+        session[f"user_ratings_{pid}"] = ratings
+    else:
+        ratings = session[f"user_ratings_{pid}"]
+
+    # POSTPONED TO SAVE VERCEL RESOURCES Calculate the average latitude and longitude for all rated toilets
+    # if ratings != []:
+    #     avg_lat = sum(rating['latitude'] for rating in ratings) / len(ratings)
+    #     avg_lon = sum(rating['longitude'] for rating in ratings) / len(ratings)
+    # else:
+    #     
+    
+    avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
 
     nots = []
     own = False
@@ -288,7 +325,7 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
-    return render_template("profile.html", ratings=ratings, ts=ts, session=session, name=uname, avg_lat=avg_lat, avg_lon=avg_lon, own=own, achievements=user_achievements, nots=nots)
+    return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -311,15 +348,23 @@ def my_profile():
 
 @app.route("/leaderboard")
 def leaderboard():    
-    leaderboard = funcs.get_users_sorted_by_ratings()
+    check_cookie_status()
+    if not session.get("leaderboard"):
+        leaderboard = funcs.get_users_sorted_by_ratings()
+        session["leaderboard"] = leaderboard
+
     ts = get_texts(session["lang"], "leaderboard")
-    return render_template("leaderboard.html", ts=ts, leaderboard=leaderboard, session=session)
+    return render_template("leaderboard.html", ts=ts, session=session)
 
 @app.route("/trending")
-def trending():    
-    leaderboard = funcs.get_top_10_toilets()
+def trending():
+    check_cookie_status()
+    if not session.get("trends"):
+        leaderboard = funcs.get_top_10_toilets()
+        session["trends"] = leaderboard
+
     ts = get_texts(session["lang"], "trending")
-    return render_template("trends.html", ts=ts, leaderboard=leaderboard, session=session)
+    return render_template("trends.html", ts=ts, session=session)
 
 @app.route("/clear-notifications")
 def clear_notifications():
@@ -332,17 +377,17 @@ def clear_notifications():
 
     return redirect("/")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
     app.run(debug=False, port=7000)
