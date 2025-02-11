@@ -8,7 +8,7 @@ MarkupSafe==2.1.5
 Werkzeug==3.0.1
 bcrypt==4.0.1
 geopy==2.3.0
-psycopg[binary]==3.1.8
+psycopg[binary]==3.2.4
 requests==2.31.0
 python-dotenv==1.0.0
 better_profanity==0.6.0
