@@ -10,6 +10,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ### 🗺️ Find Nearby Toilets  
 - Quickly locate the closest public restrooms using the map.
+- Trends now show you the top-10 most rated toilets!
 
 ### ⭐ Rate & Review  
 - Share your experience by rating restrooms on cleanliness, comfort, and convenience.  
@@ -21,11 +22,12 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Comment on toilets that are closed, under construction, or just plain terrifying.
 
 ### 💻 Miscellaneous
-- Mutliple languages (German and English as of now).
+- Mutliple languages (9 in total)
 - Responsive design, conveniently usable on mobile now.
 - Notification system, including pushing new ones and marking old ones as read.
-- Leaderboard of users with most ratings
+- Leaderboard of users with most ratings.
 - Chunk Loading for explore page!
+- In Google Index since 15th January, 2025
 
 ## 🛠️ Tech Stack  
 
@@ -36,8 +38,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features/planned improvements
 
-- Trending toilets?
 - Discover the best-rated toilets with our *Royal Flush Rankings*.
+- QOL improvement -> showing toilet location as often as possible (currently not possible due to computational difficulties/inefficient ideas of mine)
 
 ## 🤔 Why go2klo?  
 

@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, session, request, url_for, j
 import funcs, re, random, json
 from werkzeug.exceptions import HTTPException
 from datetime import datetime
+from better_profanity import profanity
 
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
@@ -78,6 +79,7 @@ def process_login():
         password = request.form["password"]
 
         if username and password:
+            username = username.lower()
             response = funcs.login(username, password)
             if response[0] == True:
                 session["user"] = username
@@ -148,6 +150,9 @@ def process_register():
             return render_template("logreg.html", action="register", msg="Password too short! (min. 6 characters)", session=session, ts=ts)
             
         username = username.lower()
+        
+        if profanity.contains_profanity(username):
+            return render_template("logreg.html", action="register", msg="Bad words detected! Try a proper username", session=session, ts=ts)
 
         if len(username) > 20:
             return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
@@ -195,6 +200,10 @@ def process_rating():
         return redirect("/")
 
     query = request.form["location_query"]
+    
+    if profanity.contains_profanity(query) or "gustav" in query.lower():
+        return redirect("/rate")
+    
     lat, lng = funcs.get_coordinates(query)
 
     session["rating_coords"] = (lat, lng)
@@ -212,6 +221,12 @@ def finish_rating():
     privacy = request.form["privacy"]
     comment = request.form["comment"]
     user = session["user"]
+    
+    profanity.load_censor_words()
+    comment = profanity.censor(comment)
+
+    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s]*$", comment, re.UNICODE):  
+        return render_template("rate.html", msg="Invalid chars in comment", session=session)
 
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
     
