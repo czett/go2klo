@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, session, request, url_for, jsonify
 import funcs, re, random, json
 from werkzeug.exceptions import HTTPException
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
@@ -175,10 +176,18 @@ def rate():
     check_cookie_status()
     if not check_login_status():
         return redirect("/login")
-    
+
     ts = get_texts(session["lang"], "get_location")
 
-    return render_template("get_location.html", session=session, ts=ts)
+    if not session.get("cooldown"):
+        session["cooldown"] = 0
+    else:
+        cooldown_time = 180
+        if datetime.now().timestamp() - session["cooldown"] < cooldown_time:
+            cooldown_msg = "You have to wait " + str(int(cooldown_time/60)) + " minutes between ratings! Currently you have to wait for " + str(cooldown_time - int(datetime.now().timestamp() - session["cooldown"])) + " seconds."
+            return render_template("get_location.html", session=session, ts=ts, msg=cooldown_msg)
+
+    return render_template("get_location.html", session=session, ts=ts, msg=None)
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
@@ -215,6 +224,8 @@ def finish_rating():
             session.pop("trends")
         if session.get("leaderboard"):
             session.pop("leaderboard")
+
+        session["cooldown"] = datetime.now().timestamp()
 
         return redirect("/")
     else:

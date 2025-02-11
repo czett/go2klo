@@ -364,6 +364,10 @@ body, html {
     font-size: 2rem;
 }
 
+.rating-form .msg{
+    width: 100%;
+}
+
 .rating-form form input, .rating-form form textarea{
     resize: none;
     padding: 1vh;
