@@ -69,7 +69,8 @@
                 "rather_register": "I'd rather register",
                 "rather_login": "I'd rather login",
                 "public": "public",
-                "email": "Enter your email"
+                "email": "Enter your email",
+                "confirm_password": "Confirm your password"
             },
             "profile": {
                 "has": "has",
@@ -180,7 +181,8 @@
                 "rather_register": "Ich möchte mich lieber registrieren",
                 "rather_login": "Ich möchte mich lieber einloggen",
                 "public": "öffentlich",
-                "email": "Gib deine E-Mail-Adresse ein"
+                "email": "Gib deine E-Mail-Adresse ein",
+                "confirm_password": "Bestätige dein Passwort"
             },
             "profile": {
                 "has": "hat",
@@ -291,7 +293,8 @@
                 "rather_register": "Предпочитам да се регистрирам",
                 "rather_login": "Предпочитам да вляза",
                 "public": "публичен",
-                "email": "Въведете вашия имейл"
+                "email": "Въведете вашия имейл",
+                "confirm_password": "Потвърдете вашата парола"
             },
             "profile": {
                 "has": "има",
@@ -402,7 +405,8 @@
                 "rather_register": "Je préfère m'inscrire",
                 "rather_login": "Je préfère me connecter",
                 "public": "public",
-                "email": "Entrez votre email"
+                "email": "Entrez votre email",
+                "confirm_password": "Confirmez votre mot de passe"
             },
             "profile": {
                 "has": "a",
@@ -513,7 +517,8 @@
                 "rather_register": "Prefiero registrarme",
                 "rather_login": "Prefiero iniciar sesión",
                 "public": "público",
-                "email": "Ingresa tu correo electrónico"
+                "email": "Ingresa tu correo electrónico",
+                "confirm_password": "Confirma tu contraseña"
             },
             "profile": {
                 "has": "tiene",
@@ -624,7 +629,8 @@
                 "rather_register": "Preferisco registrarmi",
                 "rather_login": "Preferisco accedere",
                 "public": "pubblico",
-                "email": "Inserisci la tua email"
+                "email": "Inserisci la tua email",
+                "confirm_password": "Conferma la tua password"
             },
             "profile": {
                 "has": "ha",
@@ -735,7 +741,8 @@
                 "rather_register": "Jeg vil heller registrere meg",
                 "rather_login": "Jeg vil heller logge inn",
                 "public": "offentlig",
-                "email": "Skriv inn e-postadressen din"
+                "email": "Skriv inn e-postadressen din",
+                "confirm_password": "Bekreft passordet ditt"
             },
             "profile": {
                 "has": "har",
@@ -846,7 +853,8 @@
                 "rather_register": "Ich will lieber registriern",
                 "rather_login": "Ich will lieber einloggen",
                 "public": "öffentlich",
-                "email": "Gib deine E-Mail-Adresse ein"
+                "email": "Gib deine E-Mail-Adresse ein",
+                "confirm_password": "Passwort bestätigen"
             },
             "profile": {
                 "has": "hat",
@@ -956,7 +964,9 @@
                 "register": "Regjistrohu",
                 "rather_register": "Do të preferoja të regjistrohem",
                 "rather_login": "Do të preferoja të kyçem",
-                "public": "publik"
+                "public": "publik",
+                "email": "Vendos adresën tënde të emailit",
+                "confirm_password": "Konfirmo fjalëkalimin"
             },
             "profile": {
                 "has": "ka",

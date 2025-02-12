@@ -35,11 +35,36 @@
             <input type="email" name="email" id="email" placeholder="email" required>
             <label for="password">{{ts["password"]}}:</label>
             <input type="password" name="password" id="password" placeholder="password">
+            <label for="confirm_password">{{ts["confirm_password"]}}:</label>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="confirm password">
             <button type="submit">{{ts["register"]}}</button>
             <a href="/login">
                 <div class="switch-form">{{ts["rather_login"]}}</div>
             </a>
         </form>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const password = document.getElementById("password");
+                const confirmPassword = document.getElementById("confirm_password");
+                const submitButton = document.querySelector("button[type='submit']");
+
+                function validatePasswords() {
+                    if (password.value !== confirmPassword.value) {
+                        confirmPassword.style.borderColor = "#d4040d";
+                        password.style.borderColor = "#d4040d";
+                        submitButton.disabled = true;
+                    } else {
+                        confirmPassword.style.borderColor = "";
+                        password.style.borderColor = "";
+                        submitButton.disabled = false;
+                    }
+                }
+
+                password.addEventListener("input", validatePasswords);
+                confirmPassword.addEventListener("input", validatePasswords);
+            });
+        </script>
     {% endif %}
 </div>
 
