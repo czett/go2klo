@@ -56,14 +56,14 @@ def send_verification_email(recipient_email, auth_code):
         return False, f"Error sending email: {e}"
     
 def send_password_reset_email(recipient_email, pwlink):
-    sender = {"name": "go2klo", "email": "noreply@go2klo.com"}  # Adjust sender info
+    sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
     to = [{"email": recipient_email, "name": recipient_email}]
     
     email_data = sib_api_v3_sdk.SendSmtpEmail(
         to=to,
         sender=sender,
-        template_id=2,  # Replace with Brevo template ID
-        params={"pwlink": f"https://go2klo.com/r/{pwlink}"}  # Variable for {{ params.pwlink }}
+        template_id=2,
+        params={"pwlink": f"https://go2klo.com/r/{pwlink}"}
     )
     
     try:
