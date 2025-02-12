@@ -10,7 +10,7 @@ import os
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
-import random
+import random, string
 
 try:
     load_dotenv()
@@ -35,6 +35,9 @@ def generate_auth_code():
     remaining_digits = ''.join([str(random.randint(0, 9)) for _ in range(5)])
     return first_digit + remaining_digits
 
+def generate_password_reset_code():
+    return "".join(random.choices(string.ascii_lowercase, k=16))
+
 def send_verification_email(recipient_email, auth_code):
     sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
     to = [{"email": recipient_email, "name": recipient_email}]
@@ -51,6 +54,39 @@ def send_verification_email(recipient_email, auth_code):
         return True, f"Verification email sent to {recipient_email}"
     except ApiException as e:
         return False, f"Error sending email: {e}"
+    
+def send_password_reset_email(recipient_email, pwlink):
+    sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
+    to = [{"email": recipient_email, "name": recipient_email}]
+    
+    email_data = sib_api_v3_sdk.SendSmtpEmail(
+        to=to,
+        sender=sender,
+        template_id=2,
+        params={"pwlink": f"https://go2klo.com/r/{pwlink}"}
+    )
+    
+    try:
+        api_instance.send_transac_email(email_data)
+        print(f"Password reset email sent to {recipient_email}")
+    except ApiException as e:
+        print(f"Error sending email: {e}")
+
+def reset_password(username, new_password):
+    hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt())
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE users SET password = %s WHERE username = %s",
+                    (hashed_password.decode(), username)
+                )
+        return True, "Password reset successfully"
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
 
 def get_db_connection():
     return psycopg.connect(**DB_CONFIG)
@@ -88,17 +124,31 @@ def check_username_or_email_exists(username: str, email: str):
     finally:
         conn.close()
 
-def login(username: str, password: str):
-    username = username.replace(" ", "")
+def get_username_by_email(email: str):
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT password FROM users WHERE username = %s", (username,))
-            user = cur.fetchone()
-            if user and bcrypt.checkpw(password.encode(), user[0].encode()):
-                return True, "Success"
+            cur.execute("SELECT username FROM users WHERE email = %s", (email,))
+            result = cur.fetchone()
+            if result:
+                return result[0]
             else:
-                return False, "Wrong username or password. Remove spaces if entered!"
+                return None
+    except Exception as e:
+        return None
+    finally:
+        conn.close()
+
+def login(identifier: str, password: str):
+    identifier = identifier.replace(" ", "")
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT username, password, email FROM users WHERE username = %s OR email = %s", (identifier, identifier))
+            user = cur.fetchone()
+            if user and bcrypt.checkpw(password.encode(), user[1].encode()):
+                return True, "Success"
+            return False, "Wrong username/email or password. Remove spaces if entered!"
     except Exception as e:
         return False, f"Error: {e}"
     finally:

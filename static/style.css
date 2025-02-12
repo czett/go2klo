@@ -306,6 +306,11 @@ body, html {
     cursor: pointer;
 }
 
+.logreg-form form button span{
+    color: var(--bg);
+    font-size: 2rem;
+}
+
 .logreg-form form input{
     border: 2px solid var(--ac);
     background-color: transparent;
