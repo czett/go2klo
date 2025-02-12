@@ -78,13 +78,16 @@ def process_login():
         username = request.form["username"]
         password = request.form["password"]
 
-        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username):  # Prevents SQL injection
-            return render_template("logreg.html", action="login", msg="Invalid username!", session=session, ts=ts)
+        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", username):  # Prevents SQL injection and allows email login
+            return render_template("logreg.html", action="login", msg="Invalid username or email!", session=session, ts=ts)
 
         if username and password:
             username = username.lower()
             response = funcs.login(username, password)
             if response[0] == True:
+                if "@" in username:
+                    username = funcs.get_username_by_email(username)
+                    
                 session["user"] = username
                 session["logged_in"] = True
                 session.permanent = True

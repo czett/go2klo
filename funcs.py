@@ -88,17 +88,31 @@ def check_username_or_email_exists(username: str, email: str):
     finally:
         conn.close()
 
-def login(username: str, password: str):
-    username = username.replace(" ", "")
+def get_username_by_email(email: str):
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT password FROM users WHERE username = %s", (username,))
-            user = cur.fetchone()
-            if user and bcrypt.checkpw(password.encode(), user[0].encode()):
-                return True, "Success"
+            cur.execute("SELECT username FROM users WHERE email = %s", (email,))
+            result = cur.fetchone()
+            if result:
+                return result[0]
             else:
-                return False, "Wrong username or password. Remove spaces if entered!"
+                return None
+    except Exception as e:
+        return None
+    finally:
+        conn.close()
+
+def login(identifier: str, password: str):
+    identifier = identifier.replace(" ", "")
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT username, password, email FROM users WHERE username = %s OR email = %s", (identifier, identifier))
+            user = cur.fetchone()
+            if user and bcrypt.checkpw(password.encode(), user[1].encode()):
+                return True, "Success"
+            return False, "Wrong username/email or password. Remove spaces if entered!"
     except Exception as e:
         return False, f"Error: {e}"
     finally:
