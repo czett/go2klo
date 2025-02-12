@@ -99,6 +99,74 @@ def process_login():
 
     return "Congrats, you worked around my code :)"
 
+@app.route("/pwreset")
+def pwreset():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+    return render_template("logreg.html", action="pwreset", msg=None, ts=ts, session=session)
+
+@app.route("/pwreset/process", methods=["POST"])
+def process_pwreset():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+
+    try:
+        email = request.form["email"]
+        username = request.form["username"]
+
+        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email):
+            return render_template("logreg.html", action="pwreset", msg="Invalid username or email!", session=session, ts=ts)
+
+        if not username == funcs.get_username_by_email(email):
+            return render_template("logreg.html", action="pwreset", msg="Username and email don't belong to same account!", session=session, ts=ts)
+
+        if email:
+            session["username"] = username
+            session["pwreset_code"] = funcs.generate_password_reset_code()
+            funcs.send_password_reset_email(email, session["pwreset_code"])
+            return render_template("logreg.html", action="pwreset", msg="Reset link sent via email. Make sure to quickly open in this browser.", session=session, ts=ts)
+    except Exception as e:
+        return redirect("/")
+
+    return "Congrats, you worked around my code :)"
+
+@app.route("/r/<code>")
+def reset_password(code):
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+
+    if not session.get("pwreset_code"):
+        return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
+
+    if code == session["pwreset_code"]:
+        return render_template("logreg.html", action="newpw", msg=None, ts=ts, session=session)
+    else:
+        return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
+
+@app.route("/r/process", methods=["POST"])
+def process_new_password():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "logreg")
+
+    try:
+        password = request.form["password"]
+        username = session["username"]
+
+        if not re.match("^[A-Za-z0-9_]*$", password):
+            return render_template("logreg.html", action="newpw", msg="Only letters, digits and underscores allowed!", ts=ts, session=session)
+        elif len(password) < 6:
+            return render_template("logreg.html", action="newpw", msg="Password too short! (min. 6 characters)", ts=ts, session=session)
+
+        response = funcs.reset_password(username, password)
+        if response[0] == True:
+            return render_template("logreg.html", action="login", msg="Password reset successfully! You can now login.", ts=ts, session=session)
+        else:
+            return render_template("logreg.html", action="newpw", msg=response[1], ts=ts, session=session)
+    except Exception as e:
+        return render_template("logreg.html", action="newpw", msg="An error occured. Whoopsie!", ts=ts, session=session)
+
+    return "Congrats, you worked around my code :)"
+
 @app.route("/accept-cookies")
 def accept_cookies(): 
     session["cookies"] = True
@@ -170,7 +238,7 @@ def process_register_auth():
             else:
                 return render_template("logreg.html", action="register", ts=ts, msg=response[1], session=session)
         else:
-            return render_template("auth.html", ts=ts, session=session, msg=f"{code}, {auth_code} Invalid code! Try again.")
+            return render_template("auth.html", ts=ts, session=session, msg=f"Invalid code! Try again.")
     except:
         return redirect("/explore")
 
