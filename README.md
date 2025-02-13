@@ -28,6 +28,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Leaderboard of users with most ratings.
 - Chunk Loading for explore page!
 - In Google Index since 15th January, 2025
+- User Auth and Password reset (email-based)
+- Caching for saving computation power
 
 ## 🛠️ Tech Stack  
 
@@ -35,10 +37,12 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Frontend**: HTML, CSS, and JavaScript  
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
+- **Mailing**: Brevo/sendinblue
 
 ## 🚧 Future Features/planned improvements
 
 - Discover the best-rated toilets with our *Royal Flush Rankings*.
+- further hardware usage optimizations
 - QOL improvement -> showing toilet location as often as possible (currently not possible due to computational difficulties/inefficient ideas of mine)
 
 ## 🤔 Why go2klo?  
@@ -52,5 +56,7 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - geopy Nominatim, this project relies on you
 - icon-icons and Google Fonts for icons and logos
 - flag-icons for language switcher from [flagicons.lipis.dev](https://flagicons.lipis.dev/) <3
+- my friends for early- and stress-testing the app from (almost) day one
+- GPT-4o
 
-[go2klo](https://go2klo.com/), dev'ed 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.com/), in development since 11/24 (idea and prototype 10/2022)
