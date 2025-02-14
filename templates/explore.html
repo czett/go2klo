@@ -47,17 +47,7 @@
         .catch(error => console.error('Error fetching toilet data:', error));
 </script> -->
 <script>
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var userLat = position.coords.latitude;
-            var userLng = position.coords.longitude;
-            var map = L.map('map').setView([userLat, userLng], 13);  // Centered at user's location with close zoom
-        }, function() {
-            var map = L.map('map').setView([51.1657, 10.4515], 6);  // Centered at the center of Europe (Germany) if location access is denied
-        });
-    } else {
-        var map = L.map('map').setView([51.1657, 10.4515], 6);  // Centered at the center of Europe (Germany) if geolocation is not supported
-    }
+    var map = L.map('map').setView([51.1657, 10.4515], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
