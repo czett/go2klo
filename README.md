@@ -13,7 +13,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Trends now show you the top-10 most rated toilets!
 
 ### ⭐ Rate & Review  
-- Share your experience by rating restrooms on cleanliness, comfort, and convenience.  
+- Share your experience by rating restrooms on cleanliness, comfort, and supplies.  
 - Add funny or helpful comments to guide others (e.g., “Bring your own TP!”).
 - Earn crazy cool achievements (four implemented)!
 
@@ -28,6 +28,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Leaderboard of users with most ratings.
 - Chunk Loading for explore page!
 - In Google Index since 15th January, 2025
+- Text Censoring/Filtering basically anywhere
 - User Auth and Password reset (email-based)
 - Caching for saving computation power
 
@@ -42,7 +43,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ## 🚧 Future Features/planned improvements
 
 - Discover the best-rated toilets with our *Royal Flush Rankings*.
-- further hardware usage optimizations
+- further hardware usage optimizations -> Edge Requests!
 - QOL improvement -> showing toilet location as often as possible (currently not possible due to computational difficulties/inefficient ideas of mine)
 
 ## 🤔 Why go2klo?  
