@@ -112,7 +112,7 @@ def process_pwreset():
 
     try:
         email = request.form["email"]
-        username = request.form["username"]
+        username = request.form["username"].lower()
 
         if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email):
             return render_template("logreg.html", action="pwreset", msg="Invalid username or email!", session=session, ts=ts)
