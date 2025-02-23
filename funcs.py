@@ -10,7 +10,7 @@ import os
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
-import random, string
+import random, string, base64
 
 try:
     load_dotenv()
@@ -25,10 +25,37 @@ DB_CONFIG = {
     "port": os.getenv("DB_PORT")
 }
 
+alphabet = string.ascii_lowercase
+enc_key = os.getenv("ENC_KEY")
+
 api_key = os.getenv("MAIL")
 configuration = sib_api_v3_sdk.Configuration()
 configuration.api_key["api-key"] = api_key
 api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
+def encode(clear):
+    key = enc_key
+    enc = []
+    for i in range(len(clear)):
+        key_c = key[i % len(key)]
+        if clear[i] in alphabet and key_c in alphabet:
+            enc_c = alphabet[(alphabet.index(clear[i]) + alphabet.index(key_c)) % 26]
+        else:
+            enc_c = clear[i]
+        enc.append(enc_c)
+    return "".join(enc)
+
+def decode(enc):
+    key = enc_key
+    dec = []
+    for i in range(len(enc)):
+        key_c = key[i % len(key)]
+        if enc[i] in alphabet and key_c in alphabet:
+            dec_c = alphabet[(alphabet.index(enc[i]) - alphabet.index(key_c)) % 26]
+        else:
+            dec_c = enc[i]
+        dec.append(dec_c)
+    return "".join(dec)
 
 def generate_auth_code():
     first_digit = str(random.randint(1, 9))
@@ -68,7 +95,6 @@ def send_password_reset_email(recipient_email, pwlink):
     
     try:
         api_instance.send_transac_email(email_data)
-        print(f"Password reset email sent to {recipient_email}")
     except ApiException as e:
         print(f"Error sending email: {e}")
 
@@ -93,6 +119,7 @@ def get_db_connection():
 
 def register(username: str, password: str, email: str):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    email = encode(email)
     conn = get_db_connection()
     try:
         with conn:
@@ -111,6 +138,8 @@ def register(username: str, password: str, email: str):
 
 def check_username_or_email_exists(username: str, email: str):
     conn = get_db_connection()
+    email = encode(email)
+
     try:
         with conn.cursor() as cur:
             cur.execute("SELECT 1 FROM users WHERE username = %s OR email = %s", (username, email))
@@ -126,6 +155,7 @@ def check_username_or_email_exists(username: str, email: str):
 
 def get_username_by_email(email: str):
     conn = get_db_connection()
+    email = encode(email)
     try:
         with conn.cursor() as cur:
             cur.execute("SELECT username FROM users WHERE email = %s", (email,))
@@ -144,7 +174,7 @@ def login(identifier: str, password: str):
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT username, password, email FROM users WHERE username = %s OR email = %s", (identifier, identifier))
+            cur.execute("SELECT username, password, email FROM users WHERE username = %s OR email = %s", (identifier, encode(identifier)))
             user = cur.fetchone()
             if user and bcrypt.checkpw(password.encode(), user[1].encode()):
                 return True, "Success"
@@ -424,7 +454,7 @@ def check_user_exists(user_id: str):
                 else:
                     return False
     except Exception as e:
-        print(f"Error: {e}")
+        # print(f"Error: {e}")
         return False
     finally:
         conn.close()
@@ -454,7 +484,7 @@ def get_user_id_by_username(username):
             else:
                 return None
     except Exception as e:
-        print(f"Error: {e}")
+        # print(f"Error: {e}")
         return None
     finally:
         conn.close()
@@ -535,7 +565,7 @@ def get_reviewed_countries(user):
             countries = [row[0] for row in cur.fetchall()]
             return countries
     except Exception as e:
-        print(f"Error fetching countries: {e}")
+        # print(f"Error fetching countries: {e}")
         return []
     finally:
         conn.close()
@@ -551,7 +581,7 @@ def get_achievements(user):
             else:
                 return []
     except Exception as e:
-        print(f"Error fetching achievements: {e}")
+        # print(f"Error fetching achievements: {e}")
         return []
     finally:
         conn.close()
@@ -563,7 +593,8 @@ def get_country_from_coordinates(lat, lon):
         if location and "address" in location.raw:
             return location.raw["address"].get("country", "unknown")
     except Exception as e:
-        print(f"Error fetching country: {e}")
+        # print(f"Error fetching country: {e}")
+        pass
     return "unknown"
 
 def convert_usernames_to_lowercase():
@@ -626,6 +657,27 @@ def convert_ratings_usernames_to_lowercase():
                         (lower_username, rating_id)
                     )
         return True, "Ratings usernames converted to lowercase successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def encode_all_emails(): # yeah i didnt figure this out too quickly damn
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT user_id, email FROM users")
+                users = cur.fetchall()
+                
+                for user_id, email in users:
+                    if email:  # Check if email exists
+                        encoded_email = encode(email)
+                        cur.execute(
+                            "UPDATE users SET email = %s WHERE user_id = %s",
+                            (encoded_email, user_id)
+                        )
+        return True, "Emails encoded successfully."
     except Exception as e:
         return False, f"Error: {e}"
     finally:
