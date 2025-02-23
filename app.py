@@ -138,6 +138,8 @@ def reset_password(code):
     if not session.get("pwreset_code"):
         return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
 
+    print(code, session["pwreset_code"])
+
     if code == session["pwreset_code"]:
         return render_template("logreg.html", action="newpw", msg=None, ts=ts, session=session)
     else:
@@ -502,4 +504,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)
