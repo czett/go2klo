@@ -375,9 +375,37 @@ def toilets_api(): # thanks GPT here :o
     return jsonify(toilets)
 
 @app.route("/toilet/<tid>")
-def toilet(tid):
+def toilet_num(tid):
+    # check_cookie_status()
+    # info = funcs.get_toilet_details(tid)
+    # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
+    # # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
+
+    # ts = get_texts(session["lang"], "toilet")
+
+    # return render_template("toilet.html", toilet=info, ts=ts, session=session)
+
     check_cookie_status()
+
+    if session.get("tid"):
+        session.pop("tid")
+
+    session["tid"] = tid
+    return redirect("/toilet")
+
+@app.route("/toilet") # all because of adsense bro
+def toilet():
+    check_cookie_status()
+
+    if not session.get("tid"):
+        return redirect("/explore")
+
+    tid = session["tid"]
     info = funcs.get_toilet_details(tid)
+
+    if info == None:
+        return redirect("/explore") # redirect to explore if toilet does not exist
+
     info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
 
@@ -504,4 +532,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
