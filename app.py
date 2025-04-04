@@ -338,7 +338,7 @@ def finish_rating():
     
     profanity.load_censor_words()
 
-    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s]*$", comment, re.UNICODE):  
+    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", comment, re.UNICODE):
         return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
     comment = profanity.censor(comment)
