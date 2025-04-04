@@ -335,14 +335,15 @@ def finish_rating():
     privacy = request.form["privacy"]
     comment = request.form["comment"]
     user = session["user"]
+    uid = funcs.get_user_id_by_username(user)
     
     profanity.load_censor_words()
 
-    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s]*$", comment, re.UNICODE):  
+    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", comment, re.UNICODE):
         return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
     comment = profanity.censor(comment)
-    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
+    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
     
     if response[0] == True:
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
@@ -451,7 +452,10 @@ def profile(pid):
     # else:
     #     
     
-    avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
+    # AS OF NOW, APRIL 4TH 25, I AM REMOVING THE USER MAP DUE TO IT BEING UNNECESSARY AND CHEWING UP MY VERCEL PLAN
+
+
+    #avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
 
     nots = []
     own = False
@@ -467,7 +471,8 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
-    return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
+    # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
+    return render_template("profile.html", ts=ts, pid=str(pid), session=session, own=own, nots=nots)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -494,6 +499,8 @@ def leaderboard():
     if not session.get("leaderboard"):
         leaderboard = funcs.get_users_sorted_by_ratings()
         session["leaderboard"] = leaderboard
+
+    # test
 
     ts = get_texts(session["lang"], "leaderboard")
     return render_template("leaderboard.html", ts=ts, session=session)

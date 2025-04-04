@@ -30,7 +30,7 @@
     </ul>
     {% endif %}
 
-    <div id="map"></div>
+    <!-- <div id="map"></div> -->
 
     <div class="trophy-case-title">{{ts["trophy_case"]}}</div>
 
@@ -44,7 +44,7 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
     // europe center as on explore
     var map = L.map('map').setView([51.1657, 10.4515], 3);
     // Add tile layer to the map (OpenStreetMap by default)
@@ -59,6 +59,6 @@
         .bindPopup("<b>Toilet #{{ rating.toilet_id }}</b><br>Cleanliness: {{ rating.cleanliness }}<br>Supplies: {{ rating.supplies }}<br>Privacy: {{ rating.privacy }}<br>Comment: {{ rating.comment | escape }}")
         .openPopup();
     {% endfor %}
-</script>
+</script> -->
 
 {% endblock %}

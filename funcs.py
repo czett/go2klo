@@ -192,26 +192,132 @@ def get_coordinates(location_name):
     else:
         return None, None
 
-def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user: str):
+# def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user: str):
+#     latitude, longitude = coords
+#     conn = get_db_connection()
+
+#     try:
+#         with conn:
+#             with conn.cursor() as cur:
+#                 cur.execute(
+#                     """
+#                     SELECT 1 FROM ratings
+#                     WHERE toilet_id IN (
+#                         SELECT toilet_id FROM toilets
+#                         WHERE latitude = %s AND longitude = %s
+#                     ) AND username = %s
+#                     """,
+#                     (latitude, longitude, user)
+#                 )
+#                 if cur.fetchone():
+#                     return False, "You have already rated this toilet."
+
+#                 cur.execute(
+#                     """
+#                     SELECT toilet_id FROM toilets
+#                     WHERE latitude = %s AND longitude = %s
+#                     """,
+#                     (latitude, longitude)
+#                 )
+#                 result = cur.fetchone()
+
+#                 if result:
+#                     toilet_id = result[0]
+#                 else:
+#                     cur.execute(
+#                         """
+#                         INSERT INTO toilets (latitude, longitude)
+#                         VALUES (%s, %s)
+#                         RETURNING toilet_id
+#                         """,
+#                         (latitude, longitude)
+#                     )
+#                     toilet_id = cur.fetchone()[0]
+
+#                 cur.execute(
+#                     """
+#                     INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, username)
+#                     VALUES (%s, %s, %s, %s, %s, %s)
+#                     RETURNING rating_id
+#                     """,
+#                     (toilet_id, cleanliness, supplies, privacy, comment, user)
+#                 )
+#                 rating_id = cur.fetchone()[0]
+
+#                 cur.execute("SELECT achievements FROM users WHERE username = %s", (user,))
+#                 result = cur.fetchone()
+#                 if result is None:
+#                     return False, "User not found."
+
+#                 current_achievements = result[0] or []
+#                 new_achievements = []
+
+#                 cur.execute("SELECT COUNT(*) FROM ratings WHERE username = %s", (user,))
+#                 rating_count = cur.fetchone()[0]
+#                 if rating_count == 1 and "first_flush" not in current_achievements:
+#                     new_achievements.append("first_flush")
+#                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'First Flush'!"})
+
+#                 cur.execute(
+#                     """
+#                     SELECT latitude, longitude 
+#                     FROM toilets t
+#                     JOIN ratings r ON t.toilet_id = r.toilet_id
+#                     WHERE r.username = %s
+#                     """,
+#                     (user,)
+#                 )
+#                 user_ratings = cur.fetchall()
+#                 if len(user_ratings) > 1:
+#                     for prev_coords in user_ratings:
+#                         if distance_between_coords(prev_coords, coords) >= 50 and "globetrotter" not in current_achievements:
+#                             new_achievements.append("globetrotter")
+#                             app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Globetrotter'!"})
+#                             break
+
+#                 if cleanliness == 5 and supplies == 5 and privacy == 5 and "clean_sweep" not in current_achievements:
+#                     new_achievements.append("clean_sweep")
+#                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Clean Sweep'!"})
+
+#                 if rating_count >= 10 and "toilet_master" not in current_achievements:
+#                     new_achievements.append("toilet_master")
+#                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Toilet Master'!"})
+
+#                 if new_achievements:
+#                     updated_achievements = list(set(current_achievements + new_achievements))
+#                     cur.execute(
+#                         "UPDATE users SET achievements = %s WHERE username = %s",
+#                         (json.dumps(updated_achievements), user)
+#                     )
+
+#         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
+#     except Exception as e:
+#         return False, f"Error: {e}"
+#     finally:
+#         conn.close()
+
+def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user_id: int):
     latitude, longitude = coords
     conn = get_db_connection()
 
     try:
         with conn:
             with conn.cursor() as cur:
+                # Check if the user has already rated this toilet based on user_id
                 cur.execute(
                     """
                     SELECT 1 FROM ratings
                     WHERE toilet_id IN (
                         SELECT toilet_id FROM toilets
                         WHERE latitude = %s AND longitude = %s
-                    ) AND username = %s
+                    ) AND rated_user_id = %s
                     """,
-                    (latitude, longitude, user)
+                    (latitude, longitude, user_id)
                 )
                 if cur.fetchone():
                     return False, "You have already rated this toilet."
 
+                # Get toilet_id based on latitude and longitude
                 cur.execute(
                     """
                     SELECT toilet_id FROM toilets
@@ -234,17 +340,19 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     )
                     toilet_id = cur.fetchone()[0]
 
+                # Insert rating and associate it with user_id (now rated_user_id)
                 cur.execute(
                     """
-                    INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, username)
+                    INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, rated_user_id)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     RETURNING rating_id
                     """,
-                    (toilet_id, cleanliness, supplies, privacy, comment, user)
+                    (toilet_id, cleanliness, supplies, privacy, comment, user_id)
                 )
                 rating_id = cur.fetchone()[0]
 
-                cur.execute("SELECT achievements FROM users WHERE username = %s", (user,))
+                # Fetch the achievements of the user based on user_id
+                cur.execute("SELECT achievements FROM users WHERE user_id = %s", (user_id,))
                 result = cur.fetchone()
                 if result is None:
                     return False, "User not found."
@@ -252,20 +360,22 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 current_achievements = result[0] or []
                 new_achievements = []
 
-                cur.execute("SELECT COUNT(*) FROM ratings WHERE username = %s", (user,))
+                # Check how many ratings the user has made
+                cur.execute("SELECT COUNT(*) FROM ratings WHERE rated_user_id = %s", (user_id,))
                 rating_count = cur.fetchone()[0]
                 if rating_count == 1 and "first_flush" not in current_achievements:
                     new_achievements.append("first_flush")
                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'First Flush'!"})
 
+                # Check if the user qualifies for the "Globetrotter" achievement
                 cur.execute(
                     """
                     SELECT latitude, longitude 
                     FROM toilets t
                     JOIN ratings r ON t.toilet_id = r.toilet_id
-                    WHERE r.username = %s
+                    WHERE r.rated_user_id = %s
                     """,
-                    (user,)
+                    (user_id,)
                 )
                 user_ratings = cur.fetchall()
                 if len(user_ratings) > 1:
@@ -275,19 +385,22 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                             app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Globetrotter'!"})
                             break
 
+                # Check if the user qualifies for the "Clean Sweep" achievement
                 if cleanliness == 5 and supplies == 5 and privacy == 5 and "clean_sweep" not in current_achievements:
                     new_achievements.append("clean_sweep")
                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Clean Sweep'!"})
 
+                # Check if the user qualifies for the "Toilet Master" achievement
                 if rating_count >= 10 and "toilet_master" not in current_achievements:
                     new_achievements.append("toilet_master")
                     app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Toilet Master'!"})
 
+                # Update the user's achievements if needed
                 if new_achievements:
                     updated_achievements = list(set(current_achievements + new_achievements))
                     cur.execute(
-                        "UPDATE users SET achievements = %s WHERE username = %s",
-                        (json.dumps(updated_achievements), user)
+                        "UPDATE users SET achievements = %s WHERE user_id = %s",
+                        (json.dumps(updated_achievements), user_id)
                     )
 
         return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
@@ -347,6 +460,7 @@ def get_toilet_details(toilet_id):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
+                # Get toilet coordinates
                 cur.execute("""
                     SELECT latitude, longitude
                     FROM toilets
@@ -358,31 +472,40 @@ def get_toilet_details(toilet_id):
 
                 latitude, longitude = toilet
 
+                # Get ratings for this toilet based on rated_user_id
                 cur.execute("""
-                    SELECT cleanliness, supplies, privacy, comment, username
+                    SELECT cleanliness, supplies, privacy, comment, rated_user_id
                     FROM ratings
                     WHERE toilet_id = %s
                 """, (toilet_id,))
                 ratings = cur.fetchall()
 
+                # Calculate average ratings
                 avg_cleanliness = sum(r[0] for r in ratings) / len(ratings) if ratings else 0
                 avg_supplies = sum(r[1] for r in ratings) / len(ratings) if ratings else 0
                 avg_privacy = sum(r[2] for r in ratings) / len(ratings) if ratings else 0
+
+                # Fetch the username associated with each rating using user_id
+                rated_users = []
+                for r in ratings:
+                    user_id = r[4]
+                    cur.execute("""
+                        SELECT username FROM users WHERE user_id = %s
+                    """, (user_id,))
+                    user = cur.fetchone()
+                    rated_users.append({
+                        "username": user[0] if user else "Unknown",
+                        "cleanliness": r[0],
+                        "supplies": r[1],
+                        "privacy": r[2],
+                        "comment": r[3]
+                    })
 
                 return {
                     "toilet_id": toilet_id,
                     "latitude": latitude,
                     "longitude": longitude,
-                    "ratings": [
-                        {
-                            "username": r[4],
-                            "cleanliness": r[0],
-                            "supplies": r[1],
-                            "privacy": r[2],
-                            "comment": r[3]
-                        }
-                        for r in ratings
-                    ],
+                    "ratings": rated_users,
                     "avg_cleanliness": avg_cleanliness,
                     "avg_supplies": avg_supplies,
                     "avg_privacy": avg_privacy
@@ -390,19 +513,22 @@ def get_toilet_details(toilet_id):
     except Exception as e:
         return {"error": str(e)}
 
+
 def get_user_ratings(user_id: int):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
+                # Get the username associated with the user_id
                 cur.execute("SELECT username FROM users WHERE user_id = %s", (user_id,))
-                username = cur.fetchone()
-                
-                if not username:
+                user = cur.fetchone()
+
+                if not user:
                     return {"message": "User not found."}
 
-                username = username[0]
+                username = user[0]
 
+                # Fetch ratings based on the user_id (now using rated_user_id)
                 cur.execute("""
                     SELECT 
                         r.toilet_id,
@@ -412,11 +538,11 @@ def get_user_ratings(user_id: int):
                         r.supplies,
                         r.privacy,
                         r.comment,
-                        r.username
+                        r.rated_user_id
                     FROM ratings r
                     JOIN toilets t ON r.toilet_id = t.toilet_id
-                    WHERE r.username = %s
-                """, (username,))
+                    WHERE r.rated_user_id = %s
+                """, (user_id,))
 
                 ratings = cur.fetchall()
 
@@ -432,7 +558,7 @@ def get_user_ratings(user_id: int):
                         "supplies": r[4],
                         "privacy": r[5],
                         "comment": r[6],
-                        "username": r[7]
+                        "username": username  # Returning the username here as it was fetched earlier
                     }
                     for r in ratings
                 ]
@@ -535,8 +661,8 @@ def get_users_sorted_by_ratings():
                         u.username, 
                         COUNT(r.rating_id) AS rating_count
                     FROM users u
-                    LEFT JOIN ratings r ON u.username = r.username
-                    GROUP BY u.username
+                    LEFT JOIN ratings r ON u.user_id = r.rated_user_id  -- Changed to use user_id
+                    GROUP BY u.user_id  -- Group by user_id instead of username
                     HAVING COUNT(r.rating_id) > 0
                     ORDER BY rating_count DESC
                     LIMIT 50
@@ -549,7 +675,7 @@ def get_users_sorted_by_ratings():
     finally:
         conn.close()
 
-def get_reviewed_countries(user):
+def get_reviewed_countries(user_id):
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
@@ -558,9 +684,9 @@ def get_reviewed_countries(user):
                 SELECT DISTINCT t.country 
                 FROM toilets t
                 JOIN ratings r ON t.toilet_id = r.toilet_id
-                WHERE r.username = %s AND t.country IS NOT NULL
+                WHERE r.rated_user_id = %s AND t.country IS NOT NULL
                 """,
-                (user,)
+                (user_id,)
             )
             countries = [row[0] for row in cur.fetchall()]
             return countries
@@ -642,25 +768,25 @@ def get_top_10_toilets():
     finally:
         conn.close()
 
-def convert_ratings_usernames_to_lowercase():
-    conn = get_db_connection()
-    try:
-        with conn:
-            with conn.cursor() as cur:
-                cur.execute("SELECT rating_id, username FROM ratings")
-                ratings = cur.fetchall()
+# def convert_ratings_usernames_to_lowercase():
+#     conn = get_db_connection()
+#     try:
+#         with conn:
+#             with conn.cursor() as cur:
+#                 cur.execute("SELECT rating_id, username FROM ratings")
+#                 ratings = cur.fetchall()
                 
-                for rating_id, username in ratings:
-                    lower_username = username.lower()
-                    cur.execute(
-                        "UPDATE ratings SET username = %s WHERE rating_id = %s",
-                        (lower_username, rating_id)
-                    )
-        return True, "Ratings usernames converted to lowercase successfully."
-    except Exception as e:
-        return False, f"Error: {e}"
-    finally:
-        conn.close()
+#                 for rating_id, username in ratings:
+#                     lower_username = username.lower()
+#                     cur.execute(
+#                         "UPDATE ratings SET username = %s WHERE rating_id = %s",
+#                         (lower_username, rating_id)
+#                     )
+#         return True, "Ratings usernames converted to lowercase successfully."
+#     except Exception as e:
+#         return False, f"Error: {e}"
+#     finally:
+#         conn.close()
 
 def encode_all_emails(): # yeah i didnt figure this out too quickly damn
     conn = get_db_connection()
