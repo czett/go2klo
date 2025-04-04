@@ -335,6 +335,7 @@ def finish_rating():
     privacy = request.form["privacy"]
     comment = request.form["comment"]
     user = session["user"]
+    uid = funcs.get_user_id_by_username(user)
     
     profanity.load_censor_words()
 
@@ -342,7 +343,7 @@ def finish_rating():
         return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
     comment = profanity.censor(comment)
-    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], user)
+    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
     
     if response[0] == True:
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
@@ -525,17 +526,17 @@ def clear_notifications():
 
     return redirect("/")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
