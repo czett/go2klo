@@ -231,7 +231,7 @@ def process_register_auth():
         code = request.form["authcode"]
         if int(code) == int(auth_code):
             username, password, email = session["creds"]
-            response = funcs.register(username, password, email)
+            response = funcs.register(username.lower(), password, email)
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
@@ -359,7 +359,8 @@ def finish_rating():
 
         return redirect("/")
     else:
-        return render_template("rate.html", msg=response[1], session=session)
+        ts = get_texts(session["lang"], "rate")
+        return render_template("rate.html", msg=response[1], session=session, ts=ts)
     
 @app.route("/explore")
 def explore():
