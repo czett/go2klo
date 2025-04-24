@@ -46,10 +46,10 @@
                 <span class="material-symbols-rounded">leaderboard</span>
             </a>
             {% if session.logged_in != True %}
-            <a href="/register" class="nomobile">
-                <button class="navbar-cta-btn nomobile">{{ts["register"]}}</button>
+            <a href="/login" class="nomobile">
+                <button class="navbar-cta-btn nomobile">Login</button>
             </a>
-            <a href="/register" class="link nopc">
+            <a href="/login" class="link nopc">
                 <span class="material-symbols-rounded">login</span>
             </a>
             {% else %}

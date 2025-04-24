@@ -7,28 +7,99 @@
 <div id="map"></div>
 
 <!-- Toilet details -->
-<p><strong>{{ts["address"]}}</strong> {{toilet.address}} <br> <strong>{{ts["location"]}}</strong> {{ts["latitude"]}} {{ toilet.latitude }}, {{ts["longitude"]}} {{ toilet.longitude }}</p>
+<!-- <p class="nomobile"><strong>{{ts["address"]}}</strong> {{toilet.address}} <br> <strong>{{ts["location"]}}</strong> {{ts["latitude"]}} {{ toilet.latitude }}, {{ts["longitude"]}} {{ toilet.longitude }}</p> -->
 
 <!-- Average Ratings -->
-<h2>Average Ratings:</h2>
-<ul>
-    <li><strong>{{ts["cleanliness"]}}</strong> {{ toilet.avg_cleanliness | round(2) }}</li>
-    <li><strong>{{ts["supplies"]}}</strong> {{ toilet.avg_supplies | round(2) }}</li>
-    <li><strong>{{ts["privacy"]}}</strong> {{ toilet.avg_privacy | round(2) }}</li>
-</ul>
+<h2>Average Rating:</h2>
+<div class="avg-ratings">
+    <div class="rating-item">
+        <span class="material-symbols-rounded" style="color: rgba(60, 145, 230, {{ (toilet.avg_cleanliness | round(2)/5) }});">household_supplies</span>
+        <div class="avg-criteria">{{ts["cleanliness"]}}</div>
+        <div class="avg-criteria-value">{{ toilet.avg_cleanliness | round(2) }}</div>
+    </div>
+    <div class="rating-item">
+        <span class="material-symbols-rounded" style="color: rgba(60, 145, 230, {{ (toilet.avg_supplies | round(2)/5) }});">shelves</span>
+        <div class="avg-criteria">{{ts["supplies"]}}</div>
+        <div class="avg-criteria-value">{{ toilet.avg_supplies | round(2) }}</div>
+    </div>
+    <div class="rating-item">
+        <span class="material-symbols-rounded" style="color: rgba(60, 145, 230, {{ (toilet.avg_privacy | round(2)/5) }});">security</span>
+        <div class="avg-criteria">{{ts["privacy"]}}</div>
+        <div class="avg-criteria-value">{{ toilet.avg_privacy | round(2) }}</div>
+    </div>
+</div>
 
-<h2>Ratings:</h2>
-<ul>
+<h2>All User Ratings:</h2>
+<!-- <div class="comment-list">
     {% for rating in toilet.ratings %}
-        <li>
-            <a href="/profile/{{ rating.username }}"><strong>@{{ rating.username }}</strong>:</a>
-            {{ts["cleanliness"]}}: {{ rating.cleanliness }},
-            {{ts["supplies"]}}: {{ rating.supplies }},
-            {{ts["privacy"]}}: {{ rating.privacy }},
-            {{ts["comment"]}}: "{% if '@' in rating.comment %}{{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}{% else %}{{ rating.comment }}{% endif %}"
-        </li>
+        <div class="comment-item">
+            <div class="comment-user"></div>
+                <a href="/profile/{{ rating.username }}" class="comment-username"><strong>@{{ rating.username }}</strong></a>
+            </div>
+            <div class="comment-details">
+                <div class="comment-detail">
+                    <span class="comment-label">{{ts["cleanliness"]}}:</span>
+                    <span class="comment-value">{{ rating.cleanliness }}</span>
+                </div>
+                <div class="comment-detail">
+                    <span class="comment-label">{{ts["supplies"]}}:</span>
+                    <span class="comment-value">{{ rating.supplies }}</span>
+                </div>
+                <div class="comment-detail">
+                    <span class="comment-label">{{ts["privacy"]}}:</span>
+                    <span class="comment-value">{{ rating.privacy }}</span>
+                </div>
+                <div class="comment-text">
+                    <span class="comment-label">{{ts["comment"]}}:</span>
+                    <span class="comment-value">
+                        {% if '@' in rating.comment %}
+                            {{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="comment-at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}
+                        {% else %}
+                            {{ rating.comment }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-</ul>
+</div> -->
+
+<div class="comments-list">
+    {% for rating in toilet.ratings %}
+        <div class="comment-item">
+            <div class="comment-data">
+                <div class="comment-publisher">
+                    <a href="/profile/{{ rating.username }}" class="comment-username"><strong>@{{ rating.username }}</strong></a>
+                </div>
+                {% if rating.comment.strip() != "" %}
+                <div class="comment-text">
+                    <!-- <span class="comment-label">{{ts["comment"]}}:</span> -->
+                    <span class="comment-value">
+                        {% if '@' in rating.comment %}
+                            {{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="comment-at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}
+                        {% else %}
+                            {{ rating.comment }}
+                        {% endif %}
+                    </span>
+                </div>
+                {% else %}
+                <div class="comment text">
+                    The User did not leave a comment.
+                </div>
+                {% endif %}
+            </div>
+            <div class="comment-avg-icon">
+                {% set avg_comment = ((rating.cleanliness + rating.supplies + rating.privacy) / 3) | round(2) %}
+                <span class="comment-avg-icon-star material-symbols-rounded" style="color: rgba(60, 145, 230, {{ avg_comment/5 }});">star_shine</span>
+                <div class="avg-comment-rating">
+                    <span>
+                        {{ avg_comment }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 <script>
     // Create the map
