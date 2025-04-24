@@ -31,6 +31,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Text Censoring/Filtering basically anywhere
 - User Auth and Password reset (email-based)
 - Caching for saving computation power
+- Addresses everywhere! (crazy for the OG users at least)
 
 ## 🛠️ Tech Stack  
 
@@ -44,7 +45,6 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 - Discover the best-rated toilets with our *Royal Flush Rankings*.
 - further hardware usage optimizations -> Edge Requests!
-- QOL improvement -> showing toilet location as often as possible (currently not possible due to computational difficulties/inefficient ideas of mine)
 
 ## 🤔 Why go2klo?  
 
