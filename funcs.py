@@ -1,4 +1,4 @@
-import psycopg
+import psycopg, webbrowser
 from psycopg import sql
 import bcrypt
 from geopy.geocoders import Nominatim
@@ -296,6 +296,20 @@ def get_coordinates(location_name):
 #     finally:
 #         conn.close()
 
+def coords_to_nice_address(latitude, longitude):
+    geolocator = Nominatim(user_agent="go2klo_app")
+    location = geolocator.reverse((latitude, longitude), addressdetails=True)
+    if location and "address" in location.raw:
+        address = location.raw["address"]
+        street = address.get("road")
+        number = address.get("house_number")
+        city = address.get("city", address.get("town", address.get("village")))
+        country = address.get("country")
+        components = [street, number, city, country]
+        return ", ".join(filter(None, components))
+    else:
+        return "Unknown location"
+
 def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user_id: int):
     latitude, longitude = coords
     conn = get_db_connection()
@@ -317,11 +331,11 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 if cur.fetchone():
                     return False, "You have already rated this toilet."
 
-                # Get toilet_id based on latitude and longitude
+                # Get toilet_id based on latitude and longitude with a tolerance of 10 meters (~0.0001 degrees)
                 cur.execute(
                     """
                     SELECT toilet_id FROM toilets
-                    WHERE latitude = %s AND longitude = %s
+                    WHERE ABS(latitude - %s) <= 0.0001 AND ABS(longitude - %s) <= 0.0001
                     """,
                     (latitude, longitude)
                 )
@@ -330,13 +344,14 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 if result:
                     toilet_id = result[0]
                 else:
+                    location_str = coords_to_nice_address(latitude, longitude)
                     cur.execute(
                         """
-                        INSERT INTO toilets (latitude, longitude)
-                        VALUES (%s, %s)
+                        INSERT INTO toilets (latitude, longitude, location_str)
+                        VALUES (%s, %s, %s)
                         RETURNING toilet_id
                         """,
-                        (latitude, longitude)
+                        (latitude, longitude, location_str)
                     )
                     toilet_id = cur.fetchone()[0]
 
@@ -409,7 +424,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     finally:
         conn.close()
 
-def get_all_toilets(): # just for inital clicl on explore, to be concise the cards below map. gotta fix actually-..
+def get_all_toilets(): # just for initial click on explore, to be concise the cards below map.
     try:
         conn = get_db_connection()
         with conn:
@@ -419,14 +434,16 @@ def get_all_toilets(): # just for inital clicl on explore, to be concise the car
                         t.toilet_id, 
                         t.latitude, 
                         t.longitude,
+                        t.location_str,
                         COUNT(r.rating_id) AS rating_count
                     FROM toilets t
                     LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
-                    GROUP BY t.toilet_id
+                    GROUP BY t.toilet_id, t.location_str
+                    ORDER BY t.toilet_id DESC
                 """)
                 toilets = cur.fetchall()
 
-                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "location_str": toilet[3], "rating_count": toilet[4]} for toilet in toilets]
     except Exception as e:
         return f"Error: {e}"
     
@@ -460,9 +477,9 @@ def get_toilet_details(toilet_id):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                # Get toilet coordinates
+                # Get toilet coordinates and location string
                 cur.execute("""
-                    SELECT latitude, longitude
+                    SELECT latitude, longitude, location_str
                     FROM toilets
                     WHERE toilet_id = %s
                 """, (toilet_id,))
@@ -470,7 +487,7 @@ def get_toilet_details(toilet_id):
                 if not toilet:
                     return None
 
-                latitude, longitude = toilet
+                latitude, longitude, location_str = toilet
 
                 # Get ratings for this toilet based on rated_user_id
                 cur.execute("""
@@ -505,6 +522,7 @@ def get_toilet_details(toilet_id):
                     "toilet_id": toilet_id,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "location_str": location_str,
                     "ratings": rated_users,
                     "avg_cleanliness": avg_cleanliness,
                     "avg_supplies": avg_supplies,
