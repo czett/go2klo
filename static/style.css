@@ -1034,7 +1034,7 @@ button:disabled{
     }
     
     #map{
-        aspect-ratio: 1;
+        aspect-ratio: 1 !important;
     }
     
     .logreg-form{
@@ -1046,7 +1046,7 @@ button:disabled{
     }
     
     .toilets-list .toilet{
-        aspect-ratio: 2.5;
+        aspect-ratio: 1.5;
     }
 
     .leaderboard .entry{
