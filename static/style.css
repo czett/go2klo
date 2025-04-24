@@ -944,6 +944,10 @@ button:disabled{
         display: block;
     }
 
+    ::-webkit-scrollbar{
+        display: none;
+    }
+
     .nav{
         position: fixed !important;
         inset: auto auto 0 50%;
