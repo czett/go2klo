@@ -883,7 +883,7 @@ button:disabled{
     display: flex;
     justify-content: space-between;
     align-items: start;
-    aspect-ratio: 4;
+    aspect-ratio: 3;
 }
 
 .comments-list .comment-item .comment-data{
@@ -959,6 +959,10 @@ button:disabled{
 
     .footer .flinks a img{
         width: 3vw;
+    }
+
+    .comment-item{
+        aspect-ratio: 1.8 !important;
     }
 }
 
@@ -1240,10 +1244,6 @@ button:disabled{
 
     .comments-list{
         grid-template-columns: repeat(1, 1fr);
-    }
-
-    .comment-item{
-        aspect-ratio: 2 !important;
     }
 
     .comments-list .comment-item .comment-avg-icon .avg-comment-rating{
