@@ -935,32 +935,67 @@ button:disabled{
     } */
 }
 
-@media (width < 850px){
+@media (width < 850px){    
     .nomobile{
-        display: none;
+        display: none !important;
     }
-    
+
     .nopc{
         display: block;
     }
-    
-    .nav .links{
-        visibility: hidden;
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5vh;
-        width: 100%;
-        z-index: 1001;
-        background: var(--bg);
-        inset: auto auto 0 0;
-        transform: translateY(99%);
+
+    .nav{
+        position: fixed !important;
+        inset: auto auto 0 50%;
+        height: 12vh;
+        background-color: var(--ac);
+        transform: translate(-50%, -0%);
         box-sizing: border-box;
-        padding: 1.5vh 0;
+        border-radius: var(--brad) var(--brad) 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 !important;
+    }
+
+    .nav .link.nopc{
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    
+    .nav .link.nopc span{
+        box-sizing: border-box;
+        font-size: 1.75rem;
+        color: var(--bg);
+        transition: 250ms;
+    }
+    
+    /* .nav .link.nopc span:hover{
+        font-size: 2rem;
+    } */
+
+    .nav .link.nopc.rate-link span{
+        aspect-ratio: 1;
+        background-color: var(--fg);
+        padding: 2vh;
+        border-radius: 50%;
+        font-size: 2.25rem;
+    }
+
+    .content{
+        padding-top: 0;
+        padding-bottom: 5vh;
+    }
+
+    .banner{
+        margin-top: var(--rlpad);
     }
     
     .nav .menu-icon{
+        display: none;
         position: absolute;
         inset: 50% auto auto 50%;
         transform: translate(-50%, -50%);
@@ -1037,6 +1072,11 @@ button:disabled{
     .cookie-banner{
         width: calc(100vw - 2*var(--rlpad));
         aspect-ratio: 2;
+        bottom: 15vh;
+    }
+
+    .cookie-banner button{
+        width: 100%;
     }
 
     .rated-banner{
@@ -1070,5 +1110,10 @@ button:disabled{
 
     .lang-list a img{
         width: 100%;
+    }
+
+    .logreg-form{
+        inset: var(--rlpad) auto auto auto;
+        transform: translate(0, 0);
     }
 }

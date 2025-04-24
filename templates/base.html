@@ -18,30 +18,48 @@
 <body>
     {% block navbar %}
     <div class="nav">
-        <div class="nopc menu-icon" onmousedown="mobileMenu()" data-collapsed="1">
+        <div class="nopc nomobile menu-icon" onmousedown="mobileMenu()" data-collapsed="1">
             <span class="material-symbols-rounded menu-icon-span">menu</span>
         </div>
         <div class="links">
-            <a href="/" class="link">{{ts["nav_logo"]}}</a>
-            <a href="/explore" class="link">{{ts["nav_explore"]}}</a>
-
+            <a href="/" class="link nomobile">{{ts["nav_logo"]}}</a>
+            <a href="/" class="link nopc">
+                <span class="material-symbols-rounded">home</span>
+            </a>
+            <a href="/explore" class="link nomobile">{{ts["nav_explore"]}}</a>
+            <a href="/explore" class="link nopc">
+                <span class="material-symbols-rounded">map</span>
+            </a>
+            
             <a href="/" class="nomobile">
                 <div class="logo">
                     go2klo
                 </div>
             </a>
-
-            <a href="/rate" class="link">{{ts["nav_rate"]}}</a>
+            
+            <a href="/rate" class="link nomobile">{{ts["nav_rate"]}}</a>
+            <a href="/rate" class="link nopc rate-link">
+                <span class="material-symbols-rounded">add</span>
+            </a>
+            <a href="/leaderboard" class="link nopc">
+                <span class="material-symbols-rounded">leaderboard</span>
+            </a>
             {% if session.logged_in != True %}
-                <a href="/register">
-                    <button class="navbar-cta-btn">{{ts["register"]}}</button>
-                </a>
+            <a href="/register" class="nomobile">
+                <button class="navbar-cta-btn nomobile">{{ts["register"]}}</button>
+            </a>
+            <a href="/register" class="link nopc">
+                <span class="material-symbols-rounded">login</span>
+            </a>
             {% else %}
-                <a href="/myprofile" class="link">{{ts["nav_profile"]}}</a>
+            <a href="/myprofile" class="link nomobile">{{ts["nav_profile"]}}</a>
+            <a href="/myprofile" class="link nopc">
+                <span class="material-symbols-rounded">person</span>
+            </a>
             {% endif%}
 
             {% set langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"] %}
-            <div class="lang-switch">
+            <div class="lang-switch nomobile">
                 {% set lang = session.lang %}
                 <img class="current-lang" src="{{ url_for('static', filename='icons/' + lang + '.svg') }}" alt="{{ l }}">
             
