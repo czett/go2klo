@@ -76,7 +76,7 @@ body, html {
     justify-content: space-between;
 }
 
-.nav .links *:not(.logo){
+.nav .links a.nomobile:not(.logo){
     font-size: 1.4rem;
     text-decoration: none;
     box-sizing: border-box;
@@ -87,7 +87,7 @@ body, html {
     font-weight: 500;
 }
 
-.nav .links *:not(.logo):hover{
+.nav .links a.nomobile:not(.logo):hover{
     background-color: var(--fg);
     color: var(--bg);
 }
@@ -1214,7 +1214,7 @@ button:disabled{
         box-sizing: border-box;
     }
 
-    .nav .links *, .nav .links *:hover{
+    .nav .links a.nopc, .nav .links a.nopc:hover{
         background-color: transparent !important;
         border: 0px solid transparent !important;
     }
@@ -1341,31 +1341,40 @@ button:disabled{
     }
 
     .lang-switch{
-        position: static;
-        width: auto;
-        border: none;
-        aspect-ratio: auto;
-        display: block;
+        position: absolute;
+        inset: 50% auto auto 50%;
+        transform: translate(-50%, 50%);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 1vh;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg);
+        box-sizing: border-box;
+        border: 3px solid var(--ac);
+        border-bottom: none;
+        border-radius: var(--brad) var(--brad) 0 0;
     }
-
-    .current-lang{
-        display: none;
-    }
-
+    
     .lang-list{
         position: static !important;
+        display: flex;
         flex-direction: row !important;
+        gap: 1vh !important;
+        height: 100%;
+        width: fit-content !important;
+        visibility: visible !important;
         transform: translate(0, 0) !important;
-        width: 50vw !important;
-        gap: 1.5vw !important;
     }
 
     .lang-list a{
         flex: 1;
     }
 
-    .lang-list a img{
-        width: 100%;
+    .lang-switch img{
+        width: 3vh !important;
     }
 
     .logreg-form{

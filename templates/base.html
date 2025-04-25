@@ -42,8 +42,8 @@
             <a href="/rate" class="link nopc rate-link">
                 <span class="material-symbols-rounded">add</span>
             </a>
-            <a href="/leaderboard" class="link nopc">
-                <span class="material-symbols-rounded">leaderboard</span>
+            <a class="link nopc mobile-lang-btn" onmousedown="toggleLangs()" data-langs-visible="0">
+                <span class="material-symbols-rounded">translate</span>
             </a>
             {% if session.logged_in != True %}
             <a href="/login" class="nomobile nav-login-btn">Login</a>
@@ -58,9 +58,9 @@
             {% endif%}
 
             {% set langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"] %}
-            <div class="lang-switch nomobile">
+            <div class="lang-switch">
                 {% set lang = session.lang %}
-                <img class="current-lang" src="{{ url_for('static', filename='icons/' + lang + '.svg') }}" alt="{{ l }}">
+                <img class="current-lang" onmousedown="toggleLangs()" src="{{ url_for('static', filename='icons/' + lang + '.svg') }}" alt="{{ l }}">
             
                 <div class="lang-list">
                     {% for l in langs %}
@@ -159,6 +159,19 @@
                 document.querySelector(".lang-list").style.visibility = "hidden";
                 document.querySelector(".menu-icon-span").style.rotate = "0deg";
                 iconBtn.dataset.collapsed = "1";
+            }
+        }
+        
+        function toggleLangs(){
+            langsBtn = document.querySelector(".mobile-lang-btn");
+            // let state = iconBtn.dataset.collapsed;
+
+            if (langsBtn.dataset.collapsed == "1"){
+                document.querySelector(".lang-switch").style.transform = "translate(-50%, 50%)";
+                langsBtn.dataset.collapsed = "0";
+            }else{
+                document.querySelector(".lang-switch").style.transform = "translate(-50%, -50%)";
+                langsBtn.dataset.collapsed = "1";
             }
         }
 
