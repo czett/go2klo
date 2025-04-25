@@ -76,12 +76,38 @@ body, html {
     justify-content: space-between;
 }
 
-.nav .links *{
-    font-size: 1.3rem;
+.nav .links *:not(.logo){
+    font-size: 1.4rem;
     text-decoration: none;
+    box-sizing: border-box;
+    border-radius: calc(1.5 * var(--brad));
+    padding: 1vh 2.25vh;
+    border: 3px solid transparent;
+    transition: 350ms ease-in;
+    font-weight: 500;
+}
+
+.nav .links *:not(.logo):hover{
+    background-color: var(--fg);
+    color: var(--bg);
+}
+
+.nav-login-btn{
+    background-color: var(--fg);
+    color: var(--bg);
+}
+
+.nav .links .nav-login-btn:hover{
+    color: var(--fg);
+    background-color: var(--bg);
+    border-color: var(--fg);
 }
 
 .nav .links .logo{
+    text-decoration: none;
+}
+
+.nav .links .logo div{
     font-size: 2.5rem;
     text-decoration: none;
     font-family: 'SUSE';
