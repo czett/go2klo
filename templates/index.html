@@ -26,6 +26,7 @@
 </div>
 {% endif %}
 
+{% if not session["logged_in"] %}
 <div class="benefit-header">{{ts["benefit_header"]}}</div>
 
 <div class="benefit-cards">
@@ -33,24 +34,31 @@
         <div class="card-icon">
             <span class="material-symbols-rounded">warning</span>
         </div>
-        <div class="card-title">{{ts["card_1_title"]}}</div>
-        <div class="card-text">{{ts["card_1_text"]}}</div>
+        <div class="card-texts">
+            <div class="card-title">{{ts["card_1_title"]}}</div>
+            <div class="card-text">{{ts["card_1_text"]}}</div>
+        </div>
     </div>
     <div class="card">
         <div class="card-icon">
             <span class="material-symbols-rounded">map</span>
         </div>
-        <div class="card-title">{{ts["card_2_title"]}}</div>
-        <div class="card-text">{{ts["card_2_text"]}}</div>
+        <div class="card-texts">
+            <div class="card-title">{{ts["card_2_title"]}}</div>
+            <div class="card-text">{{ts["card_2_text"]}}</div>
+        </div>
     </div>
     <div class="card">
         <div class="card-icon">
             <span class="material-symbols-rounded">star</span>
         </div>
-        <div class="card-title">{{ts["card_3_title"]}}</div>
-        <div class="card-text">{{ts["card_3_text"]}}</div>
+        <div class="card-texts">
+            <div class="card-title">{{ts["card_3_title"]}}</div>
+            <div class="card-text">{{ts["card_3_text"]}}</div>
+        </div>
     </div>
 </div>
+{% endif %}
 
 <div class="benefit-header">{{ts["explore_header"]}}</div>
 
@@ -60,8 +68,10 @@
             <div class="card-icon">
                 <span class="material-symbols-rounded">leaderboard</span>
             </div>
-            <div class="card-title">{{ts["leaderboard"]}}</div>
-            <div class="card-text">{{ts["leaderboard_desc"]}}</div>
+            <div class="card-texts">
+                <div class="card-title">{{ts["leaderboard"]}}</div>
+                <div class="card-text">{{ts["leaderboard_desc"]}}</div>
+            </div>
         </div>
     </a>
     <a href="/explore" style="text-decoration: none;">
@@ -69,8 +79,10 @@
             <div class="card-icon">
                 <span class="material-symbols-rounded">public</span>
             </div>
-            <div class="card-title">{{ts["explore"]}}</div>
-            <div class="card-text">{{ts["explore_desc"]}}</div>
+            <div class="card-texts">
+                <div class="card-title">{{ts["explore"]}}</div>
+                <div class="card-text">{{ts["explore_desc"]}}</div>
+            </div>
         </div>
     </a>
     <a href="/trending" style="text-decoration: none;">
@@ -78,8 +90,10 @@
             <div class="card-icon">
                 <span class="material-symbols-rounded">trending_up</span>
             </div>
-            <div class="card-title">{{ts["trending"]}}</div>
-            <div class="card-text">{{ts["trending_desc"]}}</div>
+            <div class="card-texts">
+                <div class="card-title">{{ts["trending"]}}</div>
+                <div class="card-text">{{ts["trending_desc"]}}</div>
+            </div>
         </div>
     </a>
 </div>
