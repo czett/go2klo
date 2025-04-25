@@ -17,7 +17,7 @@
 
     {% if session["user_ratings_" + pid]|length > 0 %}
     <h2 class="ratings-header">{{ts["ratings_title"]}}:</h2>
-    <ul class="users-ratings">
+    <!-- <ul class="users-ratings">
         {% for rating in session["user_ratings_" + pid] %}
         <li class="rating">
             <a href="/toilet/{{ rating.toilet_id }}"><strong>{{ts["toilet"]}} #{{ rating.toilet_id }}:</strong></a>
@@ -27,7 +27,43 @@
             {{ts["comment"]}}: "{% if '@' in rating.comment %}{{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}{% else %}{{ rating.comment }}{% endif %}"
         </li>
         {% endfor %}
-    </ul>
+    </ul> -->
+
+    <div class="comments-list">
+        {% for rating in session["user_ratings_" + pid] | reverse %}
+            <div class="comment-item">
+                <div class="comment-data">
+                    <div class="comment-publisher">
+                        <a href="/toilet/{{ rating.toilet_id }}"><strong>{{ts["toilet"]}} #{{ rating.toilet_id }}:</strong></a>                    </div>
+                    {% if rating.comment.strip() != "" %}
+                    <div class="comment-text">
+                        <!-- <span class="comment-label">{{ts["comment"]}}:</span> -->
+                        <span class="comment-value">
+                            {% if '@' in rating.comment %}
+                                {{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="comment-at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}
+                            {% else %}
+                                {{ rating.comment }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% else %}
+                    <div class="comment text">
+                        The User did not leave a comment.
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="comment-avg-icon">
+                    {% set avg_comment = ((rating.cleanliness + rating.supplies + rating.privacy) / 3) | round(2) %}
+                    <span class="comment-avg-icon-star material-symbols-rounded" style="color: rgba(60, 145, 230, {{ avg_comment/5 }});">rate_review</span>
+                    <div class="avg-comment-rating">
+                        <span>
+                            {{ avg_comment }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     {% endif %}
 
     <!-- <div id="map"></div> -->
