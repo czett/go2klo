@@ -516,6 +516,14 @@ def trending():
     ts = get_texts(session["lang"], "trending")
     return render_template("trends.html", ts=ts, session=session)
 
+@app.route("/totd")
+def totd():
+    check_cookie_status()
+    
+    result = funcs.get_toilet_of_the_day()
+
+    return redirect(f"/toilet/{result}") if result != None else redirect("/explore")
+
 @app.route("/clear-notifications")
 def clear_notifications():
     if not check_login_status():
@@ -540,4 +548,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)

@@ -1,4 +1,5 @@
-import psycopg, webbrowser
+import psycopg
+from datetime import datetime, timezone
 from psycopg import sql
 import bcrypt
 from geopy.geocoders import Nominatim
@@ -355,14 +356,17 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     )
                     toilet_id = cur.fetchone()[0]
 
+                # get current utc timestamp
+                current_utc_time = datetime.now(timezone.utc)
+
                 # Insert rating and associate it with user_id (now rated_user_id)
                 cur.execute(
                     """
-                    INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, rated_user_id)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO ratings (toilet_id, cleanliness, supplies, privacy, comment, rated_user_id, rating_date)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                     RETURNING rating_id
                     """,
-                    (toilet_id, cleanliness, supplies, privacy, comment, user_id)
+                    (toilet_id, cleanliness, supplies, privacy, comment, user_id, current_utc_time)
                 )
                 rating_id = cur.fetchone()[0]
 
@@ -826,3 +830,54 @@ def encode_all_emails(): # yeah i didnt figure this out too quickly damn
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def get_ratings_last_24h():
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT 
+                        r.rating_id,
+                        r.toilet_id,
+                        r.cleanliness,
+                        r.supplies,
+                        r.privacy,
+                        r.comment,
+                        r.rated_user_id,
+                        r.rating_date
+                    FROM ratings r
+                    WHERE r.rating_date >= NOW() - INTERVAL '24 HOURS'
+                """)
+                ratings = cur.fetchall()
+
+                return [
+                    {
+                        "rating_id": r[0],
+                        "toilet_id": r[1],
+                        "cleanliness": r[2],
+                        "supplies": r[3],
+                        "privacy": r[4],
+                        "comment": r[5],
+                        "rated_user_id": r[6],
+                        "rating_date": r[7]
+                    }
+                    for r in ratings
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def get_toilet_of_the_day():
+    last24h_list = get_ratings_last_24h()
+    if not last24h_list:
+        return None
+    
+    toilet_counts = {}
+    for rating in last24h_list:
+        toilet_id = rating["toilet_id"]
+        toilet_counts[toilet_id] = toilet_counts.get(toilet_id, 0) + 1
+
+    most_common_toilet = max(toilet_counts, key=toilet_counts.get, default=None)
+    return most_common_toilet

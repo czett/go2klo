@@ -4,7 +4,11 @@
 <h1>{{ts["title"]}}{{ toilet.toilet_id }} ({{toilet.location_str}})</h1>
 
 <!-- Map container -->
-<div id="map"></div>
+<div id="map">
+    <a class="get-me-there" href="https://www.google.com/maps/search/?api=1&query={{toilet.latitude}},{{toilet.longitude}}" target="_blank">
+        <span class="material-symbols-rounded">directions_car</span>
+    </a>
+</div>
 
 <!-- Toilet details -->
 <!-- <p class="nomobile"><strong>{{ts["address"]}}</strong> {{toilet.address}} <br> <strong>{{ts["location"]}}</strong> {{ts["latitude"]}} {{ toilet.latitude }}, {{ts["longitude"]}} {{ toilet.longitude }}</p> -->
