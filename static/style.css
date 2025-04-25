@@ -1356,6 +1356,7 @@ button:disabled{
         border: 3px solid var(--ac);
         border-bottom: none;
         border-radius: var(--brad) var(--brad) 0 0;
+        transition: 250ms;
     }
     
     .lang-list{
