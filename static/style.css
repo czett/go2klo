@@ -439,6 +439,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
     aspect-ratio: 2.5 !important;
     border-radius: var(--brad);
+    position: relative;
 }
 
 .explore-title{
@@ -923,6 +924,28 @@ button:disabled{
 .comments-list .comment-item .comment-value{
     font-style: italic;
     font-size: 1.1rem;
+}
+
+.get-me-there{
+    aspect-ratio: 1;
+    width: 5rem;
+    border-radius: 50%;
+    background-color: var(--bg);
+    position: absolute;
+    inset: auto auto 1vh 1vh;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    align-items: center;
+    cursor: pointer;
+}
+
+.get-me-there span{
+    font-size: 3rem;
+    color: var(--fg);
+    font-variation-settings: 'wght' 600;
+    /* background-color: red; */
 }
 
 /* responsive design (spooky) */
