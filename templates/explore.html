@@ -10,43 +10,26 @@
     <a href="/toilet/{{toilet['toilet_id']}}">
         <div class="toilet">
             <!-- <div class="name">{{ts["toilet"]}} {{toilet["toilet_id"]}}</div> -->
-            <div class="name">{{toilet["location_str"]}} (#{{toilet["toilet_id"]}})</div>
-            <div class="coords">{{ts["coords"]}}: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
-            <div class="ratings">{{ts["ratings"]}}: {{toilet["rating_count"]}}</div>
+            <div class="toilet-data">
+                <div class="name">{{toilet["location_str"]}} (#{{toilet["toilet_id"]}})</div>
+                <div class="coords">{{ts["coords"]}}: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
+                <div class="ratings">{{ts["ratings"]}}: {{toilet["rating_count"]}}</div>
+            </div>
+            <div class="toilet-icon">
+                {% if toilet.rating_count >= 3 %}
+                <span class="material-symbols-rounded" style="opacity: 1; filter: saturate(1);">diamond</span>
+                {% elif toilet.rating_count >= 2 %}
+                <span class="material-symbols-rounded" style="opacity: 0.6; filter: saturate(0.6);">hotel_class</span>
+                {% else %}
+                <span class="material-symbols-rounded" style="opacity: 0.2; filter: saturate(0);">star</span>
+                {% endif %}
+            </div>
         </div>
     </a>
     {% endfor %}
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- <script>
-    // Initialize map and set view to center of Europe
-    var map = L.map('map').setView([51.1657, 10.4515], 6);  // Centered at the center of Europe (Germany)
-
-    // Add OpenStreetMap tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    // Get toilets data from Flask backend
-    fetch('/api/toilets')
-        .then(response => response.json())
-        .then(data => {
-            // Loop through each toilet and add a marker
-            data.forEach(function(toilet) {
-                var marker = L.marker([toilet.latitude, toilet.longitude])
-                    .addTo(map)
-                    .bindPopup('Toilet ID: ' + toilet.toilet_id);
-
-                // Add a click event to each marker
-                marker.on('click', function() {
-                    // Redirect to the toilet details page
-                    window.location.href = '/toilet/' + toilet.toilet_id;
-                });
-            });
-        })
-        .catch(error => console.error('Error fetching toilet data:', error));
-</script> -->
 <script>
     var map = L.map('map').setView([51.1657, 10.4515], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

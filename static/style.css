@@ -76,12 +76,38 @@ body, html {
     justify-content: space-between;
 }
 
-.nav .links *{
-    font-size: 1.3rem;
+.nav .links *:not(.logo){
+    font-size: 1.4rem;
     text-decoration: none;
+    box-sizing: border-box;
+    border-radius: calc(1.5 * var(--brad));
+    padding: 1vh 2.25vh;
+    border: 3px solid transparent;
+    transition: 350ms ease-in;
+    font-weight: 500;
+}
+
+.nav .links *:not(.logo):hover{
+    background-color: var(--fg);
+    color: var(--bg);
+}
+
+.nav-login-btn{
+    background-color: var(--fg);
+    color: var(--bg);
+}
+
+.nav .links .nav-login-btn:hover{
+    color: var(--fg);
+    background-color: var(--bg);
+    border-color: var(--fg);
 }
 
 .nav .links .logo{
+    text-decoration: none;
+}
+
+.nav .links .logo div{
     font-size: 2.5rem;
     text-decoration: none;
     font-family: 'SUSE';
@@ -179,21 +205,46 @@ body, html {
     border-radius: var(--brad);
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
+    justify-content: space-between;
     align-items: center;
     height: 100%;
 }
 
+.benefit-cards .card .card-icon{
+    width: 33%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .benefit-cards .card .card-icon span{
-    font-size: 4rem;
+    font-size: 7rem;
     margin-bottom: 1vh;
+    color: var(--ac);
+    opacity: 0.7;
+    transition: 250ms;
+}
+
+.benefit-cards .card:hover .card-icon span{
+    opacity: 1;
+    /* background-color: red; */
+}
+
+.benefit-cards .card .card-texts{
+    width: 66%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 100%;
 }
 
 .benefit-cards .card .card-title, .benefit-cards a .card .card-title{
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1vh;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
 }
 
@@ -201,7 +252,7 @@ body, html {
     font-size: 1.25rem;
     font-weight: 400;
     margin-bottom: 1vh;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
 }
 
@@ -465,19 +516,47 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: var(--brad);
     aspect-ratio: 3;
     background: transparent;
-    border: 2px solid var(--ac);
+    border: 2px solid var(--bgd);
     overflow: hidden;
     padding: 2vh;
     box-sizing: border-box;
+    transition: 250ms;
+
+    display: grid;
+    grid-template-columns: 66% 33%;
+    gap: 1vh;
+    width: 100%;
 }
 
 .toilets-list a{
     text-decoration: none;
 }
 
-.toilets-list .toilet .name{
-    font-size: 2rem;
+.toilets-list .toilet .toilet-data{
+    width: 100%;
+}
+
+.toilets-list .toilet .toilet-data .name{
+    font-size: 1.3rem;
     font-weight: 600;
+    margin-bottom: .5vh;
+}
+
+.toilets-list .toilet .toilet-icon{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.toilets-list .toilet .toilet-icon span{
+    font-size: 7rem;
+    color: var(--ac);
+}
+
+.toilets-list .toilet:hover .toilet-icon span{
+    filter: saturate(1) !important;
 }
 
 .at-mention{
@@ -987,6 +1066,40 @@ button:disabled{
     .comment-item{
         aspect-ratio: 1.8 !important;
     }
+
+    /* start page cards */
+
+    .benefit-cards .card{
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        gap: 0;
+    }
+    
+    .benefit-cards .card .card-icon{
+        width: 100%;
+        height: fit-content;
+    }
+    
+    .benefit-cards .card .card-icon span{
+        font-size: 3rem;
+        margin-bottom: 1vh;
+        color: var(--fg);
+    }
+
+    .benefit-cards .card .card-texts{
+        width: 100%;
+        height: fit-content;
+    }
+
+    .benefit-cards .card .card-title, .benefit-cards a .card .card-title{
+        text-align: center;
+        font-size: 1.75rem;
+    }
+    
+    .benefit-cards .card .card-text, .benefit-cards a .card .card-text{
+        text-align: center;
+    }
 }
 
 @media (width < 1100px){
@@ -1098,7 +1211,6 @@ button:disabled{
         flex: 1;
         position: relative;
         box-sizing: border-box;
-        background-color: red;
     }
     
     .nav .link.nopc span{
