@@ -71,7 +71,7 @@
 <div class="comments-list">
     {% for rating in toilet.ratings %}
         {% if rating.user.rank != None %}
-        <div class="comment-item special special-{{rating.user.rank}}">
+        <div class="comment-item special special-{{rating.user.rank}}" onmousedown="redirect('/profile/{{ rating.user.username }}')">
             <div class="comment-data">
             <div class="comment-publisher">
                 <a href="/profile/{{ rating.user.username }}" class="comment-username"><strong>@{{ rating.user.username }}</strong></a>
@@ -81,7 +81,7 @@
                 </span>
             </div>
         {% else %}
-        <div class="comment-item">
+        <div class="comment-item" onmousedown="redirect('/profile/{{ rating.user.username }}')">
             <div class="comment-data">
             <div class="comment-publisher">
                 <a href="/profile/{{ rating.user.username }}" class="comment-username"><strong>@{{ rating.user.username }}</strong></a>
@@ -129,6 +129,13 @@
     // Add a marker for the toilet location
     var marker = L.marker([{{ toilet.latitude }}, {{ toilet.longitude }}]).addTo(map);
     marker.bindPopup("<b>Toilet #{{ toilet.toilet_id }}</b><br>Location: {{ toilet.latitude }}, {{ toilet.longitude }}").openPopup();
+</script>
+
+<script>
+    // Function to redirect to a new URL
+    function redirect(url) {
+        window.location.href = url;
+    }
 </script>
 
 {% endblock %}
