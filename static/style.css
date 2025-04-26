@@ -983,11 +983,11 @@ button:disabled{
 }
 
 .comments-list .comment-item.special-basic{
-    background: linear-gradient(45deg, #9c87f2, #de86f4);
+    background: linear-gradient(45deg, #795548, #a1887f);
 }
 
 .comments-list .comment-item.special .comment-publisher .comment-rank *{
-    color: #9c87f2 !important;
+    color: #795548 !important;
 }
 
 .comments-list .comment-item.special-dev{
@@ -1007,11 +1007,11 @@ button:disabled{
 }
 
 .comments-list .comment-item.special-og{
-    background: linear-gradient(45deg, #795548, #a1887f);
+    background: linear-gradient(45deg, #9c87f2, #de86f4);
 }
 
 .comments-list .comment-item.special-og .comment-publisher .comment-rank *{
-    color: #795548 !important;
+    color: #9c87f2 !important;
 }
 
 .comments-list .comment-item.special *:not(.comment-rank span){
@@ -1444,7 +1444,7 @@ button:disabled{
     }
 
     .lang-switch img{
-        width: 3vh !important;
+        width: 3.5vh !important;
     }
 
     .logreg-form{
