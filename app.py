@@ -404,6 +404,7 @@ def toilet():
 
     tid = session["tid"]
     info = funcs.get_toilet_details(tid)
+    rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake"}
 
     if info == None:
         return redirect("/explore") # redirect to explore if toilet does not exist
@@ -414,7 +415,7 @@ def toilet():
 
     ts = get_texts(session["lang"], "toilet")
 
-    return render_template("toilet.html", toilet=info, ts=ts, session=session)
+    return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
 
 @app.route("/profile/<int:pid>")
 def profile(pid):

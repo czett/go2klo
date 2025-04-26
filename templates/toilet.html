@@ -76,7 +76,7 @@
             <div class="comment-publisher">
                 <a href="/profile/{{ rating.user.username }}" class="comment-username"><strong>@{{ rating.user.username }}</strong></a>
                 <span class="comment-rank">
-                    <span class="material-symbols-rounded">favorite</span>
+                    <span class="material-symbols-rounded">{{icon_map[rating.user.rank]}}</span>
                     <span>{{ rating.user.rank }}</span>
                 </span>
             </div>
