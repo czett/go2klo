@@ -70,11 +70,23 @@
 
 <div class="comments-list">
     {% for rating in toilet.ratings %}
+        {% if rating.user.rank != None %}
+        <div class="comment-item special special-{{rating.user.rank}}">
+            <div class="comment-data">
+            <div class="comment-publisher">
+                <a href="/profile/{{ rating.user.username }}" class="comment-username"><strong>@{{ rating.user.username }}</strong></a>
+                <span class="comment-rank">
+                    <span class="material-symbols-rounded">{{icon_map[rating.user.rank]}}</span>
+                    <span>{{ rating.user.rank }}</span>
+                </span>
+            </div>
+        {% else %}
         <div class="comment-item">
             <div class="comment-data">
-                <div class="comment-publisher">
-                    <a href="/profile/{{ rating.username }}" class="comment-username"><strong>@{{ rating.username }}</strong></a>
-                </div>
+            <div class="comment-publisher">
+                <a href="/profile/{{ rating.user.username }}" class="comment-username"><strong>@{{ rating.user.username }}</strong></a>
+            </div>
+        {% endif %}
                 {% if rating.comment.strip() != "" %}
                 <div class="comment-text">
                     <!-- <span class="comment-label">{{ts["comment"]}}:</span> -->

@@ -157,9 +157,11 @@ body, html {
     margin-top: 5vh;
     aspect-ratio: 4;
     width: 100%;
-    background-color: var(--ac);
+    background-color: var(--bg);
     border-radius: var(--brad);
     overflow: hidden;
+    box-sizing: border-box;
+    border: 2px solid var(--ac);
     position: relative;
 }
 
@@ -170,13 +172,13 @@ body, html {
 
 .banner .icon span{
     font-size: 10rem;
-    color: var(--bg);
+    color: var(--ac);
 }
 
 .banner .title-text{
     position: absolute;
     inset: 2vw auto auto 2vw;
-    color: var(--bg);
+    color: var(--fg);
     font-weight: 600;
     font-size: 3rem;
 }
@@ -184,7 +186,7 @@ body, html {
 .banner .bottom-text{
     position: absolute;
     inset: 6vw auto auto 2vw;
-    color: var(--bg);
+    color: var(--fg);
     font-weight: 400;
     font-size: 1.25rem;
 }
@@ -199,7 +201,7 @@ body, html {
 .benefit-cards .card{
     flex: 1;
     background: var(--bg);
-    border: 2px solid var(--ac);
+    border: 2px solid var(--bgd);
     box-sizing: border-box;
     padding: 2vh;
     border-radius: var(--brad);
@@ -916,7 +918,7 @@ button:disabled{
 .avg-ratings .rating-item{
     text-decoration: none;
     list-style: none;
-    flex: 1;
+    flex: 1 !important;
     /* background-color: var(--bgd); */
     border: 2px solid var(--bgd);
     border-radius: calc(0.75*var(--brad));
@@ -964,7 +966,70 @@ button:disabled{
     justify-content: space-between;
     align-items: start;
     aspect-ratio: 3;
+    overflow: hidden;
 }
+
+.comments-list .comment-item.special{
+    border: none;
+    box-shadow: 0 0 40px 1px rgba(20, 20, 20, 0.3);
+    transition: 350ms;
+}
+
+.comments-list .comment-item.special:hover{
+    scale: 1.02;
+    filter: saturate(1.1);
+    cursor: pointer;
+}
+
+.comments-list .comment-item.special-basic{
+    background: linear-gradient(45deg, #9c87f2, #de86f4);
+}
+
+.comments-list .comment-item.special .comment-publisher .comment-rank *{
+    color: #9c87f2 !important;
+}
+
+.comments-list .comment-item.special-dev{
+    background: linear-gradient(45deg, #318b35, #85e689);
+}
+
+.comments-list .comment-item.special-dev .comment-publisher .comment-rank *{
+    color: #318b35 !important;
+}
+
+.comments-list .comment-item.special-supporter{
+    background: linear-gradient(45deg, #d4040d, #e57373);
+}
+
+.comments-list .comment-item.special-supporter .comment-publisher .comment-rank *{
+    color: #d4040d !important;
+}
+
+.comments-list .comment-item.special-og{
+    background: linear-gradient(45deg, #795548, #a1887f);
+}
+
+.comments-list .comment-item.special-og .comment-publisher .comment-rank *{
+    color: #795548 !important;
+}
+
+.comments-list .comment-item.special *:not(.comment-rank span){
+    color: var(--bg) !important;
+}
+
+.comment-rank{
+    width: fit-content;
+    padding: .25vh 1vh;
+    background-color: var(--bg);
+    border-radius: var(--brad);
+    font-size: 1.15rem !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: .5vh;
+    justify-content: space-between;
+}
+
 
 .comments-list .comment-item .comment-data{
     width: 66%;
@@ -974,6 +1039,9 @@ button:disabled{
 .comments-list .comment-item .comment-publisher{
     font-size: 1.5rem;
     margin-bottom: .5vh;
+    display: flex;
+    align-items: center;
+    gap: 1vh;
 }
 
 .comments-list .comment-item .comment-publisher a{
@@ -1224,7 +1292,7 @@ button:disabled{
         position: absolute;
         inset: 50% auto auto 50%;
         transform: translate(-50%, -50%);
-        font-size: 1.75rem; 
+        font-size: 2rem; 
         color: var(--bg);
         transition: 250ms;
     }
