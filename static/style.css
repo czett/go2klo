@@ -918,7 +918,7 @@ button:disabled{
 .avg-ratings .rating-item{
     text-decoration: none;
     list-style: none;
-    flex: 1 !important;
+    /* flex: 1 !important; */
     /* background-color: var(--bgd); */
     border: 2px solid var(--bgd);
     border-radius: calc(0.75*var(--brad));
@@ -939,6 +939,7 @@ button:disabled{
     text-align: center !important;
     font-weight: bold;
     font-size: 1.1rem;
+    word-break: break-word;
 }
 
 .avg-ratings .rating-item .avg-criteria-value{
