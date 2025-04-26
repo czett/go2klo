@@ -953,6 +953,7 @@ button:disabled{
 .comments-list{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
     gap: 2vh;
     padding-bottom: 2vh;
 }
@@ -962,11 +963,11 @@ button:disabled{
     border-radius: calc(0.75*var(--brad));
     /* aspect-ratio: 1; */
     box-sizing: border-box;
-    padding: 1.5vh;
     display: flex;
     justify-content: space-between;
     align-items: start;
-    aspect-ratio: 3;
+    /* aspect-ratio: 3; */
+    /* height: fit-content; */
     overflow: hidden;
 }
 
@@ -1035,11 +1036,12 @@ button:disabled{
 .comments-list .comment-item .comment-data{
     width: 66%;
     height: 100%;
+    padding: 2vh 2.5vh;
 }
 
 .comments-list .comment-item .comment-publisher{
     font-size: 1.5rem;
-    margin-bottom: .5vh;
+    margin-bottom: 1.5vh;
     display: flex;
     align-items: center;
     gap: 1vh;
@@ -1058,15 +1060,15 @@ button:disabled{
 .comments-list .comment-item .comment-avg-icon .comment-avg-icon-star{
     font-size: 4rem;
     position: absolute;
-    inset: 0% auto auto 50%;
+    inset: 5% auto auto 50%;
     transform: translate(-50%, 0%);
 }
 
 .comments-list .comment-item .comment-avg-icon .avg-comment-rating{
     font-size: 2rem;
     position: absolute;
-    inset: auto auto 0% 50%;
-    transform: translate(-50%, -0%);
+    inset: auto auto 5% 50%;
+    transform: translate(-50%, 0%);
 }
 
 .comments-list .comment-item .comment-value{
@@ -1132,9 +1134,9 @@ button:disabled{
         width: 3vw;
     }
 
-    .comment-item{
+    /* .comment-item{
         aspect-ratio: 1.8 !important;
-    }
+    } */
 
     /* start page cards */
 
@@ -1462,6 +1464,10 @@ button:disabled{
         aspect-ratio: 1;
     }
 
+    .avg-ratings .rating-item .avg-criteria{
+        font-size: .9rem;
+    }
+
     .comments-list{
         grid-template-columns: repeat(1, 1fr);
     }
@@ -1471,5 +1477,15 @@ button:disabled{
         position: absolute;
         inset: auto auto 0% 50%;
         transform: translate(-50%, -50%);
+    }
+
+    .comments-list .comment-item .comment-avg-icon .comment-avg-icon-star{
+        font-size: 3rem;
+    }
+    
+    .comments-list .comment-item .comment-avg-icon .avg-comment-rating span{
+        font-size: 1.5rem !important;
+        line-height: 100%;
+        margin: 0;
     }
 }
