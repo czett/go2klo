@@ -1060,14 +1060,14 @@ button:disabled{
 .comments-list .comment-item .comment-avg-icon .comment-avg-icon-star{
     font-size: 4rem;
     position: absolute;
-    inset: 5% auto auto 50%;
+    inset: 2vh auto auto 50%;
     transform: translate(-50%, 0%);
 }
 
 .comments-list .comment-item .comment-avg-icon .avg-comment-rating{
     font-size: 2rem;
     position: absolute;
-    inset: auto auto 5% 50%;
+    inset: auto auto 2vh 50%;
     transform: translate(-50%, 0%);
 }
 
