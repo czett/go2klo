@@ -918,7 +918,7 @@ button:disabled{
 .avg-ratings .rating-item{
     text-decoration: none;
     list-style: none;
-    flex: 1;
+    flex: 1 !important;
     /* background-color: var(--bgd); */
     border: 2px solid var(--bgd);
     border-radius: calc(0.75*var(--brad));
@@ -1292,7 +1292,7 @@ button:disabled{
         position: absolute;
         inset: 50% auto auto 50%;
         transform: translate(-50%, -50%);
-        font-size: 1.75rem; 
+        font-size: 2rem; 
         color: var(--bg);
         transition: 250ms;
     }
