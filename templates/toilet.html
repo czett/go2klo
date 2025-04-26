@@ -70,7 +70,11 @@
 
 <div class="comments-list">
     {% for rating in toilet.ratings %}
+        {% if rating.username == "vorp" %}
+        <div class="comment-item special special-dev">
+        {% else %}
         <div class="comment-item">
+        {% endif %}
             <div class="comment-data">
                 <div class="comment-publisher">
                     <a href="/profile/{{ rating.username }}" class="comment-username"><strong>@{{ rating.username }}</strong></a>

@@ -968,6 +968,38 @@ button:disabled{
     aspect-ratio: 3;
 }
 
+.comments-list .comment-item.special{
+    border: none;
+    box-shadow: 0 0 40px 1px rgba(20, 20, 20, 0.3);
+    transition: 350ms;
+}
+
+.comments-list .comment-item.special:hover{
+    scale: 1.02;
+    filter: saturate(1.1);
+    cursor: pointer;
+}
+
+.comments-list .comment-item.special-basic{
+    background: linear-gradient(45deg, #9c87f2, #de86f4);
+}
+
+.comments-list .comment-item.special-dev{
+    background: linear-gradient(45deg, #318b35, #85e689);
+}
+
+.comments-list .comment-item.special-supporter{
+    background: linear-gradient(45deg, #d4040d, #e57373);
+}
+
+.comments-list .comment-item.special-og{
+    background: linear-gradient(45deg, #795548, #a1887f);
+}
+
+.comments-list .comment-item.special *{
+    color: var(--bg) !important;
+}
+
 .comments-list .comment-item .comment-data{
     width: 66%;
     height: 100%;
