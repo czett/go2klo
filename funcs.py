@@ -676,6 +676,21 @@ def distance_between_coords(coord1, coord2):
 
     return R * c
 
+def get_user_rank(user_id: int):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT rank FROM users WHERE user_id = %s", (user_id,))
+            result = cur.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None  # User not found
+    except Exception as e:
+        return None  # Handle error gracefully :3
+    finally:
+        conn.close()
+
 def get_users_sorted_by_ratings():
     try:
         conn = get_db_connection()

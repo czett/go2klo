@@ -177,10 +177,30 @@ body, html {
 
 .banner .title-text{
     position: absolute;
-    inset: 2vw auto auto 2vw;
+    inset: 1vw auto auto 2vw;
     color: var(--fg);
     font-weight: 600;
     font-size: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 2vh;
+}
+
+.banner .title-text .user-rank{
+    display: flex;
+    justify-content: space-between;
+    gap: 1vh;
+    align-items: center;
+    border: 2px solid var(--ac);
+    padding: 1vh 2vh;
+    box-sizing: border-box;
+    border-radius: var(--brad);
+    font-size: 2rem !important;
+    font-weight: 500;
+}
+
+.banner .title-text .user-rank span{
+    font-size: 2rem !important;
 }
 
 .banner .bottom-text{
@@ -991,12 +1011,28 @@ button:disabled{
     color: #795548 !important;
 }
 
+.banner .title-text .user-rank, .banner .title-text .user-rank span{
+    color: #795548;
+}
+
+.banner .title-text .user-rank{
+    border: 4px solid #795548;
+}
+
 .comments-list .comment-item.special-dev{
     background: linear-gradient(45deg, #318b35, #85e689);
 }
 
 .comments-list .comment-item.special-dev .comment-publisher .comment-rank *{
     color: #318b35 !important;
+}
+
+.banner .title-text .user-rank.profile-rank-banner-dev, .banner .title-text .user-rank.profile-rank-banner-dev span{
+    color: #318b35;
+}
+
+.banner .title-text .user-rank.profile-rank-banner-dev{
+    border: 4px solid #318b35;
 }
 
 .comments-list .comment-item.special-supporter{
@@ -1007,12 +1043,28 @@ button:disabled{
     color: #d4040d !important;
 }
 
+.banner .title-text .user-rank.profile-rank-banner-supporter, .banner .title-text .user-rank.profile-rank-banner-supporter span{
+    color: #d4040d;
+}
+
+.banner .title-text .user-rank.profile-rank-banner-supporter{
+    border: 4px solid #d4040d;
+}
+
 .comments-list .comment-item.special-og{
     background: linear-gradient(45deg, #9c87f2, #de86f4);
 }
 
 .comments-list .comment-item.special-og .comment-publisher .comment-rank *{
     color: #9c87f2 !important;
+}
+
+.banner .title-text .user-rank.profile-rank-banner-og, .banner .title-text .user-rank.profile-rank-banner-og span{
+    color: #9c87f2;
+}
+
+.banner .title-text .user-rank.profile-rank-banner-og{
+    border: 4px solid #9c87f2;
 }
 
 .comments-list .comment-item.special *:not(.comment-rank span){
