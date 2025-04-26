@@ -9,7 +9,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ## 📦 Features  
 
 ### 🗺️ Find Nearby Toilets  
-- Quickly locate the closest public restrooms using the map.
+- Quickly locate the nearest public restrooms using the map.
 - Trends now show you the top-10 most rated toilets!
 
 ### ⭐ Rate & Review  
