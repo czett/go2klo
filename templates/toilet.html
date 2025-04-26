@@ -70,14 +70,14 @@
 
 <div class="comments-list">
     {% for rating in toilet.ratings %}
-        {% if rating.username == "vorp" %}
-        <div class="comment-item special special-dev">
+        {% if rating.user.rank != None %}
+        <div class="comment-item special special-{{rating.user.rank}}">
         {% else %}
         <div class="comment-item">
         {% endif %}
             <div class="comment-data">
                 <div class="comment-publisher">
-                    <a href="/profile/{{ rating.username }}" class="comment-username"><strong>@{{ rating.username }}</strong></a>
+                    <a href="/profile/{{ rating.user.username }}" class="comment-username"><strong>@{{ rating.user.username }}</strong></a>
                 </div>
                 {% if rating.comment.strip() != "" %}
                 <div class="comment-text">

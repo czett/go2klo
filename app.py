@@ -408,7 +408,8 @@ def toilet():
     if info == None:
         return redirect("/explore") # redirect to explore if toilet does not exist
 
-    info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
+    # im sorry for this geopy, i left it in for too long without even using the address :(
+    # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
 
     ts = get_texts(session["lang"], "toilet")

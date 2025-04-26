@@ -511,11 +511,14 @@ def get_toilet_details(toilet_id):
                 for r in ratings:
                     user_id = r[4]
                     cur.execute("""
-                        SELECT username FROM users WHERE user_id = %s
+                        SELECT username, rank FROM users WHERE user_id = %s
                     """, (user_id,))
                     user = cur.fetchone()
                     rated_users.append({
-                        "username": user[0] if user else "Unknown",
+                        "user": {
+                            "username": user[0] if user else "Unknown",
+                            "rank": user[1] if user else None
+                        },
                         "cleanliness": r[0],
                         "supplies": r[1],
                         "privacy": r[2],
