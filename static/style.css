@@ -157,9 +157,11 @@ body, html {
     margin-top: 5vh;
     aspect-ratio: 4;
     width: 100%;
-    background-color: var(--ac);
+    background-color: var(--bg);
     border-radius: var(--brad);
     overflow: hidden;
+    box-sizing: border-box;
+    border: 2px solid var(--ac);
     position: relative;
 }
 
@@ -170,13 +172,13 @@ body, html {
 
 .banner .icon span{
     font-size: 10rem;
-    color: var(--bg);
+    color: var(--ac);
 }
 
 .banner .title-text{
     position: absolute;
     inset: 2vw auto auto 2vw;
-    color: var(--bg);
+    color: var(--fg);
     font-weight: 600;
     font-size: 3rem;
 }
@@ -184,7 +186,7 @@ body, html {
 .banner .bottom-text{
     position: absolute;
     inset: 6vw auto auto 2vw;
-    color: var(--bg);
+    color: var(--fg);
     font-weight: 400;
     font-size: 1.25rem;
 }
@@ -199,7 +201,7 @@ body, html {
 .benefit-cards .card{
     flex: 1;
     background: var(--bg);
-    border: 2px solid var(--ac);
+    border: 2px solid var(--bgd);
     box-sizing: border-box;
     padding: 2vh;
     border-radius: var(--brad);
