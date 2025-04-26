@@ -456,9 +456,10 @@ def profile(pid):
     #     
     
     # AS OF NOW, APRIL 4TH 25, I AM REMOVING THE USER MAP DUE TO IT BEING UNNECESSARY AND CHEWING UP MY VERCEL PLAN
-
-
     #avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
+
+    rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake"}
+    user_rank = funcs.get_user_rank(pid)
 
     nots = []
     own = False
@@ -475,7 +476,7 @@ def profile(pid):
     ts = get_texts(session["lang"], "profile")
 
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
-    return render_template("profile.html", ts=ts, pid=str(pid), session=session, own=own, nots=nots)
+    return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
@@ -550,4 +551,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)

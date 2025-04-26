@@ -4,13 +4,18 @@
 
 <div class="user-profile">
     <div class="banner">
-        <div class="title-text">@{{session["username_" + pid]}}</div>
+        <div class="title-text">
+            @{{session["username_" + pid]}}
+            <div class="user-rank profile-rank-banner-{{rank}}">
+                <span class="material-symbols-rounded">{{icon_map[rank]}}</span>
+                {{rank}}
+            </div>
+        </div>
         <div class="bottom-text">@{{session["username_" + pid]}} {{ts["has"]}} {{session["user_ratings_" + pid]|length}} {{ts["ratings"]}}</div>
         <div class="icon">
             {% if own %}
             <a href="/logout"><span class="material-symbols-rounded">logout</span></a>
             {% else%}
-            <span class="material-symbols-rounded">stars</span>
             {% endif %}
         </div>
     </div>
