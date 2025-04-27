@@ -129,6 +129,11 @@ def register(username: str, password: str, email: str):
                     "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
                     (username, hashed_password.decode(), email),
                 )
+
+                cur.execute(
+                    "UPDATE app_data SET count = count + 1 WHERE data_name = %s",
+                    ("user_count",)
+                )
         return True, "Success"
     except psycopg.errors.UniqueViolation:
         return False, "Username or email already exists"
@@ -899,3 +904,43 @@ def get_toilet_of_the_day():
 
     most_common_toilet = max(toilet_counts, key=toilet_counts.get, default=None)
     return most_common_toilet
+
+def assign_user_rank(user_id: int, rank_name: str):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Check if the rank is a limited edition rank
+                cur.execute(
+                    "SELECT 1 FROM app_data WHERE data_name = %s AND data_content = %s",
+                    ("limited_edition_rank", rank_name)
+                )
+                if cur.fetchone():
+                    cur.execute(
+                        "UPDATE app_data SET count = count - 1 WHERE data_name = %s AND count > 0",
+                        ("limited_edition_rank",)
+                    )
+
+                # Assign the rank to the user
+                cur.execute("UPDATE users SET rank = %s WHERE user_id = %s", (rank_name, user_id))
+        return True, f"Rank '{rank_name}' assigned to user with ID {user_id}."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def has_user_rank(user_id: int, rank_name: str):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT rank FROM users WHERE user_id = %s", (user_id,))
+            result = cur.fetchone()
+            if result and result[0] == rank_name:
+                return True, ""
+            elif result and result[0] != rank_name:
+                return False, f"User has a different rank: {result[0]}"
+            return False, ""
+    except Exception as e:
+        return False  # Handle error gracefully
+    finally:
+        conn.close()
