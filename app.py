@@ -538,6 +538,23 @@ def clear_notifications():
 
     return redirect("/")
 
+@app.route("/claim/limited-edition-rank")
+def claim_limited_edition_rank():
+    if not check_login_status():
+        return redirect("/")
+    
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
+
+        has_rank = funcs.has_user_rank(uid, "basic")
+
+        if has_rank[0] == False and has_rank[1] == "":
+            funcs.assign_user_rank(uid, "basic")
+            return "hola zro"
+
+    return redirect("/")
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
