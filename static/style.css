@@ -989,6 +989,7 @@ button:disabled{
     /* aspect-ratio: 3; */
     /* height: fit-content; */
     overflow: hidden;
+    min-height: 12vh;
 }
 
 .comments-list .comment-item.special{
