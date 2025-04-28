@@ -541,30 +541,30 @@ def clear_notifications():
 @app.route("/claim/limited-edition-rank")
 def claim_limited_edition_rank():
     if not check_login_status():
-        return redirect("/")
+        return redirect("/explore")
     
     if session.get("user"):
         user = session["user"]
         uid = funcs.get_user_id_by_username(user)
 
-        has_rank = funcs.has_user_rank(uid, "basic")
+        has_rank = funcs.has_user_rank(uid, "og")
 
         if has_rank[0] == False and has_rank[1] == "":
-            funcs.assign_user_rank(uid, "basic")
+            rank_assign_response = funcs.assign_user_rank(uid, "og")
 
     return redirect("/")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
     app.run(debug=False, port=7000)
