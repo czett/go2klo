@@ -1697,5 +1697,17 @@ button:disabled{
 
     .reports-list{
         grid-template-columns: repeat(1, 1fr);
-    }  
+    }
+    
+    .toilet-top-info{
+        flex-direction: column;
+        align-items: start;
+        gap: 2vh;
+        padding-bottom: 2vh;
+        height: auto;
+    }
+
+    .toilet-top-info h1{
+        margin-bottom: 0vh;
+    }
 }
