@@ -1020,3 +1020,42 @@ def delete_report_by_id(report_id: int):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def search_toilets(query: str):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT 
+                        t.toilet_id, 
+                        t.latitude, 
+                        t.longitude,
+                        t.location_str,
+                        COUNT(r.rating_id) AS rating_count,
+                        MAX(r.rating_date) AS latest_rating_date
+                    FROM toilets t
+                    LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
+                    WHERE UNACCENT(LOWER(t.location_str)) LIKE UNACCENT(%s)
+                    GROUP BY t.toilet_id, t.location_str
+                    ORDER BY latest_rating_date DESC NULLS LAST, t.toilet_id DESC
+                """, (f"%{query.lower()}%",))
+
+
+                toilet_results = cur.fetchall()
+
+                return [
+                    {
+                        "toilet_id": toilet[0],
+                        "latitude": toilet[1],
+                        "longitude": toilet[2],
+                        "location_str": toilet[3],
+                        "rating_count": toilet[4],
+                        "latest_rating_date": toilet[5]
+                    }
+                    for toilet in toilet_results
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()

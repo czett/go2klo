@@ -370,8 +370,21 @@ def finish_rating():
 def explore():
     check_cookie_status()
     ts = get_texts(session["lang"], "explore")
-    toilets = funcs.get_all_toilets()
-    return render_template("explore.html", toilets=toilets, ts=ts, session=session)
+    
+    return render_template("explore.html", ts=ts, session=session)
+
+@app.route("/explore/search", methods=["POST"])
+def search_toilets():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "explore")
+
+    try:
+        query = request.form["search-query"]
+    except:
+        return redirect("/explore")
+
+    toilets = funcs.search_toilets(query)
+    return render_template("explore.html", ts=ts, session=session, toilets=toilets)
 
 @app.route("/api/toilets")
 def toilets_api(): # thanks GPT here :o

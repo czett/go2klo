@@ -1300,6 +1300,55 @@ button:disabled{
     color: var(--bg);
 }
 
+/* explore page search bar and form */
+
+.explore-search{
+    margin: 2vh 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.explore-search .search-title{
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1vh;
+}
+
+.explore-search form{
+    padding-bottom: 1vh;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    /* gap: 1vh; */
+    box-sizing: border-box;
+}
+
+.explore-search form *{
+    box-sizing: border-box;
+    padding: .75vh 1.25vh;
+    font-size: 1.3rem;
+    font-weight: 500;
+    outline: none;
+    border: 2px solid var(--bgd2);
+}
+
+.explore-search form input{
+    border-radius: var(--brad) 0 0 var(--brad);
+    border-right: none;
+    text-transform: capitalize;
+    background: transparent;
+}
+
+.explore-search form button{
+    border-radius: 0 var(--brad) var(--brad) 0;
+    border: none;
+    background-color: var(--ac);
+    font-size: 1.25rem;
+    color: var(--bg);
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
@@ -1697,5 +1746,40 @@ button:disabled{
 
     .reports-list{
         grid-template-columns: repeat(1, 1fr);
-    }  
+    }
+    
+    .toilet-top-info{
+        flex-direction: column;
+        align-items: start;
+        gap: 2vh;
+        padding-bottom: 2vh;
+        height: auto;
+    }
+
+    .toilet-top-info h1{
+        margin-bottom: 0vh;
+    }
+
+    /* explore search */
+
+    .explore-search form{
+        padding-bottom: 1vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .explore-search form *{
+        font-size: 1.15rem;
+        padding: 2vh 1vh;
+    }
+    
+    .explore-search form input{
+        border-radius: calc(0.5*var(--brad)) calc(0.5*var(--brad)) 0 0;
+        border: 2px solid var(--bgd2);
+        border-bottom: none;
+    }
+    
+    .explore-search form button{
+        border-radius: 0 0 calc(0.5*var(--brad)) calc(0.5*var(--brad));
+    }
 }
