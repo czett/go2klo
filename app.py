@@ -55,13 +55,17 @@ def startpoint():
     check_cookie_status()
     
     rated = (False, "") # normie case :3
+    report = None # normie case :3
     if session.get("rated"):
         rated = session["rated"]
+    if session.get("report"):
+        report = session["report"]
+        session.pop("report")
 
     ts = get_texts(session["lang"], "index")
 
     session["rated"] = (False, "")
-    return render_template("index.html", session=session, rated=rated, ts=ts)
+    return render_template("index.html", session=session, rated=rated, ts=ts, report=report)
 
 @app.route("/login")
 def login():
@@ -554,17 +558,37 @@ def claim_limited_edition_rank():
 
     return redirect("/")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+@app.route("/report", methods=["POST"])
+def report_process():
+    if not check_login_status():
+        return redirect("/")
+    
+    try:
+        toilet_id = request.form["toilet_id"]
+        report_text = request.form["report_text"]
+        if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", report_text, re.UNICODE):
+            return redirect("/error/400")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+        session["report"] = toilet_id
+
+        user_id = funcs.get_user_id_by_username(session["user"])
+        report_response = funcs.add_report(toilet_id, report_text, user_id)
+
+        return redirect("/")
+    except:
+        return redirect("/")
+
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
+
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

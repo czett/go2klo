@@ -924,7 +924,99 @@ button:disabled{
     cursor: not-allowed;
 }
 
+/* report form */
+
+.report-form{
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    /* display: flex; */
+    flex-direction: column;
+    align-items: start;
+    z-index: 2000;
+    background-color: var(--bg);
+    padding: 2vh;
+    border-radius: var(--brad);
+    border: 2px solid var(--bgd2);
+    min-width: 15vw;
+    width: fit-content;
+    display: none;
+}
+
+.report-form .report-form-title{
+    font-size: 2rem;
+    font-weight: 700;
+    max-width: 100%;
+    text-wrap: nowrap;
+}
+
+.report-form form{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    width: 100%;
+}
+
+.report-form form textarea, .report-form form button{
+    padding: .75vh 1vh;
+    box-sizing: border-box;
+    outline: none;
+    border: 2px solid var(--bgd);
+    resize: none !important;
+    border-radius: calc(var(--brad)/2);
+    font-size: 1rem;
+}
+
+.report-form form button{
+    background-color: #d4040d;
+    border: none;
+} 
+
+.report-form form button span{
+    color: var(--bg);
+    cursor: pointer;
+    font-size: 2rem;
+} 
+
+.report-form form p.close-report-form{
+    font-size: 1rem;
+    color: var(--fg);
+    cursor: pointer;
+    text-decoration: underline;
+    width: 100%;
+    text-align: center;
+}
+
 /* toilet subpage redesign attempt */
+
+.toilet-top-info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2vh;
+}
+
+.toilet-report-btn{
+    background-color: #d4040d;
+    border-radius: var(--brad);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1vh;
+    cursor: pointer;
+    padding: 1vh 2vh;
+    user-select: none;
+}
+
+.toilet-report-btn span{
+    font-size: 2rem;
+    color: var(--bg);
+}
+
+.toilet-report-btn div{
+    font-size: 1.2rem;
+    color: var(--bg);
+}
 
 .avg-ratings{
     display: grid;

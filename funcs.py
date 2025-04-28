@@ -947,3 +947,21 @@ def has_user_rank(user_id: int, rank_name: str):
         return False, ""  # Handle error gracefully
     finally:
         conn.close()
+
+def add_report(tid: int, desc: str, user_id: int):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO reported (tid, description, report_date, user_id)
+                    VALUES (%s, %s, NOW(), %s)
+                    """,
+                    (tid, desc, user_id)
+                )
+        return True, "Report added successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()

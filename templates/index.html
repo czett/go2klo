@@ -114,6 +114,10 @@
 </script>
 {% endif %}
 
+{% if report != None %}
+<script>alert("Thank you for reporting toilet #{{report}}")</script>
+{% endif %}
+
 {% if not session["logged_in"] %}
 <div class="get-started">
     <div class="box-text">{{ts["cta_banner"]}}</div>
