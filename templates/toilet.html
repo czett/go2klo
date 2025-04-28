@@ -1,7 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ts["title"]}}{{ toilet.toilet_id }} ({{toilet.location_str}})</h1>
+<div class="toilet-top-info">
+    <h1>{{ts["title"]}}{{ toilet.toilet_id }} ({{toilet.location_str}})</h1>
+    {% if session.logged_in %}
+    <div class="toilet-report-btn">
+        <span class="material-symbols-rounded">flag</span>
+        <div onmousedown="reportMenu('open')">{{ts["report"]}}</div>
+    </div>
+    
+    <div class="report-form">
+        <form action="/report" method="POST" enctype="multipart/form-data">
+            <div class="report-form-title">{{ts['report']}}</div>
+            <input type="hidden" name="toilet_id" value="{{ toilet.toilet_id }}">
+            <textarea name="report_text" placeholder="{{ts['report_textarea']}}" required></textarea>
+            <button type="submit">
+                <span class="material-symbols-rounded">report</span>
+            </button>
+            <p class="close-report-form" onmousedown="reportMenu('close')">{{ts['cancel']}}</p>
+        </form>
+    </div>
+
+    <script>
+        function reportMenu(action) {
+            const reportForm = document.querySelector('.report-form');
+            if (action === 'open') {
+                reportForm.style.display = 'block';
+            } else if (action === 'close') {
+                reportForm.style.display = 'none';
+            }
+        }
+    </script>
+    {% endif %}
+</div>
 
 <!-- Map container -->
 <div id="map">

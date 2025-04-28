@@ -924,7 +924,99 @@ button:disabled{
     cursor: not-allowed;
 }
 
+/* report form */
+
+.report-form{
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    /* display: flex; */
+    flex-direction: column;
+    align-items: start;
+    z-index: 2000;
+    background-color: var(--bg);
+    padding: 2vh;
+    border-radius: var(--brad);
+    border: 2px solid var(--bgd2);
+    min-width: 15vw;
+    width: fit-content;
+    display: none;
+}
+
+.report-form .report-form-title{
+    font-size: 2rem;
+    font-weight: 700;
+    max-width: 100%;
+    text-wrap: nowrap;
+}
+
+.report-form form{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    width: 100%;
+}
+
+.report-form form textarea, .report-form form button{
+    padding: .75vh 1vh;
+    box-sizing: border-box;
+    outline: none;
+    border: 2px solid var(--bgd);
+    resize: none !important;
+    border-radius: calc(var(--brad)/2);
+    font-size: 1rem;
+}
+
+.report-form form button{
+    background-color: #d4040d;
+    border: none;
+} 
+
+.report-form form button span{
+    color: var(--bg);
+    cursor: pointer;
+    font-size: 2rem;
+} 
+
+.report-form form p.close-report-form{
+    font-size: 1rem;
+    color: var(--fg);
+    cursor: pointer;
+    text-decoration: underline;
+    width: 100%;
+    text-align: center;
+}
+
 /* toilet subpage redesign attempt */
+
+.toilet-top-info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2vh;
+}
+
+.toilet-report-btn{
+    background-color: #d4040d;
+    border-radius: var(--brad);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1vh;
+    cursor: pointer;
+    padding: 1vh 2vh;
+    user-select: none;
+}
+
+.toilet-report-btn span{
+    font-size: 2rem;
+    color: var(--bg);
+}
+
+.toilet-report-btn div{
+    font-size: 1.2rem;
+    color: var(--bg);
+}
 
 .avg-ratings{
     display: grid;
@@ -1151,6 +1243,63 @@ button:disabled{
     /* background-color: red; */
 }
 
+/* reports list for dev rank users */
+
+.reports{
+    margin: 3vh 0
+}
+
+.reports-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.reports-list .report-item{
+    border: 2px solid var(--bgd);
+    border-radius: calc(0.75*var(--brad));
+    box-sizing: border-box;
+    padding: 1vh 2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1vh;
+    grid-auto-rows: 1fr;
+}
+
+.reports-list .report-item .report-details{
+    width: auto;
+    height: 100%;
+}
+
+.reports-list .report-item .report-details *{
+    font-size: 1.1rem;
+}
+
+.reports-list .report-item .report-actions{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: .5vh;
+    width: fit-content;
+    height: 100%;
+}
+
+.reports-list .report-item .report-actions a{
+    padding: 1vh;
+    border-radius: var(--brad);
+    background-color: var(--ac);
+    text-wrap: nowrap;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: var(--bg);
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
@@ -1303,6 +1452,10 @@ button:disabled{
         text-align: center;
         margin-bottom: 1vh;
     } */
+
+    .reports-list{
+        grid-template-columns: repeat(2, 1fr);
+    }   
 }
 
 @media (width < 850px){    
@@ -1541,4 +1694,8 @@ button:disabled{
         line-height: 100%;
         margin: 0;
     }
+
+    .reports-list{
+        grid-template-columns: repeat(1, 1fr);
+    }  
 }

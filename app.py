@@ -55,13 +55,17 @@ def startpoint():
     check_cookie_status()
     
     rated = (False, "") # normie case :3
+    report = None # normie case :3
     if session.get("rated"):
         rated = session["rated"]
+    if session.get("report"):
+        report = session["report"]
+        session.pop("report")
 
     ts = get_texts(session["lang"], "index")
 
     session["rated"] = (False, "")
-    return render_template("index.html", session=session, rated=rated, ts=ts)
+    return render_template("index.html", session=session, rated=rated, ts=ts, report=report)
 
 @app.route("/login")
 def login():
@@ -475,6 +479,11 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
+    if own == True and user_rank == "dev":
+        reports = []
+        reports = funcs.get_all_reports()
+        return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
+
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
     return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
 
@@ -554,6 +563,58 @@ def claim_limited_edition_rank():
 
     return redirect("/")
 
+@app.route("/report", methods=["POST"])
+def report_process():
+    if not check_login_status():
+        return redirect("/")
+    
+    try:
+        toilet_id = request.form["toilet_id"]
+        report_text = request.form["report_text"]
+        if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", report_text, re.UNICODE):
+            return redirect("/error/400")
+
+        session["report"] = toilet_id
+
+        user_id = funcs.get_user_id_by_username(session["user"])
+        report_response = funcs.add_report(toilet_id, report_text, user_id)
+
+        return redirect("/")
+    except:
+        return redirect("/")
+    
+@app.route("/report/decline/<rid>")
+def decline_report(rid):
+    if not check_login_status():
+        return redirect("/")
+    
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
+
+        has_rank = funcs.has_user_rank(uid, "dev")
+
+        if has_rank[0] == True and has_rank[1] == "":
+            funcs.delete_report_by_id(rid)
+
+    return redirect("/myprofile")
+
+@app.route("/report/accept/<tid>")
+def accept_report(tid):
+    if not check_login_status():
+        return redirect("/")
+    
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
+
+        has_rank = funcs.has_user_rank(uid, "dev")
+
+        if has_rank[0] == True:
+            funcs.delete_toilet_by_id(int(tid))
+        
+    return redirect("/myprofile")
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
@@ -567,4 +628,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
