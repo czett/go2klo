@@ -541,7 +541,7 @@ def clear_notifications():
 @app.route("/claim/limited-edition-rank")
 def claim_limited_edition_rank():
     if not check_login_status():
-        return redirect("/explore")
+        return redirect("/")
     
     if session.get("user"):
         user = session["user"]
