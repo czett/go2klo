@@ -444,15 +444,16 @@ def get_all_toilets(): # just for initial click on explore, to be concise the ca
                         t.latitude, 
                         t.longitude,
                         t.location_str,
-                        COUNT(r.rating_id) AS rating_count
+                        COUNT(r.rating_id) AS rating_count,
+                        MAX(r.rating_date) AS latest_rating_date
                     FROM toilets t
                     LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
                     GROUP BY t.toilet_id, t.location_str
-                    ORDER BY t.toilet_id DESC
+                    ORDER BY latest_rating_date DESC NULLS LAST, t.toilet_id DESC
                 """)
                 toilets = cur.fetchall()
 
-                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "location_str": toilet[3], "rating_count": toilet[4]} for toilet in toilets]
+                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "location_str": toilet[3], "rating_count": toilet[4], "latest_rating_date": toilet[5]} for toilet in toilets]
     except Exception as e:
         return f"Error: {e}"
     
