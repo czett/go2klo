@@ -938,9 +938,12 @@ def has_user_rank(user_id: int, rank_name: str):
             if result and result[0] == rank_name:
                 return True, ""
             elif result and result[0] != rank_name:
-                return False, f"User has a different rank: {result[0]}"
-            return False, ""
+                if result[0] is None or result[0] == "None":
+                    return False, ""
+                else:
+                    return False, f"User has a different rank: {result[0]}"
+            return False, ""  # Return False, "" when rank is null or no result
     except Exception as e:
-        return False  # Handle error gracefully
+        return False, ""  # Handle error gracefully
     finally:
         conn.close()
