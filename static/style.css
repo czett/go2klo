@@ -1759,4 +1759,27 @@ button:disabled{
     .toilet-top-info h1{
         margin-bottom: 0vh;
     }
+
+    /* explore search */
+
+    .explore-search form{
+        padding-bottom: 1vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .explore-search form *{
+        font-size: 1.15rem;
+        padding: 2vh 1vh;
+    }
+    
+    .explore-search form input{
+        border-radius: calc(0.5*var(--brad)) calc(0.5*var(--brad)) 0 0;
+        border: 2px solid var(--bgd2);
+        border-bottom: none;
+    }
+    
+    .explore-search form button{
+        border-radius: 0 0 calc(0.5*var(--brad)) calc(0.5*var(--brad));
+    }
 }
