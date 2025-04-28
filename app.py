@@ -370,8 +370,8 @@ def finish_rating():
 def explore():
     check_cookie_status()
     ts = get_texts(session["lang"], "explore")
-    toilets = funcs.get_all_toilets()
-    return render_template("explore.html", toilets=toilets, ts=ts, session=session)
+    
+    return render_template("explore.html", ts=ts, session=session)
 
 @app.route("/api/toilets")
 def toilets_api(): # thanks GPT here :o
@@ -628,4 +628,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

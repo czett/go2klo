@@ -47,7 +47,10 @@
                 "tip": "tip: click a pin to get to its ratings",
                 "toilet": "Toilet",
                 "ratings": "Ratings",
-                "coords": "Coordinates"
+                "coords": "Coordinates",
+                "search-title": "Search for toilets",
+                "search-placeholder": "Search for toilets by name or address",
+                "search-button": "Search"
             },
             "get_location": {
                 "title": "Rate your toilet",
@@ -164,7 +167,10 @@
                 "tip": "Tipp: Klicke auf eine Markierung, um die Bewertungen zu sehen",
                 "toilet": "Toilette",
                 "ratings": "Bewertungen",
-                "coords": "Koordinaten"
+                "coords": "Koordinaten",
+                "search-title": "Suche nach Toiletten",
+                "search-placeholder": "Suche nach Toilettenname oder Adresse",
+                "search-button": "Suche"
             },
             "get_location": {
                 "title": "Bewerte deine Toilette",
@@ -281,7 +287,10 @@
                 "tip": "съвет: кликнете на пин, за да видите оценките му",
                 "toilet": "Тоалетна",
                 "ratings": "Оценки",
-                "coords": "Координати"
+                "coords": "Координати",
+                "search-title": "Търсене на тоалетни",
+                "search-placeholder": "Търсене на тоалетни по име или адрес",
+                "search-button": "Търсене"
             },
             "get_location": {
                 "title": "Оценете вашата тоалетна",
@@ -398,7 +407,10 @@
                 "tip": "astuce : cliquez sur une épingle pour voir ses notes",
                 "toilet": "Toilette",
                 "ratings": "Notes",
-                "coords": "Coordonnées"
+                "coords": "Coordonnées",
+                "search-title": "Rechercher des toilettes",
+                "search-placeholder": "Rechercher des toilettes par nom ou adresse",
+                "search-button": "Rechercher"
             },
             "get_location": {
                 "title": "Notez votre toilette",
@@ -515,7 +527,10 @@
                 "tip": "consejo: haz clic en un pin para ver sus calificaciones",
                 "toilet": "Baño",
                 "ratings": "Calificaciones",
-                "coords": "Coordenadas"
+                "coords": "Coordenadas",
+                "search-title": "Buscar baños",
+                "search-placeholder": "Buscar baños por nombre o dirección",
+                "search-button": "Buscar"
             },
             "get_location": {
                 "title": "Califica tu baño",
@@ -632,7 +647,10 @@
                 "tip": "consiglio: fai clic su un pin per vedere le valutazioni",
                 "toilet": "Bagno",
                 "ratings": "Valutazioni",
-                "coords": "Coordinate"
+                "coords": "Coordinate",
+                "search-title": "Cerca bagni",
+                "search-placeholder": "Cerca bagni per nome o indirizzo",
+                "search-button": "Cerca"
             },
             "get_location": {
                 "title": "Valuta il tuo bagno",
@@ -749,7 +767,10 @@
                 "tip": "tips: klikk på en nål for å få tilgang til vurderingene",
                 "toilet": "Toalett",
                 "ratings": "Vurderinger",
-                "coords": "Koordinater"
+                "coords": "Koordinater",
+                "search-title": "Søk etter toaletter",
+                "search-placeholder": "Søk etter toaletter etter navn eller adresse",
+                "search-button": "Søk"
             },
             "get_location": {
                 "title": "Vurder ditt toalett",
@@ -866,7 +887,10 @@
                 "tip": "Tipp: Klick auf'n Pin für Bewertungen",
                 "toilet": "Klo",
                 "ratings": "Bewertungen",
-                "coords": "Koordinaten"
+                "coords": "Koordinaten",
+                "search-title": "Such nach Klos",
+                "search-placeholder": "Such nach Klos mit Namen oder Adresse",
+                "search-button": "Such'n"
             },
             "get_location": {
                 "title": "Bewert dein Klo",
@@ -983,7 +1007,10 @@
                 "tip": "Këshillë: Kliko një shenjë për të parë vlerësimet",
                 "toilet": "Tualet",
                 "ratings": "Vlerësime",
-                "coords": "Koordinata"
+                "coords": "Koordinata",
+                "search-title": "Kërko tualete",
+                "search-placeholder": "Kërko tualete sipas emrit ose adresës",
+                "search-button": "Kërko"
             },
             "get_location": {
                 "title": "Vlerëso tualetin tënd",

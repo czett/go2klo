@@ -5,11 +5,20 @@
 <div class="map-tip">{{ts["tip"]}}</div>
 <div id="map"></div>
 
-<div class="toilets-list">
+<div class="explore-search">
+    <div class="search-title">
+        {{ts["search-title"]}}
+    </div>
+    <form action="/explore/search" enctype="multipart/form-data" method="post">
+        <input type="text" name="search-query" placeholder="{{ts['search-placeholder']}}" required>
+        <button type="submit">{{ts['search-button']}}</button>
+    </form>
+</div>
+
+<!--<div class="toilets-list">
     {% for toilet in toilets %}
     <a href="/toilet/{{toilet['toilet_id']}}">
         <div class="toilet">
-            <!-- <div class="name">{{ts["toilet"]}} {{toilet["toilet_id"]}}</div> -->
             <div class="toilet-data">
                 <div class="name">{{toilet["location_str"]}} (#{{toilet["toilet_id"]}})</div>
                 <div class="coords">{{ts["coords"]}}: {{toilet["latitude"]}}, {{toilet["longitude"]}}</div>
@@ -27,7 +36,7 @@
         </div>
     </a>
     {% endfor %}
-</div>
+</div>-->
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>

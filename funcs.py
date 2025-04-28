@@ -1020,3 +1020,30 @@ def delete_report_by_id(report_id: int):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def search_toilets(query: str):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT toilet_id, latitude, longitude, location_str
+                    FROM toilets
+                    WHERE location_str LIKE %s
+                """, (f"%{query}%",))
+
+                toilet_results = cur.fetchall()
+
+                return [
+                    {
+                        "toilet_id": toilet[0],
+                        "latitude": toilet[1],
+                        "longitude": toilet[2],
+                        "location_str": toilet[3]
+                    }
+                    for toilet in toilet_results
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
