@@ -1243,6 +1243,63 @@ button:disabled{
     /* background-color: red; */
 }
 
+/* reports list for dev rank users */
+
+.reports{
+    margin: 3vh 0
+}
+
+.reports-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.reports-list .report-item{
+    border: 2px solid var(--bgd);
+    border-radius: calc(0.75*var(--brad));
+    box-sizing: border-box;
+    padding: 1vh 2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1vh;
+    grid-auto-rows: 1fr;
+}
+
+.reports-list .report-item .report-details{
+    width: auto;
+    height: 100%;
+}
+
+.reports-list .report-item .report-details *{
+    font-size: 1.1rem;
+}
+
+.reports-list .report-item .report-actions{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: .5vh;
+    width: fit-content;
+    height: 100%;
+}
+
+.reports-list .report-item .report-actions a{
+    padding: 1vh;
+    border-radius: var(--brad);
+    background-color: var(--ac);
+    text-wrap: nowrap;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: var(--bg);
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
@@ -1395,6 +1452,10 @@ button:disabled{
         text-align: center;
         margin-bottom: 1vh;
     } */
+
+    .reports-list{
+        grid-template-columns: repeat(2, 1fr);
+    }   
 }
 
 @media (width < 850px){    
@@ -1633,4 +1694,8 @@ button:disabled{
         line-height: 100%;
         margin: 0;
     }
+
+    .reports-list{
+        grid-template-columns: repeat(1, 1fr);
+    }  
 }

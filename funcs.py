@@ -965,3 +965,57 @@ def add_report(tid: int, desc: str, user_id: int):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def get_all_reports():
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT id, tid, user_id, description, report_date
+                    FROM reported
+                    ORDER BY report_date DESC
+                """)
+                reports = cur.fetchall()
+
+                return [
+                    {
+                        "id": report[0],
+                        "tid": report[1],
+                        "user_id": report[2],
+                        "description": report[3],
+                        "report_date": report[4]
+                    }
+                    for report in reports
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def delete_toilet_by_id(toilet_id: int):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM ratings WHERE toilet_id = %s", (toilet_id,))
+                cur.execute("DELETE FROM toilets WHERE toilet_id = %s", (toilet_id,))
+                cur.execute("DELETE FROM reported WHERE tid = %s", (toilet_id,))
+            conn.commit()
+        return True, f"Toilet mit der ID {toilet_id} wurde erfolgreich gelöscht."
+    except Exception as e:
+        return False, f"Fehler: {e}"
+    finally:
+        conn.close()
+
+def delete_report_by_id(report_id: int):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM reported WHERE id = %s", (report_id,))
+        return True, f"Report with ID {report_id} deleted successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()

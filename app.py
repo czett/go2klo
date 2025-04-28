@@ -479,6 +479,11 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
+    if own == True and user_rank == "dev":
+        reports = []
+        reports = funcs.get_all_reports()
+        return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
+
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
     return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
 
@@ -577,18 +582,50 @@ def report_process():
         return redirect("/")
     except:
         return redirect("/")
+    
+@app.route("/report/decline/<rid>")
+def decline_report(rid):
+    if not check_login_status():
+        return redirect("/")
+    
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     code = 500
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#     return redirect(f"/error/{code}")
+        has_rank = funcs.has_user_rank(uid, "dev")
 
-# @app.route("/error/<code>")
-# def error(code):
-#     ts = get_texts(session["lang"], "error")
-#     return render_template("error.html", ts=ts, code=f"error {code} :(")
+        if has_rank[0] == True and has_rank[1] == "":
+            funcs.delete_report_by_id(rid)
+
+    return redirect("/myprofile")
+
+@app.route("/report/accept/<tid>")
+def accept_report(tid):
+    if not check_login_status():
+        return redirect("/")
+    
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
+
+        has_rank = funcs.has_user_rank(uid, "dev")
+
+        if has_rank[0] == True:
+            funcs.delete_toilet_by_id(int(tid))
+        
+    return redirect("/myprofile")
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
+
+@app.route("/error/<code>")
+def error(code):
+    ts = get_texts(session["lang"], "error")
+    return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
     app.run(debug=True, port=7000)
