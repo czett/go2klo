@@ -49,7 +49,7 @@
                 "ratings": "Ratings",
                 "coords": "Coordinates",
                 "search-title": "Search for toilets",
-                "search-placeholder": "Search for toilets by name or address",
+                "search-placeholder": "Search for toilets by address, city or country",
                 "search-button": "Search"
             },
             "get_location": {
@@ -169,7 +169,7 @@
                 "ratings": "Bewertungen",
                 "coords": "Koordinaten",
                 "search-title": "Suche nach Toiletten",
-                "search-placeholder": "Suche nach Toilettenname oder Adresse",
+                "search-placeholder": "Suche nach Toiletten nach Adresse, Ort oder Land",
                 "search-button": "Suche"
             },
             "get_location": {
@@ -289,7 +289,7 @@
                 "ratings": "Оценки",
                 "coords": "Координати",
                 "search-title": "Търсене на тоалетни",
-                "search-placeholder": "Търсене на тоалетни по име или адрес",
+                "search-placeholder": "Търсене на тоалетни по адрес, град или държава",
                 "search-button": "Търсене"
             },
             "get_location": {
@@ -409,7 +409,7 @@
                 "ratings": "Notes",
                 "coords": "Coordonnées",
                 "search-title": "Rechercher des toilettes",
-                "search-placeholder": "Rechercher des toilettes par nom ou adresse",
+                "search-placeholder": "Rechercher des toilettes par adresse, ville ou pays",
                 "search-button": "Rechercher"
             },
             "get_location": {
@@ -529,7 +529,7 @@
                 "ratings": "Calificaciones",
                 "coords": "Coordenadas",
                 "search-title": "Buscar baños",
-                "search-placeholder": "Buscar baños por nombre o dirección",
+                "search-placeholder": "Buscar baños por dirección, ciudad o país",
                 "search-button": "Buscar"
             },
             "get_location": {
@@ -649,7 +649,7 @@
                 "ratings": "Valutazioni",
                 "coords": "Coordinate",
                 "search-title": "Cerca bagni",
-                "search-placeholder": "Cerca bagni per nome o indirizzo",
+                "search-placeholder": "Cerca bagni per indirizzo, città o paese",
                 "search-button": "Cerca"
             },
             "get_location": {
@@ -769,7 +769,7 @@
                 "ratings": "Vurderinger",
                 "coords": "Koordinater",
                 "search-title": "Søk etter toaletter",
-                "search-placeholder": "Søk etter toaletter etter navn eller adresse",
+                "search-placeholder": "Søk etter toaletter etter adresse, by eller land",
                 "search-button": "Søk"
             },
             "get_location": {
@@ -889,7 +889,7 @@
                 "ratings": "Bewertungen",
                 "coords": "Koordinaten",
                 "search-title": "Such nach Klos",
-                "search-placeholder": "Such nach Klos mit Namen oder Adresse",
+                "search-placeholder": "Such nach Klos mit Adresse, Stadt oder Land",
                 "search-button": "Such'n"
             },
             "get_location": {
@@ -1009,7 +1009,7 @@
                 "ratings": "Vlerësime",
                 "coords": "Koordinata",
                 "search-title": "Kërko tualete",
-                "search-placeholder": "Kërko tualete sipas emrit ose adresës",
+                "search-placeholder": "Kërko tualete sipas adresës, qytetit ose vendit",
                 "search-button": "Kërko"
             },
             "get_location": {

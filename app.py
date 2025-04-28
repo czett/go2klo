@@ -373,6 +373,19 @@ def explore():
     
     return render_template("explore.html", ts=ts, session=session)
 
+@app.route("/explore/search", methods=["POST"])
+def search_toilets():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "explore")
+
+    try:
+        query = request.form["search-query"]
+    except:
+        return redirect("/explore")
+
+    toilets = funcs.search_toilets(query)
+    return render_template("explore.html", ts=ts, session=session, toilets=toilets)
+
 @app.route("/api/toilets")
 def toilets_api(): # thanks GPT here :o
     start_id = request.args.get("start_id", default=0, type=int)
@@ -615,17 +628,17 @@ def accept_report(tid):
         
     return redirect("/myprofile")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
     app.run(debug=True, port=7000)

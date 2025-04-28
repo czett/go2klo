@@ -15,7 +15,8 @@
     </form>
 </div>
 
-<!--<div class="toilets-list">
+{% if toilets %}
+<div class="toilets-list">
     {% for toilet in toilets %}
     <a href="/toilet/{{toilet['toilet_id']}}">
         <div class="toilet">
@@ -36,7 +37,8 @@
         </div>
     </a>
     {% endfor %}
-</div>-->
+</div>
+{% endif %}
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
