@@ -705,6 +705,7 @@ def get_users_sorted_by_ratings():
                 cur.execute("""
                     SELECT 
                         u.username, 
+                        u.rank, 
                         COUNT(r.rating_id) AS rating_count
                     FROM users u
                     LEFT JOIN ratings r ON u.user_id = r.rated_user_id  -- Changed to use user_id
@@ -715,7 +716,7 @@ def get_users_sorted_by_ratings():
                 """)
                 users = cur.fetchall()
 
-                return [{"username": user[0], "rating_count": user[1]} for user in users]
+                return [{"username": user[0], "rank": user[1], "rating_count": user[2]} for user in users]
     except Exception as e:
         return {"error": str(e)}
     finally:

@@ -13,13 +13,26 @@
 <div class="leaderboard">
     <div class="title">{{ts["leaderboard"]}}</div>
     {% for entry in session.leaderboard %}
-        <div class="entry">
+        <div class="entry" onmousedown="redirect('/profile/{{ entry.username }}')">
             <a href="/profile/{{entry.username}}">
                 <div class="username">{{loop.index}}. @{{entry.username}}</div>
+                {% if entry.rank != None and entry.rank != "None" %}
+                    <div class="user-rank user-rank-{{entry.rank}}">
+                        <span class="material-symbols-rounded">{{icon_map[entry.rank]}}</span>
+                        <div>{{entry.rank}}</div>
+                    </div>
+                {% endif %}
             </a>
             <div class="ratings">{{entry.rating_count}}</div>
         </div>
     {% endfor %}
 </div>
+
+
+<script>
+    function redirect(url) {
+        window.location.href = url;
+    }
+</script>
 
 {% endblock %}

@@ -732,11 +732,16 @@ input[type="range"]::-webkit-slider-thumb {
     background: var(--bg);
     padding: 1.5vw;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .leaderboard .entry a{
     text-decoration: none;
     font-weight: 600;
+    display: flex;
+    justify-content: start;
+    gap: 1vh;
+    align-items: center;
 }
 
 .leaderboard .entry:nth-of-type(odd){
@@ -1094,6 +1099,38 @@ button:disabled{
     scale: 1.02;
     filter: saturate(1.1);
     cursor: pointer;
+}
+
+.leaderboard .entry a .user-rank{
+    padding: .5vh 1.25vh;
+    color: var(--bg);
+    box-sizing: border-box;
+    border-radius: var(--brad);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5vh;
+}
+
+.leaderboard .entry a .user-rank *{
+    color: var(--bg);
+    font-size: 1.25rem;
+}
+
+.leaderboard .entry a .user-rank.user-rank-dev{
+    background: linear-gradient(45deg, #318b35, #85e689);
+}
+
+.leaderboard .entry a .user-rank.user-rank-supporter{
+    background: linear-gradient(45deg, #d4040d, #e57373);
+}
+
+.leaderboard .entry a .user-rank.user-rank-og{
+    background: linear-gradient(45deg, #9c87f2, #de86f4);
+}
+
+.leaderboard .entry a .user-rank.user-rank-basic{
+    background: linear-gradient(45deg, #795548, #a1887f);
 }
 
 .comments-list .comment-item.special-basic{

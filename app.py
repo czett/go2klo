@@ -13,6 +13,8 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
+rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake"}
+
 def check_login_status():
     if session.get("logged_in"):
         if session["logged_in"]:
@@ -427,7 +429,6 @@ def toilet():
 
     tid = session["tid"]
     info = funcs.get_toilet_details(tid)
-    rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake"}
 
     if info == None:
         return redirect("/explore") # redirect to explore if toilet does not exist
@@ -532,10 +533,8 @@ def leaderboard():
         leaderboard = funcs.get_users_sorted_by_ratings()
         session["leaderboard"] = leaderboard
 
-    # test
-
     ts = get_texts(session["lang"], "leaderboard")
-    return render_template("leaderboard.html", ts=ts, session=session)
+    return render_template("leaderboard.html", ts=ts, session=session, icon_map=rank_icon_map)
 
 @app.route("/trending")
 def trending():
@@ -647,4 +646,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
