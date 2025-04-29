@@ -1,11 +1,17 @@
 from flask import Flask, render_template, redirect, session, request, url_for, jsonify
-import funcs, re, random, json
+import funcs, re, random, json, os
 from werkzeug.exceptions import HTTPException
 from datetime import datetime
 from better_profanity import profanity
+from dotenv import load_dotenv
+
+try:
+    load_dotenv()
+except:
+    pass # :) great code, right?
 
 app = Flask(__name__)
-app.secret_key = "wlfuiqhwelfiuwehfliwuehfwhevfjkhvgrlidzuf"
+app.secret_key = os.getenv("SECRET_KEY")
 
 def check_login_status():
     if session.get("logged_in"):
