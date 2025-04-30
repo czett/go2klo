@@ -378,8 +378,10 @@ def finish_rating():
 def explore():
     check_cookie_status()
     ts = get_texts(session["lang"], "explore")
+
+    toilets = funcs.get_toilets(20)
     
-    return render_template("explore.html", ts=ts, session=session)
+    return render_template("explore.html", ts=ts, session=session, toilets=toilets)
 
 @app.route("/explore/search", methods=["POST"])
 def search_toilets():
@@ -646,4 +648,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)

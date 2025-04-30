@@ -1087,6 +1087,7 @@ button:disabled{
     /* height: fit-content; */
     overflow: hidden;
     min-height: 12vh;
+    cursor: pointer;
 }
 
 .comments-list .comment-item.special{
