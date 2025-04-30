@@ -433,7 +433,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     finally:
         conn.close()
 
-def get_all_toilets(): # just for initial click on explore, to be concise the cards below map.
+def get_toilets(num=10): # just for initial click on explore, to be concise the cards below map.
     try:
         conn = get_db_connection()
         with conn:
@@ -450,7 +450,8 @@ def get_all_toilets(): # just for initial click on explore, to be concise the ca
                     LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
                     GROUP BY t.toilet_id, t.location_str
                     ORDER BY latest_rating_date DESC NULLS LAST, t.toilet_id DESC
-                """)
+                    LIMIT %s
+                """, (num,))
                 toilets = cur.fetchall()
 
                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "location_str": toilet[3], "rating_count": toilet[4], "latest_rating_date": toilet[5]} for toilet in toilets]
@@ -705,6 +706,7 @@ def get_users_sorted_by_ratings():
                 cur.execute("""
                     SELECT 
                         u.username, 
+                        u.rank, 
                         COUNT(r.rating_id) AS rating_count
                     FROM users u
                     LEFT JOIN ratings r ON u.user_id = r.rated_user_id  -- Changed to use user_id
@@ -715,7 +717,7 @@ def get_users_sorted_by_ratings():
                 """)
                 users = cur.fetchall()
 
-                return [{"username": user[0], "rating_count": user[1]} for user in users]
+                return [{"username": user[0], "rank": user[1], "rating_count": user[2]} for user in users]
     except Exception as e:
         return {"error": str(e)}
     finally:

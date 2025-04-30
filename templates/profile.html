@@ -38,7 +38,7 @@
 
     <div class="comments-list">
         {% for rating in session["user_ratings_" + pid] | reverse %}
-            <div class="comment-item">
+            <div class="comment-item" onmousedown="redirect('/toilet/{{ rating.toilet_id }}')">
                 <div class="comment-data">
                     <div class="comment-publisher">
                         <a href="/toilet/{{ rating.toilet_id }}"><strong>{{ts["toilet"]}} #{{ rating.toilet_id }}:</strong></a>                    </div>
@@ -127,5 +127,11 @@
         .openPopup();
     {% endfor %}
 </script> -->
+
+<script>
+    function redirect(url) {
+        window.location.href = url;
+    }
+</script>
 
 {% endblock %}
