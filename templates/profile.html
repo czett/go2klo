@@ -7,10 +7,10 @@
         <div class="title-text">
             @{{session["username_" + pid]}}
             {% if rank is not none %}
-                        <div class="user-rank profile-rank-banner-{{rank}}">
-                            <span class="material-symbols-rounded">{{icon_map[rank]}}</span>
-                            {{rank}}
-                        </div>
+                <div class="user-rank profile-rank-banner-{{rank}}">
+                    <span class="material-symbols-rounded">{{icon_map[rank]}}</span>
+                    {{rank}}
+                </div>
             {% endif %}
         </div>
         <div class="bottom-text">@{{session["username_" + pid]}} {{ts["has"]}} {{session["user_ratings_" + pid]|length}} {{ts["ratings"]}}</div>
