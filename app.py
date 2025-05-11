@@ -13,7 +13,7 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake"}
+rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign"}
 
 def check_login_status():
     if session.get("logged_in"):
@@ -484,7 +484,6 @@ def profile(pid):
     # AS OF NOW, APRIL 4TH 25, I AM REMOVING THE USER MAP DUE TO IT BEING UNNECESSARY AND CHEWING UP MY VERCEL PLAN
     #avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
 
-    rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake"}
     user_rank = funcs.get_user_rank(pid)
 
     nots = []
@@ -648,4 +647,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

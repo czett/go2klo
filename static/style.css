@@ -191,16 +191,18 @@ body, html {
     justify-content: space-between;
     gap: 1vh;
     align-items: center;
-    border: 2px solid var(--ac);
     padding: 1vh 2vh;
     box-sizing: border-box;
     border-radius: var(--brad);
     font-size: 2rem !important;
     font-weight: 500;
+    font-size: 1.25rem !important;
+    color: var(--bg) !important;
 }
 
 .banner .title-text .user-rank span{
     font-size: 2rem !important;
+    color: var(--bg) !important;
 }
 
 .banner .bottom-text{
@@ -1125,84 +1127,44 @@ button:disabled{
     font-size: 1.25rem;
 }
 
-.leaderboard .entry a .user-rank.user-rank-dev{
+.leaderboard .entry a .user-rank.user-rank, .comments-list .comment-item.special, .banner .title-text .user-rank, .banner .title-text .user-rank, .banner .title-text .user-rank{
+    background: linear-gradient(45deg, #795548, #a1887f);
+}
+
+.leaderboard .entry a .user-rank.user-rank-dev, .comments-list .comment-item.special-dev, .banner .title-text .user-rank.profile-rank-banner-dev{
     background: linear-gradient(45deg, #318b35, #85e689);
 }
 
-.leaderboard .entry a .user-rank.user-rank-supporter{
+.leaderboard .entry a .user-rank.user-rank-supporter, .comments-list .comment-item.special-supporter, .banner .title-text .user-rank.profile-rank-banner-supporter{
     background: linear-gradient(45deg, #d4040d, #e57373);
 }
 
-.leaderboard .entry a .user-rank.user-rank-og{
+.leaderboard .entry a .user-rank.user-rank-og, .comments-list .comment-item.special-og, .banner .title-text .user-rank.profile-rank-banner-og{
     background: linear-gradient(45deg, #9c87f2, #de86f4);
 }
 
-.leaderboard .entry a .user-rank.user-rank-basic{
-    background: linear-gradient(45deg, #795548, #a1887f);
-}
-
-.comments-list .comment-item.special-basic{
-    background: linear-gradient(45deg, #795548, #a1887f);
+.leaderboard .entry a .user-rank.user-rank-creator, .comments-list .comment-item.special-creator, .banner .title-text .user-rank.profile-rank-banner-creator{
+    background: linear-gradient(45deg, #E07800, #D6A600);
 }
 
 .comments-list .comment-item.special .comment-publisher .comment-rank *{
     color: #795548 !important;
 }
 
-.banner .title-text .user-rank, .banner .title-text .user-rank span{
-    color: #795548;
-}
-
-.banner .title-text .user-rank{
-    border: 4px solid #795548;
-}
-
-.comments-list .comment-item.special-dev{
-    background: linear-gradient(45deg, #318b35, #85e689);
-}
-
 .comments-list .comment-item.special-dev .comment-publisher .comment-rank *{
     color: #318b35 !important;
-}
-
-.banner .title-text .user-rank.profile-rank-banner-dev, .banner .title-text .user-rank.profile-rank-banner-dev span{
-    color: #318b35;
-}
-
-.banner .title-text .user-rank.profile-rank-banner-dev{
-    border: 4px solid #318b35;
-}
-
-.comments-list .comment-item.special-supporter{
-    background: linear-gradient(45deg, #d4040d, #e57373);
 }
 
 .comments-list .comment-item.special-supporter .comment-publisher .comment-rank *{
     color: #d4040d !important;
 }
 
-.banner .title-text .user-rank.profile-rank-banner-supporter, .banner .title-text .user-rank.profile-rank-banner-supporter span{
-    color: #d4040d;
-}
-
-.banner .title-text .user-rank.profile-rank-banner-supporter{
-    border: 4px solid #d4040d;
-}
-
-.comments-list .comment-item.special-og{
-    background: linear-gradient(45deg, #9c87f2, #de86f4);
-}
-
 .comments-list .comment-item.special-og .comment-publisher .comment-rank *{
     color: #9c87f2 !important;
 }
 
-.banner .title-text .user-rank.profile-rank-banner-og, .banner .title-text .user-rank.profile-rank-banner-og span{
-    color: #9c87f2;
-}
-
-.banner .title-text .user-rank.profile-rank-banner-og{
-    border: 4px solid #9c87f2;
+.comments-list .comment-item.special-creator .comment-publisher .comment-rank *{
+    color: #E07800 !important;
 }
 
 .comments-list .comment-item.special *:not(.comment-rank span){
