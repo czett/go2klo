@@ -10,7 +10,7 @@
             <div class="logreg-msg msg">{{msg}}</div>
         {% endif %} 
 
-        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="30">
+        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="30" id="location_str">
     
         {% if msg != None %}
             <button type="submit" disabled>{{ts["submit"]}}</button>
@@ -19,6 +19,12 @@
         {% endif %}    
     </form>
 </div>
+
+{% if rating_coords != None %}
+<script>
+document.getElementById("location_str").value = "{{rating_coords}}";
+</script>
+{% endif %}
 
 {% endblock %}
 

@@ -341,7 +341,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 cur.execute(
                     """
                     SELECT toilet_id FROM toilets
-                    WHERE ABS(latitude - %s) <= 0.0001 AND ABS(longitude - %s) <= 0.0001
+                    WHERE ABS(latitude - %s) <= 0.000225 AND ABS(longitude - %s) <= 0.000225
                     """,
                     (latitude, longitude)
                 )
