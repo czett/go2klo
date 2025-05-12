@@ -4,9 +4,15 @@
 <div class="toilet-top-info">
     <h1>{{ts["title"]}}{{ toilet.toilet_id }} ({{toilet.location_str}})</h1>
     {% if session.logged_in %}
-    <div class="toilet-report-btn">
-        <span class="material-symbols-rounded">flag</span>
-        <div onmousedown="reportMenu('open')">{{ts["report"]}}</div>
+    <div class="toilet-top-btns">
+        <div class="toilet-report-btn">
+            <span class="material-symbols-rounded">flag</span>
+            <div onmousedown="reportMenu('open')">{{ts["report"]}}</div>
+        </div>
+        <div class="rate-this-toilet-btn">
+            <span class="material-symbols-rounded">rate_review</span>
+            <div onmousedown="redirect('/rate/t/{{toilet.toilet_id}}')">{{ts["rate"]}}</div>
+        </div>
     </div>
     
     <div class="report-form">

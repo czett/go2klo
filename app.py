@@ -305,6 +305,13 @@ def rate():
     check_cookie_status()
     if not check_login_status():
         return redirect("/login")
+    
+    if session.get("rating_coords") != None:
+        rating_coords = session.get("rating_coords")
+    else:
+        rating_coords = None
+
+    session["rating_coords"] = None
 
     ts = get_texts(session["lang"], "get_location")
 
@@ -316,7 +323,27 @@ def rate():
             cooldown_msg = "You have to wait " + str(int(cooldown_time/60)) + " minutes between ratings! Currently you have to wait for " + str(cooldown_time - int(datetime.now().timestamp() - session["cooldown"])) + " seconds."
             return render_template("get_location.html", session=session, ts=ts, msg=cooldown_msg)
 
-    return render_template("get_location.html", session=session, ts=ts, msg=None)
+    return render_template("get_location.html", session=session, ts=ts, msg=None, rating_coords=rating_coords)
+
+@app.route("/rate/t/<tid>")
+def rate_tid(tid):
+    check_cookie_status()
+    if not check_login_status():
+        return redirect("/login")
+    
+    if not tid:
+        return redirect("/explore")
+
+    # check if toilet exists
+    toilet = funcs.get_toilet_details(tid)
+    if toilet == None:
+        return redirect("/explore")
+
+    lat, lng = toilet["latitude"], toilet["longitude"]
+    
+    session["rating_coords"] = f"{lat}, {lng}"
+    
+    return redirect("/rate")
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
@@ -390,6 +417,19 @@ def search_toilets():
 
     try:
         query = request.form["search-query"]
+        query = query.strip()
+        if profanity.contains_profanity(query) or "gustav" in query.lower():
+            return redirect("/explore")
+        if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", query, re.UNICODE):
+            return redirect("/explore")
+        if not query:
+            return redirect("/explore")
+        if len(query) > 100:
+            return redirect("/explore")
+        
+        # österreich fix :3
+        query = re.sub(r"[^\w\s]", "", query)
+        query = query.encode("ascii", "ignore").decode()
     except:
         return redirect("/explore")
 
