@@ -1010,7 +1010,14 @@ button:disabled{
     gap: 2vh;
 }
 
-.toilet-report-btn{
+.toilet-top-btns{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1vh;
+}
+
+.toilet-report-btn, .rate-this-toilet-btn{
     background-color: #d4040d;
     border-radius: var(--brad);
     display: flex;
@@ -1022,12 +1029,16 @@ button:disabled{
     user-select: none;
 }
 
-.toilet-report-btn span{
+.rate-this-toilet-btn{
+    background-color: var(--ac);
+}
+
+.toilet-report-btn span, .rate-this-toilet-btn span{
     font-size: 2rem;
     color: var(--bg);
 }
 
-.toilet-report-btn div{
+.toilet-report-btn div, .rate-this-toilet-btn div{
     font-size: 1.2rem;
     color: var(--bg);
 }
@@ -1761,10 +1772,27 @@ button:disabled{
         gap: 2vh;
         padding-bottom: 2vh;
         height: auto;
+        width: 100%;
     }
 
     .toilet-top-info h1{
         margin-bottom: 0vh;
+    }
+    
+    .toilet-top-btns{
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .toilet-top-btns div{
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: center !important;
+    }
+    
+    .toilet-top-btns div div{
+        width: 175% !important;
+        /* text-align: right; */
     }
 
     /* explore search */

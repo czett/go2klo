@@ -113,7 +113,8 @@
                 "comment": "Comment",
                 "report": "Report this toilet",
                 "report_textarea": "Please provide a reason for reporting this toilet",
-                "cancel": "Cancel"
+                "cancel": "Cancel",
+                "rate": "Rate this toilet"
             },
             "trending": {
                 "title": "Which loo is the talk of the town?",
@@ -233,7 +234,8 @@
                 "comment": "Kommentar",
                 "report": "Diese Toilette melden",
                 "report_textarea": "Bitte gib einen Grund an, warum du diese Toilette melden möchtest",
-                "cancel": "Abbrechen"
+                "cancel": "Abbrechen",
+                "rate": "Diese Toilette bewerten"
             },
             "trending": {
                 "title": "Welche Toilette ist gerade im Gespräch?",
@@ -353,7 +355,8 @@
                 "comment": "Коментар",
                 "report": "Докладвайте за тази тоалетна",
                 "report_textarea": "Моля, посочете причина за докладване на тази тоалетна",
-                "cancel": "Отказ"
+                "cancel": "Отказ",
+                "rate": "Оценете тази тоалетна"
             },
             "trending": {
                 "title": "Коя тоалетна е най-обсъждана?",
@@ -473,7 +476,8 @@
                 "comment": "Commentaire",
                 "report": "Signaler cette toilette",
                 "report_textarea": "Veuillez indiquer une raison pour signaler cette toilette",
-                "cancel": "Annuler"
+                "cancel": "Annuler",
+                "rate": "Évaluer cette toilette"
             },
             "trending": {
                 "title": "Quelle toilette fait parler d'elle ?",
@@ -593,7 +597,8 @@
                 "comment": "Comentario",
                 "report": "Reportar este baño",
                 "report_textarea": "Por favor, indica una razón para reportar este baño",
-                "cancel": "Cancelar"
+                "cancel": "Cancelar",
+                "rate": "Calificar este baño"
             },
             "trending": {
                 "title": "¿Qué baño es el tema de conversación?",
@@ -713,7 +718,8 @@
                 "comment": "Commento",
                 "report": "Segnala questo bagno",
                 "report_textarea": "Si prega di indicare un motivo per segnalare questo bagno",
-                "cancel": "Annulla"
+                "cancel": "Annulla",
+                "rate": "Valuta questo bagno"
             },
             "trending": {
                 "title": "Tendenze Bagni",
@@ -833,7 +839,8 @@
                 "comment": "Kommentar",
                 "report": "Rapporter dette toalettet",
                 "report_textarea": "Vennligst oppgi en grunn til å rapportere dette toalettet",
-                "cancel": "Avbryt"
+                "cancel": "Avbryt",
+                "rate": "Vurder dette toalettet"
             },
             "trending": {
                 "title": "Trender Toaletter",
@@ -953,7 +960,8 @@
                 "comment": "Kommentar",
                 "report": "Dieses Klo melden",
                 "report_textarea": "Bitte gib einen Grund an, warum du dieses Klo melden möchtest",
-                "cancel": "Abbrechen"
+                "cancel": "Abbrechen",
+                "rate": "Bewert dieses Klo"
             },
             "trending": {
                 "title": "Welches Klo ist gerade der Renner?",
@@ -1073,7 +1081,8 @@
                 "comment": "Koment",
                 "report": "Raporto këtë tualet",
                 "report_textarea": "Të lutem, jep një arsye për të raportuar këtë tualet",
-                "cancel": "Anulo"
+                "cancel": "Anulo",
+                "rate": "Vlerëso këtë tualet"
             },
             "trending": {
                 "title": "Cili tualet është më i përfoluri?",
