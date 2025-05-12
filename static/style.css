@@ -452,6 +452,11 @@ body, html {
     width: 100%;
 }
 
+.rating-form .get-loc-map{
+    margin-bottom: 2vh;
+    aspect-ratio: 3;
+}
+
 .rating-form form input, .rating-form form textarea{
     resize: none;
     padding: 1vh;
@@ -1609,7 +1614,7 @@ button:disabled{
         font-size: 2rem;
     }
     
-    .banner{
+    .banner, .get-loc-map{
         aspect-ratio: 1;
     }
     
