@@ -53,6 +53,10 @@ body, html {
     flex: 1;
 }
 
+button{
+    cursor: pointer;
+}
+
 /* nav */
 
 .nav{
