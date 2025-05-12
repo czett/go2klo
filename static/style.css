@@ -1826,4 +1826,11 @@ button:disabled{
     .explore-search form button{
         border-radius: 0 0 calc(0.5*var(--brad)) calc(0.5*var(--brad));
     }
+
+    .banner .title-text{
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
 }
