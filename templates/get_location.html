@@ -6,6 +6,11 @@
     <form action="/rate/process" enctype="multipart/form-data" method="post">
         <h2 class="title">{{ts["title"]}}</h2>
         
+        <div class="get-loc-map">
+            <div id="map" style="width: 100%; height: 300px;"></div>
+            
+        </div>
+
         {% if msg != None %}
             <div class="logreg-msg msg">{{msg}}</div>
         {% endif %} 
@@ -25,6 +30,32 @@
 document.getElementById("location_str").value = "{{rating_coords}}";
 </script>
 {% endif %}
+<script>
+    var map = L.map('map').setView([51.1657, 10.4515], 3);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var marker;
+
+    function updateLocationInput(latlng) {
+        document.getElementById("location_str").value = latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
+    }
+
+    map.on('click', function(e) {
+        if (!marker) {
+            marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+            marker.on('dragend', function() {
+                updateLocationInput(marker.getLatLng());
+            });
+        } else {
+            marker.setLatLng(e.latlng);
+        }
+        updateLocationInput(e.latlng);
+    });
+</script>
 
 {% endblock %}
 
