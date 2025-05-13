@@ -24,7 +24,11 @@
                 "login": "Login",
                 "register": "Register",
                 "trending": "Trending Toilets",
-                "trending_desc": "Discover the toilets that are making a splash! Who knew porcelain could be so popular? Dive into the top-rated loos below!"
+                "trending_desc": "Discover the toilets that are making a splash! Who knew porcelain could be so popular? Dive into the top-rated loos below!",
+                "totd": "Toilet of the day",
+                "totd_desc": "The people have spoken! This restroom has earned the highest number of ratings today, making it the undisputed champion of convenience, cleanliness, and overall excellence.",
+                "blog": "Blog",
+                "blog_desc": "Check out our blog for the latest news, tips, and stories from the world of toilets. Hilarious anecdotes, dev-logs and serious discussions, we’ve got it all covered!"
             },
             "base": {
                 "nav_logo": "Home",
@@ -145,7 +149,11 @@
                 "login": "Einloggen",
                 "register": "Registrieren",
                 "trending": "Trendende Toiletten",
-                "trending_desc": "Entdecke die Toiletten, die für Aufsehen sorgen! Wer hätte gedacht, dass Porzellan so beliebt sein könnte? Tauche hier in die am besten bewerteten Klos ein!"
+                "trending_desc": "Entdecke die Toiletten, die für Aufsehen sorgen! Wer hätte gedacht, dass Porzellan so beliebt sein könnte? Tauche hier in die am besten bewerteten Klos ein!",
+                "totd": "Toilette des Tages",
+                "totd_desc": "Die Leute haben gesprochen! Diese Toilette hat heute die höchste Anzahl an Bewertungen erhalten und ist damit der unbestrittene Champion in Sachen Bequemlichkeit, Sauberkeit und Gesamtexzellenz.",
+                "blog": "Blog",
+                "blog_desc": "Schau dir unseren Blog für die neuesten Nachrichten, Tipps und Geschichten aus der Welt der Toiletten an. Lustige Anekdoten, Entwickler-Logs und ernsthafte Diskussionen – wir haben alles abgedeckt!"
             },
             "base": {
                 "nav_logo": "Startseite",
@@ -266,7 +274,11 @@
                 "login": "Вход",
                 "register": "Регистрация",
                 "trending": "Тенденции в тоалетните",
-                "trending_desc": "Открийте тоалетните, които правят впечатление! Кой би предположил, че порцеланът може да бъде толкова популярен? Заплътете в най-високо оценените тоалетни по-долу!"
+                "trending_desc": "Открийте тоалетните, които правят впечатление! Кой би предположил, че порцеланът може да бъде толкова популярен? Заплътете в най-високо оценените тоалетни по-долу!",
+                "totd": "Тоалетна на деня",
+                "totd_desc": "Хората говорят! Тази тоалетна е получила най-висок брой оценки днес, което я прави несъмнено шампион на удобството, чистотата и общата изключителност.",
+                "blog": "Блог",
+                "blog_desc": "Проверете нашия блог за последните новини, съвети и истории от света на тоалетните. Забавни анекдоти, dev-logs и сериозни дискусии - имаме всичко покрито!"
             },
             "base": {
                 "nav_logo": "Начало",
@@ -387,7 +399,11 @@
                 "login": "Connexion",
                 "register": "Inscription",
                 "trending": "Toilettes tendance",
-                "trending_desc": "Découvrez les toilettes qui font sensation ! Qui aurait cru que la porcelaine pouvait être si populaire ? Plongez dans les toilettes les mieux notées ci-dessous !"
+                "trending_desc": "Découvrez les toilettes qui font sensation ! Qui aurait cru que la porcelaine pouvait être si populaire ? Plongez dans les toilettes les mieux notées ci-dessous !",
+                "totd": "Toilette du jour",
+                "totd_desc": "Les gens ont parlé ! Cette toilette a reçu le plus grand nombre de notes aujourd'hui, la rendant le champion incontesté du confort, de la propreté et de l'excellence globale.",
+                "blog": "Blog",
+                "blog_desc": "Consultez notre blog pour les dernières nouvelles, conseils et histoires du monde des toilettes. Anecdotes hilarantes, journaux de développement et discussions sérieuses, nous avons tout couvert !"
             },
             "base": {
                 "nav_logo": "Accueil",
@@ -508,7 +524,11 @@
                 "login": "Iniciar sesión",
                 "register": "Registrarse",
                 "trending": "Baños de Tendencia",
-                "trending_desc": "¡Descubre los baños que están causando sensación! ¿Quién hubiera pensado que la porcelana podría ser tan popular? ¡Sumérgete en los baños mejor calificados a continuación!"
+                "trending_desc": "¡Descubre los baños que están causando sensación! ¿Quién hubiera pensado que la porcelana podría ser tan popular? ¡Sumérgete en los baños mejor calificados a continuación!",
+                "totd": "Baño del Día",
+                "totd_desc": "¡La gente ha hablado! Este baño ha recibido la mayor cantidad de calificaciones hoy, convirtiéndolo en el campeón indiscutible de comodidad, limpieza y excelencia general.",
+                "blog": "Blog",
+                "blog_desc": "Consulta nuestro blog para las últimas noticias, consejos e historias del mundo de los baños. Anecdotarios divertidos, registros de desarrollo y discusiones serias: ¡tenemos todo cubierto!"
             },
             "base": {
                 "nav_logo": "Inicio",
@@ -629,7 +649,11 @@
                 "login": "Accedi",
                 "register": "Registrati",
                 "trending": "Bagni in Tendenza",
-                "trending_desc": "Scopri i bagni che stanno facendo tendenza! Chi avrebbe mai pensato che la porcellana potesse essere così popolare? Tuffati nei bagni meglio valutati qui sotto!"
+                "trending_desc": "Scopri i bagni che stanno facendo tendenza! Chi avrebbe mai pensato che la porcellana potesse essere così popolare? Tuffati nei bagni meglio valutati qui sotto!",
+                "totd": "Bagno del Giorno",
+                "totd_desc": "La gente ha parlato! Questo bagno ha ricevuto il maggior numero di valutazioni oggi, rendendolo il campione indiscusso di comfort, pulizia e eccellenza generale.",
+                "blog": "Blog",
+                "blog_desc": "Controlla il nostro blog per le ultime notizie, consigli e storie dal mondo dei bagni. Aneddoti divertenti, diari di sviluppo e discussioni serie - abbiamo tutto coperto!"
             },
             "base": {
                 "nav_logo": "Home",
@@ -750,7 +774,11 @@
                 "login": "Logg inn",
                 "register": "Registrer",
                 "trending": "Trendende toaletter",
-                "trending_desc": "Oppdag toaletter som gjør inntrykk! Hvem visste at porselen kunne være så populært? Dykk ned i de best rangerte toalettene nedenfor!"
+                "trending_desc": "Oppdag toaletter som gjør inntrykk! Hvem visste at porselen kunne være så populært? Dykk ned i de best rangerte toalettene nedenfor!",
+                "totd": "Toalett for dagen",
+                "totd_desc": "Folk har snakket! Dette toalettet har fått flest vurderinger i dag, noe som gjør det til den ubestridte mesteren av komfort, renhet og generell fortreffelighet.",
+                "blog": "Blogg",
+                "blog_desc": "Sjekk bloggen vår for de siste nyhetene, tipsene og historiene fra toalettverdenen. Morsomme anekdoter, utviklingslogger og seriøse diskusjoner - vi har alt dekket!"
             },
             "base": {
                 "nav_logo": "Hjem",
@@ -871,7 +899,11 @@
                 "login": "Einloggen",
                 "register": "Registrieren",
                 "trending": "Trendige Toiiletten",
-                "trending_desc": "Entdeck die Klos, die grad voll im Trend sind! Wer hätt's gedacht, dass Porzellan so beliebt sein kann? Tauch ein in die besten Klos unten!"
+                "trending_desc": "Entdeck die Klos, die grad voll im Trend sind! Wer hätt's gedacht, dass Porzellan so beliebt sein kann? Tauch ein in die besten Klos unten!",
+                "totd": "Toilette des Tages",
+                "totd_desc": "Die Leute ham gesprochen! Dieses Klo hat heute die meisten Bewertungen bekommen und is jetzt der unangefochtene Champion in Sachen Komfort, Sauberkeit und allem drum und dran.",
+                "blog": "Blog",
+                "blog_desc": "Schau in unser Blog für die neuesten News, Tipps und Geschichten aus der Welt der Klos. Lustige Anekdoten, Entwicklungstagebücher und ernste Diskussionen – wir ham alles dabei!"
             },
             "base": {
                 "nav_logo": "Startseite",
@@ -992,7 +1024,11 @@
                 "login": "Kyçu",
                 "register": "Regjistrohu",
                 "trending": "Tualetet e Trendit",
-                "trending_desc": "Zbuloni tualetet që po bëjnë sensacion! Kush do të kishte menduar që porcelani mund të ishte kaq i popullarizuar? Zhytuni në tualetet më të vlerësuara më poshtë!"
+                "trending_desc": "Zbuloni tualetet që po bëjnë sensacion! Kush do të kishte menduar që porcelani mund të ishte kaq i popullarizuar? Zhytuni në tualetet më të vlerësuara më poshtë!",
+                "totd": "Tualeti i Ditës",
+                "totd_desc": "Njerëzit kanë folur! Ky tualet ka marrë numrin më të madh të vlerësimeve sot, duke e bërë atë kampionin e padiskutueshëm të komoditetit, pastërtisë dhe shkëlqesës së përgjithshme.",
+                "blog": "Blog",
+                "blog_desc": "Kontrolloni blogun tonë për lajmet më të fundit, këshillat dhe historitë nga bota e tualeteve. Anedotat argëtuese, ditarët e zhvillimit dhe diskutimet serioze - ne kemi gjithçka të mbuluar!"
             },
             "base": {
                 "nav_logo": "Kryefaqja",
