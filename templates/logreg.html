@@ -28,7 +28,7 @@
         <form action="/register/process" enctype="multipart/form-data" method="post">
             <h2 class="title">{{ts["register_title"]}}
                 {% if session.referral %}
-                <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">you were invited by <a href="/profile/{{session.referral_name}}">@{{session.referral_name}}</a></p>
+                <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">{{ts.referral}}: <a href="/profile/{{session.referral_name}}">@{{session.referral_name}}</a></p>
                 {% endif %}
                 
                 {% if msg != None %}

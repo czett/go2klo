@@ -79,7 +79,8 @@
                 "email": "Enter your email",
                 "confirm_password": "Confirm your password",
                 "forgot_password": "Forgot your password?",
-                "new_password_title": "New password"
+                "new_password_title": "New password",
+                "referral": "You were invited by"
             },
             "profile": {
                 "has": "has",
@@ -204,7 +205,8 @@
                 "email": "Gib deine E-Mail-Adresse ein",
                 "confirm_password": "Bestätige dein Passwort",
                 "forgot_password": "Passwort vergessen?",
-                "new_password_title": "Neues Passwort"
+                "new_password_title": "Neues Passwort",
+                "referral": "Du wurdest eingeladen von"
             },
             "profile": {
                 "has": "hat",
@@ -329,7 +331,8 @@
                 "email": "Въведете вашия имейл",
                 "confirm_password": "Потвърдете вашата парола",
                 "forgot_password": "Забравихте паролата си?",
-                "new_password_title": "Нова парола"
+                "new_password_title": "Нова парола",
+                "referral": "Поканен сте от"
             },
             "profile": {
                 "has": "има",
@@ -454,7 +457,8 @@
                 "email": "Entrez votre email",
                 "confirm_password": "Confirmez votre mot de passe",
                 "forgot_password": "Mot de passe oublié?",
-                "new_password_title": "Nouveau mot de passe"
+                "new_password_title": "Nouveau mot de passe",
+                "referral": "Vous avez été invité par"
             },
             "profile": {
                 "has": "a",
@@ -579,7 +583,8 @@
                 "email": "Ingresa tu correo electrónico",
                 "confirm_password": "Confirma tu contraseña",
                 "forgot_password": "¿Olvidaste tu contraseña?",
-                "new_password_title": "Nueva contraseña"
+                "new_password_title": "Nueva contraseña",
+                "referral": "Fuiste invitado por"
             },
             "profile": {
                 "has": "tiene",
@@ -704,7 +709,8 @@
                 "email": "Inserisci la tua email",
                 "confirm_password": "Conferma la tua password",
                 "forgot_password": "Hai dimenticato la password?",
-                "new_password_title": "Nuova password"
+                "new_password_title": "Nuova password",
+                "referral": "Sei stato invitato da"
             },
             "profile": {
                 "has": "ha",
@@ -829,7 +835,8 @@
                 "email": "Skriv inn e-postadressen din",
                 "confirm_password": "Bekreft passordet ditt",
                 "forgot_password": "Glemt passordet ditt?",
-                "new_password_title": "Nytt passord"
+                "new_password_title": "Nytt passord",
+                "referral": "Du ble invitert av"
             },
             "profile": {
                 "has": "har",
@@ -954,7 +961,8 @@
                 "email": "Gib deine E-Mail-Adresse ein",
                 "confirm_password": "Passwort bestätigen",
                 "forgot_password": "Passwort vergessen?",
-                "new_password_title": "Neues Passwort"
+                "new_password_title": "Neues Passwort",
+                "referral": "Du wurdest eingeladen von"
             },
             "profile": {
                 "has": "hat",
@@ -1079,7 +1087,8 @@
                 "email": "Vendos adresën tënde të emailit",
                 "confirm_password": "Konfirmo fjalëkalimin",
                 "forgot_password": "Ke harruar fjalëkalimin?",
-                "new_password_title": "Fjalëkalim i Ri"
+                "new_password_title": "Fjalëkalim i Ri",
+                "referral": "Je ftuar nga"
             },
             "profile": {
                 "has": "ka",
