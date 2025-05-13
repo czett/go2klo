@@ -243,7 +243,18 @@ def process_register_auth():
         code = request.form["authcode"]
         if int(code) == int(auth_code):
             username, password, email = session["creds"]
-            response = funcs.register(username.lower(), password, email)
+
+            # check for referral here :3
+            referral_tuple = (False, None)
+            if session.get("referral"):
+                referral_uid = session["referral_uid"]
+                referral_tuple = (True, referral_uid)
+                session.pop("referral")
+                session.pop("referral_name")
+                session.pop("referral_uid")
+                session.modified = True
+
+            response = funcs.register(username.lower(), password, email, referral_tuple)
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
@@ -674,6 +685,26 @@ def accept_report(tid):
         
     return redirect("/myprofile")
 
+@app.route("/rl/<username>")
+def referral(username):
+    check_cookie_status()
+
+    if session.get("logged_in") == True:
+        return redirect("/")
+    
+    if not re.match("^[A-Za-z0-9_]*$", username):
+        return redirect("/")
+    
+    uid = funcs.get_user_id_by_username(username)
+
+    if uid:
+        session["referral"] = True
+        session["referral_name"] = username
+        session["referral_uid"] = uid
+        return redirect("/register")
+        
+    return redirect("/")
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
@@ -687,4 +718,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

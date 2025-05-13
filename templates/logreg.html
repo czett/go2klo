@@ -26,11 +26,15 @@
     {% endif %}
     {% if action == "register" %}
         <form action="/register/process" enctype="multipart/form-data" method="post">
-            <h2 class="title">{{ts["register_title"]}}</h2>
-
-            {% if msg != None %}
+            <h2 class="title">{{ts["register_title"]}}
+                {% if session.referral %}
+                <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">you were invited by <a href="/profile/{{session.referral_name}}">@{{session.referral_name}}</a></p>
+                {% endif %}
+                
+                {% if msg != None %}
                 <div class="logreg-msg msg">{{msg}}</div>
-            {% endif %}
+                {% endif %}
+            </h2>
 
             <label for="username">{{ts["username"]}}:</label>
             <input type="text" name="username" id="username" placeholder="{{ts['public']}} username">

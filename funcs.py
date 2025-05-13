@@ -118,17 +118,30 @@ def reset_password(username, new_password):
 def get_db_connection():
     return psycopg.connect(**DB_CONFIG)
 
-def register(username: str, password: str, email: str):
+def register(username: str, password: str, email: str, referral: tuple):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     email = encode(email)
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
-                cur.execute(
-                    "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
-                    (username, hashed_password.decode(), email),
-                )
+                if not referral[0]:
+                    cur.execute(
+                        "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
+                        (username, hashed_password.decode(), email),
+                    )
+                else:
+                    uid = int(referral[1])
+
+                    cur.execute(
+                        "INSERT INTO users (username, password, email, referred_by) VALUES (%s, %s, %s, %s)",
+                        (username, hashed_password.decode(), email, uid),
+                    )
+
+                    cur.execute(
+                        "UPDATE users SET referrals = referrals + 1 WHERE user_id = %s",
+                        (uid,)
+                    )
 
                 cur.execute(
                     "UPDATE app_data SET count = count + 1 WHERE data_name = %s",

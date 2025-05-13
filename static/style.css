@@ -364,6 +364,7 @@ button{
 
 .logreg-form .title{
     font-size: 3rem;
+    line-height: 90%;
     width: 100%;
     text-align: center;
 }
