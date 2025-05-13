@@ -34,6 +34,11 @@ configuration = sib_api_v3_sdk.Configuration()
 configuration.api_key["api-key"] = api_key
 api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
+rank_hierarchy = ["dev", "recruiter", "creator", "supporter", "og", "basic"]
+
+def get_rank_hierarchy():
+    return rank_hierarchy
+
 def encode(clear):
     key = enc_key
     enc = []
@@ -118,17 +123,48 @@ def reset_password(username, new_password):
 def get_db_connection():
     return psycopg.connect(**DB_CONFIG)
 
-def register(username: str, password: str, email: str):
+def register(username: str, password: str, email: str, referral: tuple):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     email = encode(email)
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
-                cur.execute(
-                    "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
-                    (username, hashed_password.decode(), email),
-                )
+                if not referral[0]:
+                    cur.execute(
+                        "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
+                        (username, hashed_password.decode(), email),
+                    )
+                else:
+                    uid = int(referral[1])
+
+                    cur.execute(
+                        "INSERT INTO users (username, password, email, referred_by) VALUES (%s, %s, %s, %s)",
+                        (username, hashed_password.decode(), email, uid),
+                    )
+
+                    cur.execute(
+                        "UPDATE users SET referrals = referrals + 1 WHERE user_id = %s",
+                        (uid,)
+                    )
+
+                    cur.execute("SELECT rank, referrals FROM users WHERE user_id = %s", (uid,))
+                    result = cur.fetchone()
+
+                    if result:
+                        rank, referrals = result
+                        if rank not in rank_hierarchy:
+                            if referrals >= 3: # min referrals for recruiter
+                                cur.execute(
+                                    "UPDATE users SET rank = %s WHERE user_id = %s",
+                                    ("recruiter", uid)
+                                )
+                        if rank_hierarchy.index(rank) < rank_hierarchy.index("recruiter"):
+                            if referrals >= 3: # min referrals for recruiter
+                                cur.execute(
+                                    "UPDATE users SET rank = %s WHERE user_id = %s",
+                                    ("recruiter", uid)
+                                )
 
                 cur.execute(
                     "UPDATE app_data SET count = count + 1 WHERE data_name = %s",

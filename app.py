@@ -13,7 +13,7 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign"}
+rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
 
 def check_login_status():
     if session.get("logged_in"):
@@ -243,7 +243,18 @@ def process_register_auth():
         code = request.form["authcode"]
         if int(code) == int(auth_code):
             username, password, email = session["creds"]
-            response = funcs.register(username.lower(), password, email)
+
+            # check for referral here :3
+            referral_tuple = (False, None)
+            if session.get("referral"):
+                referral_uid = session["referral_uid"]
+                referral_tuple = (True, referral_uid)
+                session.pop("referral")
+                session.pop("referral_name")
+                session.pop("referral_uid")
+                session.modified = True
+
+            response = funcs.register(username.lower(), password, email, referral_tuple)
             if response[0] == True:
                 session["user"] = username
                 session["logged_in"] = True
@@ -673,6 +684,26 @@ def accept_report(tid):
             funcs.delete_toilet_by_id(int(tid))
         
     return redirect("/myprofile")
+
+@app.route("/rl/<username>")
+def referral(username):
+    check_cookie_status()
+
+    if session.get("logged_in") == True:
+        return redirect("/")
+    
+    if not re.match("^[A-Za-z0-9_]*$", username):
+        return redirect("/")
+    
+    uid = funcs.get_user_id_by_username(username)
+
+    if uid:
+        session["referral"] = True
+        session["referral_name"] = username
+        session["referral_uid"] = uid
+        return redirect("/register")
+        
+    return redirect("/")
 
 @app.errorhandler(Exception)
 def handle_error(e):
