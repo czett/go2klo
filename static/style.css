@@ -1168,6 +1168,10 @@ button:disabled{
     background: linear-gradient(45deg, #E07800, #D6A600);
 }
 
+.leaderboard .entry a .user-rank.user-rank-recruiter, .comments-list .comment-item.special-recruiter, .banner .title-text .user-rank.profile-rank-banner-recruiter{
+    background: linear-gradient(45deg, #1E3A8A, #3B82F6);
+}
+
 .comments-list .comment-item.special .comment-publisher .comment-rank *{
     color: #795548 !important;
 }

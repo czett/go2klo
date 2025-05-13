@@ -13,7 +13,7 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign"}
+rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
 
 def check_login_status():
     if session.get("logged_in"):

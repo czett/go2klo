@@ -143,6 +143,18 @@ def register(username: str, password: str, email: str, referral: tuple):
                         (uid,)
                     )
 
+                    cur.execute("SELECT rank, referrals FROM users WHERE user_id = %s", (uid,))
+                    result = cur.fetchone()
+
+                    if result:
+                        rank, referrals = result
+                        if rank == None or rank == "None":
+                            if referrals >= 3: # min referrals for recruiter
+                                cur.execute(
+                                    "UPDATE users SET rank = %s WHERE user_id = %s",
+                                    ("recruiter", uid)
+                                )
+
                 cur.execute(
                     "UPDATE app_data SET count = count + 1 WHERE data_name = %s",
                     ("user_count",)
