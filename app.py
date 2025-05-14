@@ -429,6 +429,8 @@ def search_toilets():
     try:
         query = request.form["search-query"]
         query = query.strip()
+        query = query.lower()
+
         if profanity.contains_profanity(query) or "gustav" in query.lower():
             return redirect("/explore")
         if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", query, re.UNICODE):
@@ -437,10 +439,6 @@ def search_toilets():
             return redirect("/explore")
         if len(query) > 100:
             return redirect("/explore")
-        
-        # österreich fix :3
-        query = re.sub(r"[^\w\s]", "", query)
-        query = query.encode("ascii", "ignore").decode()
     except:
         return redirect("/explore")
 
@@ -718,4 +716,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
