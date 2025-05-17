@@ -1065,20 +1065,15 @@ def search_toilets(query: str):
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
-                        t.longitude,
-                        t.location_str,
-                        COUNT(r.rating_id) AS rating_count,
-                        MAX(r.rating_date) AS latest_rating_date
-                    FROM toilets t
-                    LEFT JOIN ratings r ON t.toilet_id = r.toilet_id
-                    WHERE UNACCENT(LOWER(t.location_str)) LIKE UNACCENT(%s)
-                    GROUP BY t.toilet_id, t.location_str
-                    ORDER BY latest_rating_date DESC NULLS LAST, t.toilet_id DESC
-                """, (f"%{query.lower()}%",))
+                    select toilets.toilet_id, toilets.latitude, toilets.longitude, toilets.location_str, count(ratings.rating_id) as rating_count, max(ratings.rating_date) as latest_rating_date
+                    from toilets, ratings
+                    where toilets.toilet_id = ratings.toilet_id and unaccent(toilets.location_str) ILIKE unaccent(%s)
+                    group by toilets.toilet_id, toilets.location_str
+                    order by latest_rating_date desc nulls last, toilets.toilet_id desc;
+                """, (f"%{query}%",))
 
+                # i hate joins, 10 ands in where are better
+                # change my mind
 
                 toilet_results = cur.fetchall()
 
