@@ -8,6 +8,9 @@
     <h2>{{ts["user_warning"]}}</h2>
 </div> -->
 <div class="banner">
+    <div class="bg-img">
+        <img src="{{url_for('static', filename='img/bg2.png')}}">
+    </div>
     <div class="title-text">{{ts["banner_title"]}}</div>
     <div class="bottom-text">{{ts["banner_bottom"]}}</div>
     <div class="icon">
@@ -18,6 +21,9 @@
 
 {% if session["logged_in"] %}
 <div class="banner">
+    <div class="bg-img">
+        <img src="{{url_for('static', filename='img/bg2.png')}}">
+    </div>
     <div class="title-text">{{ts["li_banner_title"]}}</div>
     <div class="bottom-text">{{ts["li_banner_bottom"]}}</div>
     <div class="icon">

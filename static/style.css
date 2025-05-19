@@ -5,6 +5,7 @@
     --fg: #131B23;
     --bg: #F8F4F9;
     --ac: #3C91E6;
+    --acalt: #0553a0;
     --bgd: #d4d4d4;
     --bgd2: #bababa;
 
@@ -38,13 +39,19 @@ body, html {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg);
+    background-color: var(--bg);
     overflow-x: hidden;
+}
+
+body{
+    background: radial-gradient(#DFDFDF 10%, transparent 10%) 0 0 / 20px 20px;
+    background-attachment: fixed;
 }
 
 *{
     color: var(--fg);
     font-family: 'GABARITO', 'Rubik', sans-serif;
+    font-weight: 600;
 }
 
 .content{
@@ -162,12 +169,37 @@ button{
     aspect-ratio: 4;
     width: 100%;
     background-color: var(--bg);
+    /* background: linear-gradient(45deg, var(--ac), var(--acalt)); */
     border-radius: var(--brad);
     overflow: hidden;
     box-sizing: border-box;
-    border: 2px solid var(--ac);
+    /* border: 2px solid var(--ac); */
     position: relative;
 }
+
+.bg-img{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    filter: blur(20px);
+}
+
+.bg-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* .blur-layer{
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20,20,20,0.5);
+    /* filter: blur(20px); */
 
 .banner .icon{
     position: absolute;
@@ -237,6 +269,7 @@ button{
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    background-color: var(--bg);
 }
 
 .benefit-cards .card .card-icon{
@@ -560,6 +593,7 @@ input[type="range"]::-webkit-slider-thumb {
     grid-template-columns: 66% 33%;
     gap: 1vh;
     width: 100%;
+    background-color: var(--bg);
 }
 
 .toilets-list a{
