@@ -137,7 +137,7 @@ button{
 }
 
 .footer .flinks{
-    gap: 5vw;
+    gap: 3vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -153,12 +153,16 @@ button{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: .75vw;
+    gap: .5vw;
 }
 
 .footer .flinks a img{
     width: 1.5vw;
     filter: brightness(0.9);
+}
+
+.footer .flinks a span{
+    font-size: 1.5vw;
 }
 
 /* index content */
@@ -182,7 +186,7 @@ button{
     height: 100%;
     position: absolute;
     z-index: 0;
-    filter: blur(20px);
+    filter: blur(20px) brightness(1.15);
 }
 
 .bg-img img{
@@ -243,10 +247,10 @@ button{
 
 .banner .bottom-text{
     position: absolute;
-    inset: 6vw auto auto 2vw;
+    inset: calc(1vw + 2vw + 1.35rem) auto auto 2vw;
     color: var(--fg);
-    font-weight: 400;
-    font-size: 1.25rem;
+    font-weight: 500;
+    font-size: 1.35rem;
 }
 
 .benefit-cards{
@@ -346,23 +350,31 @@ button{
 }
 
 .get-started .action-btns{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 1vh;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    background-color: var(--fg);
+    border-radius: calc(2*var(--brad));
+    width: fit-content;
 }
 
 .get-started .action-btns button, .navbar-cta-btn{
     box-sizing: border-box;
+    width: 100%;
     padding: 2vh 4vh;
     font-size: 1.5rem;
     color: var(--bg);
-    background: var(--ac);
-    border-radius: calc(0.5*var(--brad));
-    border: none;
+    background: var(--fg);
+    border-radius: calc(2*var(--brad));
+    border: 4px solid var(--fg);
+    box-sizing: border-box;
     outline: none;
     transition: var(--trans);
     cursor: pointer;
+}
+
+.get-started .action-btns button:hover, .navbar-cta-btn:hover{
+    background-color: var(--bg);
+    color: var(--fg);
 }
 
 .navbar-cta-btn{
@@ -1106,6 +1118,7 @@ button:disabled{
     /* aspect-ratio: 1; */
     box-sizing: border-box;
     padding: 1.5vh;
+    background-color: var(--bg);
 }
 
 .avg-ratings .rating-item span{
@@ -1152,6 +1165,7 @@ button:disabled{
     overflow: hidden;
     min-height: 12vh;
     cursor: pointer;
+    background-color: var(--bg);
 }
 
 .comments-list .comment-item.special{
