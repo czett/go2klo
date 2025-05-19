@@ -5,6 +5,7 @@
     --fg: #131B23;
     --bg: #F8F4F9;
     --ac: #3C91E6;
+    --acalt: #0553a0;
     --bgd: #d4d4d4;
     --bgd2: #bababa;
 
@@ -38,13 +39,19 @@ body, html {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg);
+    background-color: var(--bg);
     overflow-x: hidden;
+}
+
+body{
+    background: radial-gradient(#DFDFDF 10%, transparent 10%) 0 0 / 20px 20px;
+    background-attachment: fixed;
 }
 
 *{
     color: var(--fg);
     font-family: 'GABARITO', 'Rubik', sans-serif;
+    font-weight: 600;
 }
 
 .content{
@@ -130,7 +137,7 @@ button{
 }
 
 .footer .flinks{
-    gap: 5vw;
+    gap: 3vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,12 +153,16 @@ button{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: .75vw;
+    gap: .5vw;
 }
 
 .footer .flinks a img{
     width: 1.5vw;
     filter: brightness(0.9);
+}
+
+.footer .flinks a span{
+    font-size: 1.5vw;
 }
 
 /* index content */
@@ -162,12 +173,37 @@ button{
     aspect-ratio: 4;
     width: 100%;
     background-color: var(--bg);
+    /* background: linear-gradient(45deg, var(--ac), var(--acalt)); */
     border-radius: var(--brad);
     overflow: hidden;
     box-sizing: border-box;
-    border: 2px solid var(--ac);
+    /* border: 2px solid var(--ac); */
     position: relative;
 }
+
+.bg-img{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    filter: blur(20px) brightness(1.15);
+}
+
+.bg-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* .blur-layer{
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20,20,20,0.5);
+    /* filter: blur(20px); */
 
 .banner .icon{
     position: absolute;
@@ -211,10 +247,10 @@ button{
 
 .banner .bottom-text{
     position: absolute;
-    inset: 6vw auto auto 2vw;
+    inset: calc(1vw + 2vw + 1.35rem) auto auto 2vw;
     color: var(--fg);
-    font-weight: 400;
-    font-size: 1.25rem;
+    font-weight: 500;
+    font-size: 1.35rem;
 }
 
 .benefit-cards{
@@ -237,6 +273,7 @@ button{
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    background-color: var(--bg);
 }
 
 .benefit-cards .card .card-icon{
@@ -313,23 +350,31 @@ button{
 }
 
 .get-started .action-btns{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 1vh;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    background-color: var(--fg);
+    border-radius: calc(2*var(--brad));
+    width: fit-content;
 }
 
 .get-started .action-btns button, .navbar-cta-btn{
     box-sizing: border-box;
+    width: 100%;
     padding: 2vh 4vh;
     font-size: 1.5rem;
     color: var(--bg);
-    background: var(--ac);
-    border-radius: calc(0.5*var(--brad));
-    border: none;
+    background: var(--fg);
+    border-radius: calc(2*var(--brad));
+    border: 4px solid var(--fg);
+    box-sizing: border-box;
     outline: none;
     transition: var(--trans);
     cursor: pointer;
+}
+
+.get-started .action-btns button:hover, .navbar-cta-btn:hover{
+    background-color: var(--bg);
+    color: var(--fg);
 }
 
 .navbar-cta-btn{
@@ -560,6 +605,7 @@ input[type="range"]::-webkit-slider-thumb {
     grid-template-columns: 66% 33%;
     gap: 1vh;
     width: 100%;
+    background-color: var(--bg);
 }
 
 .toilets-list a{
@@ -1072,6 +1118,7 @@ button:disabled{
     /* aspect-ratio: 1; */
     box-sizing: border-box;
     padding: 1.5vh;
+    background-color: var(--bg);
 }
 
 .avg-ratings .rating-item span{
@@ -1118,6 +1165,7 @@ button:disabled{
     overflow: hidden;
     min-height: 12vh;
     cursor: pointer;
+    background-color: var(--bg);
 }
 
 .comments-list .comment-item.special{
@@ -1253,13 +1301,16 @@ button:disabled{
     font-size: 1.1rem;
 }
 
-.get-me-there{
+.get-me-there, .like-toilet-btn{
     aspect-ratio: 1;
-    width: 5rem;
-    border-radius: 0 50% 0 0;
+    width: 6rem;
+    border: 3px solid var(--ac);
+    border-radius: 50%;
+    /* border-radius: 0 50% 0 0; */
     background-color: var(--bg);
+    opacity: 0.9;
     position: absolute;
-    inset: auto auto 0 0;
+    inset: auto auto .2vw .2vw;
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -1268,9 +1319,15 @@ button:disabled{
     cursor: pointer;
 }
 
-.get-me-there span{
+/* coming soon i guess :3 */
+
+.like-toilet-btn{
+    inset: auto auto .2vw calc(.2vw + 7rem);
+}
+
+.get-me-there span, .like-toilet-btn span{
     font-size: 3rem;
-    color: var(--fg);
+    color: var(--ac);
     font-variation-settings: 'wght' 600;
     /* background-color: red; */
 }

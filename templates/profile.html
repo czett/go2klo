@@ -4,6 +4,9 @@
 
 <div class="user-profile">
     <div class="banner">
+        <div class="bg-img">
+            <img src="{{url_for('static', filename='img/bg2.png')}}">
+        </div>
         <div class="title-text">
             @{{session["username_" + pid]}}
             {% if rank is not none %}

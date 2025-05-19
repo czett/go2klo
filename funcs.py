@@ -747,7 +747,7 @@ def get_users_sorted_by_ratings():
                     FROM users u
                     LEFT JOIN ratings r ON u.user_id = r.rated_user_id  -- Changed to use user_id
                     GROUP BY u.user_id  -- Group by user_id instead of username
-                    HAVING COUNT(r.rating_id) > 0
+                    HAVING COUNT(r.rating_id) >= 0
                     ORDER BY rating_count DESC
                     LIMIT 50
                 """)
