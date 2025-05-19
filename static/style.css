@@ -1301,13 +1301,16 @@ button:disabled{
     font-size: 1.1rem;
 }
 
-.get-me-there{
+.get-me-there, .like-toilet-btn{
     aspect-ratio: 1;
-    width: 5rem;
-    border-radius: 0 50% 0 0;
+    width: 6rem;
+    border: 3px solid var(--ac);
+    border-radius: 50%;
+    /* border-radius: 0 50% 0 0; */
     background-color: var(--bg);
+    opacity: 0.9;
     position: absolute;
-    inset: auto auto 0 0;
+    inset: auto auto .2vw .2vw;
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -1316,9 +1319,15 @@ button:disabled{
     cursor: pointer;
 }
 
-.get-me-there span{
+/* coming soon i guess :3 */
+
+.like-toilet-btn{
+    inset: auto auto .2vw calc(.2vw + 7rem);
+}
+
+.get-me-there span, .like-toilet-btn span{
     font-size: 3rem;
-    color: var(--fg);
+    color: var(--ac);
     font-variation-settings: 'wght' 600;
     /* background-color: red; */
 }
