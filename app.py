@@ -386,6 +386,9 @@ def finish_rating():
     comment = request.form["comment"]
     user = session["user"]
     uid = funcs.get_user_id_by_username(user)
+
+    if uid == None:
+        return redirect("/logout")
     
     profanity.load_censor_words()
 
