@@ -58,6 +58,10 @@ def get_texts(lang:str, template:str) -> dict:
 
     return req_content
 
+@app.route("/session")
+def session_out():
+    return str(dict(session))
+
 @app.route("/")
 def startpoint():
     check_cookie_status()
@@ -152,7 +156,7 @@ def reset_password(code):
     if not session.get("pwreset_code"):
         return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
 
-    print(code, session["pwreset_code"])
+    # print(code, session["pwreset_code"])
 
     if code == session["pwreset_code"]:
         return render_template("logreg.html", action="newpw", msg=None, ts=ts, session=session)
@@ -231,7 +235,7 @@ def register_auth():
         session["auth_code"] = auth_code
 
     username, password, email = session["creds"]
-    funcs.send_verification_email(email, auth_code)
+    mail_return = funcs.send_verification_email(email, auth_code)
 
     return render_template("auth.html", ts=ts, session=session, msg=None)
 
@@ -277,11 +281,11 @@ def process_register():
     ts = get_texts(session["lang"], "logreg")
     
     try:
-        username = request.form["username"]
+        username = request.form["username"].lower()
         username.strip()
         password = request.form["password"]
         password.strip()
-        email = request.form["email"]
+        email = request.form["email"].lower()
         email.strip()
 
         session["creds"] = (username, password, email)
@@ -524,7 +528,7 @@ def profile(pid):
         for key in cached_ratings_keys:
             if key != f"user_ratings_{pid}":
                 session.pop(key)
-                print("Deleted cached ratings of user", key)
+                # print("Deleted cached ratings of user", key)
                 break
     if not session.get(f"user_ratings_{pid}"):
         ratings = funcs.get_user_ratings(pid)
@@ -619,7 +623,7 @@ def clear_notifications():
         return redirect("/")
     
     if session.get("notifications"):
-        print(session["notifications"])
+        # print(session["notifications"])
         session["notifications"] = []
 
     return redirect("/")
@@ -725,4 +729,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)
