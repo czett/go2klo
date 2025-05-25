@@ -168,10 +168,10 @@ def process_new_password():
         password = request.form["password"]
         username = session["username"]
 
-        if not re.match("^[A-Za-z0-9_]*$", password):
-            return render_template("logreg.html", action="newpw", msg="Only letters, digits and underscores allowed!", ts=ts, session=session)
+        if not re.match(r"^(?!.*--)[\x20-\x7E]+$", password):
+            return render_template("logreg.html", action="newpw", msg="Password contains invalid characters or '--' sequence is not allowed", ts=ts, session=session)
         elif len(password) < 6:
-            return render_template("logreg.html", action="newpw", msg="Password too short! (min. 6 characters)", ts=ts, session=session)
+           return render_template("logreg.html", action="newpw", msg="Password too short! (min. 6 characters)", ts=ts, session=session)
 
         response = funcs.reset_password(username, password)
         if response[0] == True:
@@ -287,9 +287,9 @@ def process_register():
         session["creds"] = (username, password, email)
 
         if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
-            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
-        elif not re.match("^[A-Za-z0-9_]*$", password):
-            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed in username!", session=session, ts=ts)
+        if not re.match(r"^(?!.*--)[\x20-\x7E]+$", password):
+            return render_template("logreg.html", action="register", msg="Password contains invalid characters or '--' sequence is not allowed", ts=ts, session=session)
         elif len(username) < 3 or len(username) > 20:
             return render_template("logreg.html", action="register", msg="Username too short or too long! (min. 3, max. 20 characters)", session=session, ts=ts)
         elif len(password) < 6:
@@ -725,4 +725,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
     
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
