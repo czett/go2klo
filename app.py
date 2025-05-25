@@ -88,7 +88,9 @@ def process_login():
 
     try:
         username = request.form["username"]
+        username.strip()
         password = request.form["password"]
+        password.strip()
 
         if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", username):  # Prevents SQL injection and allows email login
             return render_template("logreg.html", action="login", msg="Invalid username or email!", session=session, ts=ts)
@@ -276,8 +278,12 @@ def process_register():
     
     try:
         username = request.form["username"]
+        username.strip()
         password = request.form["password"]
+        password.strip()
         email = request.form["email"]
+        email.strip()
+
         session["creds"] = (username, password, email)
 
         if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
