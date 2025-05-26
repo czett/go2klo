@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+<textarea id="mytextarea" height="500px" width="500px">Hier kannst du deinen Text eingeben...</textarea>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+    selector: '#mytextarea'
+  });
+</script>
+
+<script>
+tinymce.init({
+  selector: '#mytextarea',
+  content_style: 'body { font-family: Arial; font-size: 14px; }'
+});
+
+</script>

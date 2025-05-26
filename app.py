@@ -58,6 +58,10 @@ def get_texts(lang:str, template:str) -> dict:
 
     return req_content
 
+@app.route("/session")
+def session_out():
+    return str(dict(session))
+
 @app.route("/")
 def startpoint():
     check_cookie_status()
@@ -88,7 +92,9 @@ def process_login():
 
     try:
         username = request.form["username"]
+        username.strip()
         password = request.form["password"]
+        password.strip()
 
         if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", username):  # Prevents SQL injection and allows email login
             return render_template("logreg.html", action="login", msg="Invalid username or email!", session=session, ts=ts)
@@ -150,7 +156,7 @@ def reset_password(code):
     if not session.get("pwreset_code"):
         return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
 
-    print(code, session["pwreset_code"])
+    # print(code, session["pwreset_code"])
 
     if code == session["pwreset_code"]:
         return render_template("logreg.html", action="newpw", msg=None, ts=ts, session=session)
@@ -166,10 +172,10 @@ def process_new_password():
         password = request.form["password"]
         username = session["username"]
 
-        if not re.match("^[A-Za-z0-9_]*$", password):
-            return render_template("logreg.html", action="newpw", msg="Only letters, digits and underscores allowed!", ts=ts, session=session)
+        if not re.match(r"^(?!.*--)[\x20-\x7E]+$", password):
+            return render_template("logreg.html", action="newpw", msg="Password contains invalid characters or '--' sequence is not allowed", ts=ts, session=session)
         elif len(password) < 6:
-            return render_template("logreg.html", action="newpw", msg="Password too short! (min. 6 characters)", ts=ts, session=session)
+           return render_template("logreg.html", action="newpw", msg="Password too short! (min. 6 characters)", ts=ts, session=session)
 
         response = funcs.reset_password(username, password)
         if response[0] == True:
@@ -229,7 +235,7 @@ def register_auth():
         session["auth_code"] = auth_code
 
     username, password, email = session["creds"]
-    funcs.send_verification_email(email, auth_code)
+    mail_return = funcs.send_verification_email(email, session["auth_code"])
 
     return render_template("auth.html", ts=ts, session=session, msg=None)
 
@@ -275,15 +281,19 @@ def process_register():
     ts = get_texts(session["lang"], "logreg")
     
     try:
-        username = request.form["username"]
+        username = request.form["username"].lower()
+        username.strip()
         password = request.form["password"]
-        email = request.form["email"]
+        password.strip()
+        email = request.form["email"].lower()
+        email.strip()
+
         session["creds"] = (username, password, email)
 
         if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
-            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
-        elif not re.match("^[A-Za-z0-9_]*$", password):
-            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed!", session=session, ts=ts)
+            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed in username!", session=session, ts=ts)
+        if not re.match(r"^(?!.*--)[\x20-\x7E]+$", password):
+            return render_template("logreg.html", action="register", msg="Password contains invalid characters or '--' sequence is not allowed", ts=ts, session=session)
         elif len(username) < 3 or len(username) > 20:
             return render_template("logreg.html", action="register", msg="Username too short or too long! (min. 3, max. 20 characters)", session=session, ts=ts)
         elif len(password) < 6:
@@ -518,7 +528,7 @@ def profile(pid):
         for key in cached_ratings_keys:
             if key != f"user_ratings_{pid}":
                 session.pop(key)
-                print("Deleted cached ratings of user", key)
+                # print("Deleted cached ratings of user", key)
                 break
     if not session.get(f"user_ratings_{pid}"):
         ratings = funcs.get_user_ratings(pid)
@@ -613,7 +623,7 @@ def clear_notifications():
         return redirect("/")
     
     if session.get("notifications"):
-        print(session["notifications"])
+        # print(session["notifications"])
         session["notifications"] = []
 
     return redirect("/")
@@ -706,6 +716,12 @@ def referral(username):
         
     return redirect("/")
 
+# @app.route("/blog")
+# def blog():
+#     check_cookie_status()
+#     ts = get_texts(session["lang"], "toilet")
+#     return render_template("blog.html", ts=ts, session=session)
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
@@ -717,6 +733,6 @@ def handle_error(e):
 def error(code):
     ts = get_texts(session["lang"], "error")
     return render_template("error.html", ts=ts, code=f"error {code} :(")
-    
+
 if __name__ == "__main__":
     app.run(debug=False, port=7000)
