@@ -235,7 +235,7 @@ def register_auth():
         session["auth_code"] = auth_code
 
     username, password, email = session["creds"]
-    mail_return = funcs.send_verification_email(email, auth_code)
+    mail_return = funcs.send_verification_email(email, session["auth_code"])
 
     return render_template("auth.html", ts=ts, session=session, msg=None)
 
@@ -716,6 +716,12 @@ def referral(username):
         
     return redirect("/")
 
+# @app.route("/blog")
+# def blog():
+#     check_cookie_status()
+#     ts = get_texts(session["lang"], "toilet")
+#     return render_template("blog.html", ts=ts, session=session)
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
@@ -727,6 +733,6 @@ def handle_error(e):
 def error(code):
     ts = get_texts(session["lang"], "error")
     return render_template("error.html", ts=ts, code=f"error {code} :(")
-    
+
 if __name__ == "__main__":
     app.run(debug=False, port=7000)
