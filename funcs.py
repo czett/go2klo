@@ -12,6 +12,7 @@ import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
 import random, string, base64
+from geopy.distance import geodesic
 
 try:
     load_dotenv()
@@ -38,6 +39,16 @@ rank_hierarchy = ["dev", "recruiter", "creator", "supporter", "og", "basic"]
 
 def get_rank_hierarchy():
     return rank_hierarchy
+
+def distance(coord1, coord2):
+    return geodesic(coord1, coord2).km
+
+def get_zoom_level(km):
+    zoom_levels = {"24000": 3, "12000": 4, "6000": 5, "3000": 6, "1500": 7, "750": 8, "375": 9, "187.5": 10, "93.75": 11, "46.875": 12, "23.4375": 13, "11.71875": 14, "5.859375": 15}
+
+    for key, value in zoom_levels.items():
+        if km >= float(key):
+            return value - 1
 
 def encode(clear):
     key = enc_key

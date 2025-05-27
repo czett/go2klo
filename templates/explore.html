@@ -42,9 +42,15 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
+    {% if not zoom and not focus_coords %}
     var map = L.map('map', {
         zoomControl: false // Hier wird das Zoom-Steuerelement deaktiviert
     }).setView([51.1657, 10.4515], 6);
+    {% else %}
+    var map = L.map('map', {
+        zoomControl: false // Hier wird das Zoom-Steuerelement deaktiviert
+    }).setView({{focus_coords}}, {{zoom}});
+    {% endif %}
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
