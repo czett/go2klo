@@ -456,7 +456,31 @@ def search_toilets():
         return redirect("/explore")
 
     toilets = funcs.search_toilets(query)
-    return render_template("explore.html", ts=ts, session=session, toilets=toilets)
+
+    # Default to center of Europe if no toilets found :(((
+    t1_coords = [50.1109, 8.6821]
+    zoom = 6
+    
+    if len(toilets) != 0:
+        t1 = toilets[0]
+        t1_coords = (t1["latitude"], t1["longitude"])
+
+    if len(toilets) > 1:
+        t2 = toilets[-1]
+        t2_coords = (t2["latitude"], t2["longitude"])
+
+        distance = funcs.distance(t1_coords, t2_coords)
+        zoom = funcs.get_zoom_level(distance)
+
+        print(round(distance, 0))
+
+    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
+    if zoom == None:
+        zoom = 6
+
+    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
+
+    return render_template("explore.html", ts=ts, session=session, toilets=toilets, zoom=zoom, query=query, focus_coords=list(t1_coords))
 
 @app.route("/api/toilets")
 def toilets_api(): # thanks GPT here :o
@@ -623,7 +647,7 @@ def clear_notifications():
         return redirect("/")
     
     if session.get("notifications"):
-        # print(session["notifications"])
+        #   (session["notifications"])
         session["notifications"] = []
 
     return redirect("/")
