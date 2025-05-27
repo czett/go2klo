@@ -472,10 +472,14 @@ def search_toilets():
         distance = funcs.distance(t1_coords, t2_coords)
         zoom = funcs.get_zoom_level(distance)
 
+        print(round(distance, 0))
+
+    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
     if zoom == None:
         zoom = 6
 
-    # print(focus, zoom)
+    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
+
     return render_template("explore.html", ts=ts, session=session, toilets=toilets, zoom=zoom, query=query, focus_coords=list(t1_coords))
 
 @app.route("/api/toilets")
