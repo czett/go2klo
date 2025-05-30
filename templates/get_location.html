@@ -15,7 +15,7 @@
             <div class="logreg-msg msg">{{msg}}</div>
         {% endif %} 
 
-        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="30" id="location_str">
+        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="80" id="location_str">
     
         {% if msg != None %}
             <button type="submit" disabled>{{ts["submit"]}}</button>
