@@ -78,7 +78,9 @@
 
     <!-- <div id="map"></div> -->
 
-    <div class="trophy-case-title">{{ts["trophy_case"]}}</div>
+    {% if session["user_achievements_" + pid] | length > 0 %}
+        <div class="trophy-case-title">{{ts["trophy_case"]}}</div>
+    {% endif %}
 
     <div class="trophy-case">
         {% for trophy in session["user_achievements_" + pid] %}
