@@ -74,39 +74,6 @@
 </div>
 
 <h2>All User Ratings:</h2>
-<!-- <div class="comment-list">
-    {% for rating in toilet.ratings %}
-        <div class="comment-item">
-            <div class="comment-user"></div>
-                <a href="/profile/{{ rating.username }}" class="comment-username"><strong>@{{ rating.username }}</strong></a>
-            </div>
-            <div class="comment-details">
-                <div class="comment-detail">
-                    <span class="comment-label">{{ts["cleanliness"]}}:</span>
-                    <span class="comment-value">{{ rating.cleanliness }}</span>
-                </div>
-                <div class="comment-detail">
-                    <span class="comment-label">{{ts["supplies"]}}:</span>
-                    <span class="comment-value">{{ rating.supplies }}</span>
-                </div>
-                <div class="comment-detail">
-                    <span class="comment-label">{{ts["privacy"]}}:</span>
-                    <span class="comment-value">{{ rating.privacy }}</span>
-                </div>
-                <div class="comment-text">
-                    <span class="comment-label">{{ts["comment"]}}:</span>
-                    <span class="comment-value">
-                        {% if '@' in rating.comment %}
-                            {{ rating.comment | replace('@' + rating.comment.split('@')[1].split(' ')[0], '<a class="comment-at-mention" href=\"/profile/' + rating.comment.split('@')[1].split(' ')[0] + '\">@' + rating.comment.split('@')[1].split(' ')[0] + '</a>') | safe }}
-                        {% else %}
-                            {{ rating.comment }}
-                        {% endif %}
-                    </span>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</div> -->
 
 <div class="comments-list">
     {% for rating in toilet.ratings %}

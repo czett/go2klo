@@ -26,11 +26,15 @@ def check_login_status():
     return True
 
 def check_cookie_status():
+    # cookie banner removal for now because only essential cookies are used
+    session["cookies"] = True
+    return True
+
+    # old banner validation code
     if session.get("cookies"):
         if session["cookies"]:
             return True
     else:
-        session["cookies"] = False
         session["lang"] = "english"
         return False
     
@@ -464,6 +468,7 @@ def search_toilets():
     if len(toilets) != 0:
         t1 = toilets[0]
         t1_coords = (t1["latitude"], t1["longitude"])
+        zoom = 3
 
     if len(toilets) > 1:
         t2 = toilets[-1]
@@ -746,6 +751,26 @@ def referral(username):
 #     ts = get_texts(session["lang"], "toilet")
 #     return render_template("blog.html", ts=ts, session=session)
 
+# quick redirection urls
+
+@app.route("/p/<identifier>")
+def profile_referrer(identifier):
+    check_cookie_status()
+
+    if not re.match("^[A-Za-z0-9_]*$", identifier):
+        return redirect("/")
+
+    return redirect(f"/profile/{identifier}")
+
+@app.route("/t/<tid>")
+def toilet_referrer(tid):
+    check_cookie_status()
+
+    if not re.match("^[0-9]*$", tid):
+        return redirect("/")
+
+    return redirect(f"/toilet/{tid}")
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
@@ -759,4 +784,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
