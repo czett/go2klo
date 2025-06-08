@@ -18,12 +18,14 @@
     {% for entry in session.leaderboard %}
         <div class="entry" onmousedown="redirect('/profile/{{ entry.username }}')">
             <a href="/profile/{{entry.username}}">
-                <div class="username">{{loop.index}}. @{{entry.username}}</div>
                 {% if entry.rank != None and entry.rank != "None" %}
+                    <div class="username ranked-user">{{loop.index}}. @{{entry.username}}</div>
                     <div class="user-rank user-rank-{{entry.rank}}">
                         <span class="material-symbols-rounded">{{icon_map[entry.rank]}}</span>
                         <div>{{entry.rank}}</div>
                     </div>
+                {% else %}
+                    <div class="username norank-user">{{loop.index}}. @{{entry.username}}</div>
                 {% endif %}
             </a>
             <div class="ratings">{{entry.rating_count}}</div>
