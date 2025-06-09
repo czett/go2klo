@@ -9,20 +9,22 @@
 </div>
 
 <div class="articles">
-    {% for i in range(6) %}
-      <div class="article">
+    {% for article in hot_articles %}
+      <a href="/blog/p/{{article.slug}}" style="text-decoration: none;">
+        <div class="article">
             <div class="article-icon">
                 <span class="material-symbols-rounded">newspaper</span>
             </div>
             <div class="article-data">
                 <!-- <div class="article-title">{{ts["title"]}}</div> -->
-                <div class="article-title">Lorem ipsum dolor sit amet, consectetur adipisci</div>
-                <div class="article-author">{{ts["author"]}}</div>
+                <div class="article-title">{{article.title}}</div>
+                <div class="article-author">{{article.author_username}}</div>
                 <div class="article-views">
-                    <span class="material-symbols-rounded">visibility</span> 6587
+                    <span class="material-symbols-rounded">visibility</span> {{article.views}}
                 </div>
           </div>
       </div>
+      </a>
     {% endfor %}
 </div>
 
@@ -32,20 +34,22 @@
 </div>
 
 <div class="articles">
-    {% for i in range(12) %}
-      <div class="article">
+    {% for article in newest_articles %}
+    <a href="/blog/p/{{article.slug}}" style="text-decoration: none;">
+        <div class="article">
             <div class="article-icon">
                 <span class="material-symbols-rounded">newspaper</span>
             </div>
             <div class="article-data">
-                <!-- <div class="article-title">{{ts["title"]}}</div> -->
-                <div class="article-title">Lorem ipsum dolor sit amet, consectetur adipisci</div>
-                <div class="article-author">{{ts["author"]}}</div>
+               <!-- <div class="article-title">{{ts["title"]}}</div> -->
+                <div class="article-title">{{article.title}}</div>
+                <div class="article-author">{{article.author_username}}</div>
                 <div class="article-views">
-                    <span class="material-symbols-rounded">visibility</span> 6587
+                    <span class="material-symbols-rounded">visibility</span> {{article.views}}
                 </div>
-          </div>
-      </div>
+            </div>
+        </div>
+    </a>
     {% endfor %}
 </div>
 
@@ -53,11 +57,33 @@
     <div class="search-title">
         {{ts["search-title"]}}
     </div>
-    <form action="/explore/search" enctype="multipart/form-data" method="post">
-        <input type="text" name="search-query" placeholder="{{ts['search-placeholder']}}" required>
+    <form action="/blog/search" enctype="multipart/form-data" method="post">
+        <input type="text" name="query" placeholder="{{ts['search-placeholder']}}" required>
         <button type="submit">{{ts['search-button']}}</button>
     </form>
 </div>
+
+{% if search_results %}
+<div class="articles">
+    {% for article in search_results %}
+    <a href="/blog/p/{{article.slug}}" style="text-decoration: none;">
+        <div class="article">
+            <div class="article-icon">
+                <span class="material-symbols-rounded">newspaper</span>
+            </div>
+            <div class="article-data">
+               <!-- <div class="article-title">{{ts["title"]}}</div> -->
+                <div class="article-title">{{article.title}}</div>
+                <div class="article-author">{{article.author_username}}</div>
+                <div class="article-views">
+                    <span class="material-symbols-rounded">visibility</span> {{article.views}}
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
 
 <!-- search reults here in a minute -->
 

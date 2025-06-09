@@ -13,7 +13,7 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
+rank_icon_map = {"dev": "data_object", "mod": "gavel",  "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
 
 def check_login_status():
     if session.get("logged_in"):
@@ -750,7 +750,82 @@ def referral(username):
 def blog():
     check_cookie_status()
     ts = get_texts(session["lang"], "blog")
-    return render_template("blog.html", ts=ts, session=session)
+    
+    if session.get("newest_articles"):
+        newest_articles = session["newest_articles"]
+    else:
+        newest_articles = funcs.get_newest_articles(12)
+        session["newest_articles"] = newest_articles
+    
+    if session.get("hot_articles"):
+        hot_articles = session["hot_articles"]
+    else:
+        hot_articles = funcs.get_hot_articles(3)
+        session["hot_articles"] = hot_articles
+
+    if session.get("blog_search_results"):
+        search_results = session["blog_search_results"]
+        session.pop("blog_search_results")
+    else:
+        search_results = None
+
+    return render_template("blog.html", ts=ts, session=session, newest_articles=newest_articles, hot_articles=hot_articles, search_results=search_results)
+
+@app.route("/blog/write")
+def write_blog():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "blog")
+    return render_template("blog_write.html", ts=ts, session=session)
+
+@app.route("/blog/submit", methods=["POST"])
+def submit_blog():
+    check_cookie_status()
+
+    title = request.form["title"]
+    content = request.form["content"]
+    slug = request.form["slug"]
+    img = request.form["img"]
+
+    user = session["user"]
+    uid = funcs.get_user_id_by_username(user)
+    if uid == None:
+        return redirect("/logout")
+    
+    g = funcs.submit_article(title, content, slug, img, uid)
+
+    return "okay"
+
+@app.route("/blog/p/<slug>")
+def blog_post(slug):
+    check_cookie_status()
+
+    article = funcs.get_article_by_slug(slug)
+
+    if article == None:
+        return redirect("/blog")
+    if article == "unpublished":
+        return redirect("/blog")
+
+    funcs.add_article_view(slug)
+    ts = get_texts(session["lang"], "blog")
+
+    # format date
+    print(article["created_at"])
+    article["created_at"] = article["created_at"].strftime("%d.%m.%Y")
+    print(article["created_at"])
+
+    return render_template("blog_article.html", article=article, session=session, ts=ts)
+
+@app.route("/blog/search", methods=["POST"])
+def blog_search():
+    check_cookie_status()
+
+    query = request.form["query"]
+    articles = funcs.search_articles(query)
+
+    session["blog_search_results"] = articles
+
+    return redirect("/blog")
 
 # quick redirection urls
 

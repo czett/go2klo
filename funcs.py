@@ -35,10 +35,19 @@ configuration = sib_api_v3_sdk.Configuration()
 configuration.api_key["api-key"] = api_key
 api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
-rank_hierarchy = ["dev", "recruiter", "creator", "supporter", "og", "basic"]
+rank_hierarchy = ["dev", "mod", "recruiter", "creator", "supporter", "og", "basic"]
 
 def get_rank_hierarchy():
     return rank_hierarchy
+
+def compare_ranks(rank1, rank2):
+    if rank1 not in rank_hierarchy or rank2 not in rank_hierarchy:
+        return False
+
+    index1 = rank_hierarchy.index(rank1)
+    index2 = rank_hierarchy.index(rank2)
+
+    return index1 <= index2  # true whem rank1 is higher or equal than rank2
 
 def distance(coord1, coord2):
     return geodesic(coord1, coord2).km
@@ -1101,6 +1110,222 @@ def search_toilets(query: str):
                         "latest_rating_date": toilet[5]
                     }
                     for toilet in toilet_results
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def submit_article(title: str, content: str, slug:str, img:str, user_id: int):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Check if the slug already exists
+                slug = ''.join(c for c in slug.lower().strip().replace(" ", "-") if c.isascii())[:100]
+
+                if slug == "":
+                    return False, "Slug cannot be empty."
+
+                cur.execute("SELECT 1 FROM blog WHERE slug = %s", (slug,))
+                if cur.fetchone():
+                    return False, "An article with this slug already exists."
+
+                # Insert the new article
+                cur.execute(
+                    """
+                    INSERT INTO blog (title, text, slug, img, author_id, created_at, views, published)
+                    VALUES (%s, %s, %s, %s, %s, NOW(), %s, %s)
+                    """,
+                    (title, content, slug, img, user_id, 0, False)
+                )
+        return True, "Article submitted successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def get_newest_articles(limit: int = 12):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                    FROM blog
+                    WHERE published = TRUE
+                    ORDER BY created_at DESC
+                    LIMIT %s
+                """, (limit,))
+                articles = cur.fetchall()
+
+                return [
+                    {
+                        "id": article[0],
+                        "title": article[1],
+                        "text": article[2],
+                        "slug": article[3],
+                        "img": article[4],
+                        "author_id": article[5],
+                        "created_at": article[6],
+                        "views": article[7],
+                        "published": article[8],
+                        "author_username": get_username_by_user_id(article[5])
+                    }
+                    for article in articles
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def get_article_by_slug(slug: str):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                    FROM blog
+                    WHERE slug = %s AND published = TRUE
+                """, (slug,))
+                article = cur.fetchone()
+
+                if article:
+                    return {
+                        "id": article[0],
+                        "title": article[1],
+                        "text": article[2],
+                        "slug": article[3],
+                        "img": article[4],
+                        "author_id": article[5],
+                        "created_at": article[6],
+                        "views": article[7],
+                        "published": article[8],
+                        "author_username": get_username_by_user_id(article[5])
+                    }
+                else:
+                    # If the article exists but is not published, return a specific message
+                    cur.execute("""
+                        SELECT 1 FROM blog WHERE slug = %s
+                    """, (slug,))
+                    if cur.fetchone():
+                        return "unpublished"
+                    return None
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def get_hot_articles(limit: int = 3):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                    FROM blog
+                    WHERE published = TRUE
+                    ORDER BY views DESC
+                    LIMIT %s
+                """, (limit,))
+                articles = cur.fetchall()
+
+                return [
+                    {
+                        "id": article[0],
+                        "title": article[1],
+                        "text": article[2],
+                        "slug": article[3],
+                        "img": article[4],
+                        "author_id": article[5],
+                        "created_at": article[6],
+                        "views": article[7],
+                        "published": article[8],
+                        "author_username": get_username_by_user_id(article[5])
+                    }
+                    for article in articles
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def add_article_view(slug: str):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Increment the view count for the article
+                cur.execute("UPDATE blog SET views = views + 1 WHERE slug = %s", (slug,))
+                if cur.rowcount == 0:
+                    return False, "Article not found."
+        return True, "View count updated successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def search_articles(query: str):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                    FROM blog
+                    WHERE unaccent(title) ILIKE unaccent(%s) OR unaccent(text) ILIKE unaccent(%s)
+                    AND published = TRUE
+                """, (f"%{query}%", f"%{query}%"))
+                
+                articles = cur.fetchall()
+
+                return [
+                    {
+                        "id": article[0],
+                        "title": article[1],
+                        "text": article[2],
+                        "slug": article[3],
+                        "img": article[4],
+                        "author_id": article[5],
+                        "created_at": article[6],
+                        "views": article[7],
+                        "published": article[8],
+                        "author_username": get_username_by_user_id(article[5])
+                    }
+                    for article in articles
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def get_unpublished_articles():
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                    FROM blog
+                    WHERE published = FALSE
+                """)
+                articles = cur.fetchall()
+
+                return [
+                    {
+                        "id": article[0],
+                        "title": article[1],
+                        "text": article[2],
+                        "slug": article[3],
+                        "img": article[4],
+                        "author_id": article[5],
+                        "created_at": article[6],
+                        "views": article[7],
+                        "published": article[8],
+                        "author_username": get_username_by_user_id(article[5])
+                    }
+                    for article in articles
                 ]
     except Exception as e:
         return {"error": str(e)}

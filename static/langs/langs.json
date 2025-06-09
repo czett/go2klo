@@ -136,7 +136,19 @@
                 "search-title": "Search for articles",
                 "search-placeholder": "Search for keywords in title or slug",
                 "search-button": "Search",
-                "newest": "Newest articles"
+                "newest": "Newest articles",
+                "write": "Write an article",
+                "label_title": "Title",
+                "label_content": "Content",
+                "label_slug": "Slug",
+                "label_img": "Image URL",
+                "title_placeholder": "Enter the title of your article",
+                "content_placeholder": "Enter the content of your article",
+                "slug_placeholder": "Enter the slug of your article",
+                "img_placeholder": "Enter the image URL of your article",
+                "submit": "Submit article",
+                "markdown": "Please use Markdown for formatting your article content.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/"
             }
         }, "german": {
             "index": {
