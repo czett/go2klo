@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- <h1 class="explore-title">{{ts["title"]}}</h1> stolen from explore page excuse my laziness to rename class -->
+
+<div class="heading-with-icon">
+    <span class="material-symbols-rounded">draw</span>
+    <div class="section-heading">{{ts["write"]}}</div>
+</div>
+
+<form action="/blog/submit" method="post" type="multipart/form-data" class="blog-form">
+    <div class="form-group">
+        <label for="title">{{ts["label_title"]}}</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="{{ts['title_placeholder']}}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="content">{{ts["label_content"]}}</label>
+        <p>{{ts["markdown"]}} <a target="_blank" href="{{ts['markdown_help_url']}}">{{ts["markdown_help_url"]}}</a></p>
+        <textarea class="form-control" id="content" name="content" placeholder="{{ts['content_placeholder']}}" required oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="content">{{ts["label_slug"]}}</label>
+        <input class="form-control" id="slug" name="slug" placeholder="{{ts['slug_placeholder']}}">
+    </div>
+    
+    <div class="form-group">
+        <label for="content">{{ts["label_img"]}}</label>
+        <input class="form-control" id="img" name="img" placeholder="{{ts['img_placeholder']}}">
+    </div>
+
+    <button type="submit">{{ts["submit"]}}</button>
+</form>
+
+{% endblock %}

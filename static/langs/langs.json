@@ -125,6 +125,33 @@
                 "title": "Which loo is the talk of the town?",
                 "subtitle": "Check out the most rated toilets below!",
                 "leaderboard": "Leaderboard"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Latest news, tips and stories from the world of toilets",
+                "hot_articles": "Hot articles",
+                "read_more": "Read more",
+                "posted_on": "Posted on",
+                "by": "by",
+                "search-title": "Search for articles",
+                "search-placeholder": "Search for keywords in title or slug",
+                "search-button": "Search",
+                "newest": "Newest articles",
+                "write": "Write an article",
+                "label_title": "Title",
+                "label_content": "Content",
+                "label_slug": "Slug",
+                "label_img": "Image URL",
+                "title_placeholder": "Enter the title of your article",
+                "content_placeholder": "Enter the content of your article",
+                "slug_placeholder": "Enter the slug of your article",
+                "img_placeholder": "Enter the image URL of your article",
+                "submit": "Submit article",
+                "markdown": "Please use Markdown for formatting your article content.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Unreviewed articles",
+                "approve": "Approve",
+                "reject": "Reject"
             }
         }, "german": {
             "index": {
@@ -251,6 +278,33 @@
                 "title": "Welche Toilette ist gerade im Gespräch?",
                 "subtitle": "Schau dir die am meisten bewerteten Toiletten unten an!",
                 "leaderboard": "Bestenliste"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Neueste Nachrichten, Tipps und Geschichten aus der Welt der Toiletten",
+                "hot_articles": "Beliebte Artikel",
+                "read_more": "Weiterlesen",
+                "posted_on": "Veröffentlicht am",
+                "by": "von",
+                "search-title": "Suche nach Artikeln",
+                "search-placeholder": "Suche nach Schlüsselwörtern im Titel oder Slug",
+                "search-button": "Suche",
+                "newest": "Neueste Artikel",
+                "write": "Einen Artikel schreiben",
+                "label_title": "Titel",
+                "label_content": "Inhalt",
+                "label_slug": "Slug",
+                "label_img": "Bild-URL",
+                "title_placeholder": "Gib den Titel deines Artikels ein",
+                "content_placeholder": "Gib den Inhalt deines Artikels ein",
+                "slug_placeholder": "Gib den Slug deines Artikels ein",
+                "img_placeholder": "Gib die Bild-URL deines Artikels ein",
+                "submit": "Artikel abschicken",
+                "markdown": "Bitte verwende Markdown für die Formatierung des Inhalts deines Artikels.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Unbewertete Artikel",
+                "approve": "Genehmigen",
+                "reject": "Ablehnen"
             }
         }, "bulgarian": {
             "index": {
@@ -377,6 +431,33 @@
                 "title": "Коя тоалетна е най-обсъждана?",
                 "subtitle": "Вижте най-оценените тоалетни по-долу!",
                 "leaderboard": "Класация"
+            },
+            "blog": {
+                "title": "Блог",
+                "subtitle": "Последни новини, съвети и истории от света на тоалетните",
+                "hot_articles": "Горещи статии",
+                "read_more": "Прочети повече",
+                "posted_on": "Публикувано на",
+                "by": "от",
+                "search-title": "Търсене на статии",
+                "search-placeholder": "Търсене по ключови думи в заглавието или слъга",
+                "search-button": "Търсене",
+                "newest": "Най-нови статии",
+                "write": "Напиши статия",
+                "label_title": "Заглавие",
+                "label_content": "Съдържание",
+                "label_slug": "Слуг",
+                "label_img": "URL на изображението",
+                "title_placeholder": "Въведете заглавието на вашата статия",
+                "content_placeholder": "Въведете съдържанието на вашата статия",
+                "slug_placeholder": "Въведете слуга на вашата статия",
+                "img_placeholder": "Въведете URL на изображението на вашата статия",
+                "submit": "Изпрати статията",
+                "markdown": "Моля, използвайте Markdown за форматиране на съдържанието на вашата статия.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Непреведени статии",
+                "approve": "Одобри",
+                "reject": "Отхвърли"
             }
         }, "french": {
             "index": {
@@ -503,6 +584,33 @@
                 "title": "Quelle toilette fait parler d'elle ?",
                 "subtitle": "Découvrez les toilettes les plus notées ci-dessous !",
                 "leaderboard": "Classement"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Dernières nouvelles, conseils et histoires du monde des toilettes",
+                "hot_articles": "Articles populaires",
+                "read_more": "Lire la suite",
+                "posted_on": "Publié le",
+                "by": "par",
+                "search-title": "Rechercher des articles",
+                "search-placeholder": "Rechercher des mots-clés dans le titre ou le slug",
+                "search-button": "Rechercher",
+                "newest": "Articles les plus récents",
+                "write": "Écrire un article",
+                "label_title": "Titre",
+                "label_content": "Contenu",
+                "label_slug": "Slug",
+                "label_img": "URL de l'image",
+                "title_placeholder": "Entrez le titre de votre article",
+                "content_placeholder": "Entrez le contenu de votre article",
+                "slug_placeholder": "Entrez le slug de votre article",
+                "img_placeholder": "Entrez l'URL de l'image de votre article",
+                "submit": "Soumettre l'article",
+                "markdown": "Veuillez utiliser Markdown pour formater le contenu de votre article.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Articles à revoir",
+                "approve": "Approuver",
+                "reject": "Rejeter"
             }
         }, "spanish": {
             "index": {
@@ -629,6 +737,33 @@
                 "title": "¿Qué baño es el tema de conversación?",
                 "subtitle": "¡Consulta los baños más calificados a continuación!",
                 "leaderboard": "Tabla de clasificación"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Últimas noticias, consejos e historias del mundo de los baños",
+                "hot_articles": "Artículos populares",
+                "read_more": "Leer más",
+                "posted_on": "Publicado el",
+                "by": "por",
+                "search-title": "Buscar artículos",
+                "search-placeholder": "Buscar palabras clave en el título o slug",
+                "search-button": "Buscar",
+                "newest": "Artículos más recientes",
+                "write": "Escribir un artículo",
+                "label_title": "Título",
+                "label_content": "Contenido",
+                "label_slug": "Slug",
+                "label_img": "URL de la imagen",
+                "title_placeholder": "Ingresa el título de tu artículo",
+                "content_placeholder": "Ingresa el contenido de tu artículo",
+                "slug_placeholder": "Ingresa el slug de tu artículo",
+                "img_placeholder": "Ingresa la URL de la imagen de tu artículo",
+                "submit": "Enviar artículo",
+                "markdown": "Por favor, usa Markdown para formatear el contenido de tu artículo.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Artículos por revisar",
+                "approve": "Aprobar",
+                "reject": "Rechazar"
             }
         }, "italian": {
             "index": {
@@ -755,6 +890,33 @@
                 "title": "Tendenze Bagni",
                 "subtitle": "Dai un'occhiata ai bagni più valutati qui sotto!",
                 "leaderboard": "Classifica"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Ultime notizie, consigli e storie dal mondo dei bagni",
+                "hot_articles": "Articoli Popolari",
+                "read_more": "Leggi di più",
+                "posted_on": "Pubblicato il",
+                "by": "da",
+                "search-title": "Cerca articoli",
+                "search-placeholder": "Cerca parole chiave nel titolo o nello slug",
+                "search-button": "Cerca",
+                "newest": "Articoli più recenti",
+                "write": "Scrivi un articolo",
+                "label_title": "Titolo",
+                "label_content": "Contenuto",
+                "label_slug": "Slug",
+                "label_img": "URL dell'immagine",
+                "title_placeholder": "Inserisci il titolo del tuo articolo",
+                "content_placeholder": "Inserisci il contenuto del tuo articolo",
+                "slug_placeholder": "Inserisci lo slug del tuo articolo",
+                "img_placeholder": "Inserisci l'URL dell'immagine del tuo articolo",
+                "submit": "Invia articolo",
+                "markdown": "Si prega di utilizzare Markdown per formattare il contenuto del tuo articolo.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Articoli da rivedere",
+                "approve": "Approva",
+                "reject": "Rifiuta"
             }
         }, "norwegian": {
             "index": {
@@ -881,6 +1043,33 @@
                 "title": "Trender Toaletter",
                 "subtitle": "Sjekk ut de mest vurderte toalettene nedenfor!",
                 "leaderboard": "Leaderboard"
+            },
+            "blog": {
+                "title": "Blogg",
+                "subtitle": "Siste nytt, tips og historier fra toalettverdenen",
+                "hot_articles": "Populære artikler",
+                "read_more": "Les mer",
+                "posted_on": "Publisert den",
+                "by": "av",
+                "search-title": "Søk etter artikler",
+                "search-placeholder": "Søk etter nøkkelord i tittel eller slug",
+                "search-button": "Søk",
+                "newest": "Nyeste artikler",
+                "write": "Skriv en artikkel",
+                "label_title": "Tittel",
+                "label_content": "Innhold",
+                "label_slug": "Slug",
+                "label_img": "Bilde-URL",
+                "title_placeholder": "Skriv inn tittelen på artikkelen din",
+                "content_placeholder": "Skriv inn innholdet i artikkelen din",
+                "slug_placeholder": "Skriv inn sluggen til artikkelen din",
+                "img_placeholder": "Skriv inn bilde-URLen til artikkelen din",
+                "submit": "Send artikkel",
+                "markdown": "Vennligst bruk Markdown for å formatere innholdet i artikkelen din.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Artikler til gjennomgang",
+                "approve": "Godkjenn",
+                "reject": "Avvis"
             }
         }, "austrian": {
             "index": {
@@ -1007,6 +1196,33 @@
                 "title": "Welches Klo ist gerade der Renner?",
                 "subtitle": "Schau dir die meistbewerteten Toiletten unten an!",
                 "leaderboard": "Bestenliste"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Neueste Nachrichten, Tipps und Geschichten aus der Welt der Toiletten",
+                "hot_articles": "Beliebte Artikel",
+                "read_more": "Mehr lesen",
+                "posted_on": "Veröffentlicht am",
+                "by": "von",
+                "search-title": "Artikel suchen",
+                "search-placeholder": "Such nach Schlüsselwörtern im Titel oder Slug",
+                "search-button": "Suchen",
+                "newest": "Neueste Artikel",
+                "write": "Schreib einen Artikel",
+                "label_title": "Titel",
+                "label_content": "Inhalt",
+                "label_slug": "Slug",
+                "label_img": "Bild-URL",
+                "title_placeholder": "Gib den Titel deines Artikels ein",
+                "content_placeholder": "Gib den Inhalt deines Artikels ein",
+                "slug_placeholder": "Gib den Slug deines Artikels ein",
+                "img_placeholder": "Gib die Bild-URL deines Artikels ein",
+                "submit": "Artikel abschicken",
+                "markdown": "Bitte benutze Markdown, um den Inhalt deines Artikels zu formatieren.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Artikel zur Überprüfung",
+                "approve": "Genehmigen",
+                "reject": "Ablehnen"
             }
         }, "albanian": {
             "index": {
@@ -1133,6 +1349,33 @@
                 "title": "Cili tualet është më i përfoluri?",
                 "subtitle": "Shiko tualetet më të vlerësuara më poshtë!",
                 "leaderboard": "Tabela e Liderëve"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Lajmet më të fundit, këshillat dhe historitë nga bota e tualeteve",
+                "hot_articles": "Artikujt Popullorë",
+                "read_more": "Lexo më shumë",
+                "posted_on": "Publikuar më",
+                "by": "nga",
+                "search-title": "Kërko artikuj",
+                "search-placeholder": "Kërko fjalë kyçe në titull ose slug",
+                "search-button": "Kërko",
+                "newest": "Artikujt më të rinj",
+                "write": "Shkruaj një artikull",
+                "label_title": "Titulli",
+                "label_content": "Përmbajtja",
+                "label_slug": "Slug",
+                "label_img": "URL e Imazhit",
+                "title_placeholder": "Vendos titullin e artikullit tënd",
+                "content_placeholder": "Vendos përmbajtjen e artikullit tënd",
+                "slug_placeholder": "Vendos slugun e artikullit tënd",
+                "img_placeholder": "Vendos URL-në e imazhit të artikullit tënd",
+                "submit": "Dërgo artikullin",
+                "markdown": "Të lutem, përdor Markdown për të formatuar përmbajtjen e artikullit tënd.",
+                "markdown_help_url": "https://www.markdownguide.org/basic-syntax/",
+                "to_review": "Artikuj për rishikim",
+                "approve": "Mirato",
+                "reject": "Refuzo"
             }
         }
     }

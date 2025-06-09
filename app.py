@@ -13,7 +13,7 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
+rank_icon_map = {"dev": "data_object", "mod": "gavel",  "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
 
 def check_login_status():
     if session.get("logged_in"):
@@ -27,8 +27,11 @@ def check_login_status():
 
 def check_cookie_status():
     # cookie banner removal for now because only essential cookies are used
-    session["lang"] = "english" # whoopsie daisy
     session["cookies"] = True
+    
+    if not session.get("lang"):
+        session["lang"] = "english"
+    
     return True
 
     # old banner validation code
@@ -746,11 +749,151 @@ def referral(username):
         
     return redirect("/")
 
-# @app.route("/blog")
-# def blog():
-#     check_cookie_status()
-#     ts = get_texts(session["lang"], "toilet")
-#     return render_template("blog.html", ts=ts, session=session)
+@app.route("/blog")
+def blog():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "blog")
+    
+    # search if done
+    search_query = request.args.get("search_query")
+    search_results = None
+    if search_query:
+        print(f"Search query: {search_query}")
+        articles = funcs.search_articles(search_query)
+        search_results = articles
+
+    #check for msg
+    msg = request.args.get("msg")
+
+    if session.get("newest_articles"):
+        newest_articles = session["newest_articles"]
+    else:
+        newest_articles = funcs.get_newest_articles(12)
+        session["newest_articles"] = newest_articles
+    
+    if session.get("hot_articles"):
+        hot_articles = session["hot_articles"]
+    else:
+        hot_articles = funcs.get_hot_articles(3)
+        session["hot_articles"] = hot_articles
+
+    unreviewed_articles = None
+
+    # give unreviewed articles to mods and devs
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
+
+        if uid:
+            rank = funcs.get_user_rank(uid)
+            if funcs.compare_ranks(rank, "mod") == True:
+                unreviewed_articles = funcs.get_unreviewed_articles(30)
+
+    return render_template("blog.html", ts=ts, msg=msg, session=session, newest_articles=newest_articles, hot_articles=hot_articles, search_results=search_results, unreviewed_articles=unreviewed_articles)
+
+@app.route("/blog/write")
+def write_blog():
+    check_cookie_status()
+
+    if not check_login_status():
+        return redirect("/login")
+    
+    ts = get_texts(session["lang"], "blog")
+    return render_template("blog_write.html", ts=ts, session=session)
+
+@app.route("/blog/submit", methods=["POST"])
+def submit_blog():
+    check_cookie_status()
+
+    title = request.form["title"]
+    content = request.form["content"]
+    slug = request.form["slug"]
+    img = request.form["img"]
+
+    user = session["user"]
+    uid = funcs.get_user_id_by_username(user)
+    if uid == None:
+        return redirect("/logout")
+    
+    response = funcs.submit_article(title, content, slug, img, uid)
+
+    if response[0] == True:
+        msg = "Article submitted successfully! It will be reviewed by our team."
+    else:
+        msg = "An error occurred while submitting your article: " + response[1]
+
+    return redirect(url_for("blog", msg=msg))
+
+
+@app.route("/blog/p/<slug>")
+def blog_post(slug):
+    check_cookie_status()
+
+    article = funcs.get_article_by_slug(slug)
+
+    if article == None:
+        return redirect("/blog")
+    if article[0] == "unpublished":
+        if session.get("user"):
+            user = session["user"]
+            uid = funcs.get_user_id_by_username(user)
+
+            if uid:
+                rank = funcs.get_user_rank(uid)
+                if funcs.compare_ranks(rank, "mod") == True:
+                    pass
+                else:
+                    return redirect("/blog")
+            else:
+                return redirect("/blog")
+        else:
+            return redirect("/blog")
+
+    funcs.add_article_view(slug)
+    ts = get_texts(session["lang"], "blog")
+
+    # format date
+    article = article[1]
+    article["created_at"] = article["created_at"].strftime("%d.%m.%Y")
+
+    return render_template("blog_article.html", article=article, session=session, ts=ts)
+
+@app.route("/blog/mod/<action>/<slug>")
+def blog_mod_action(action, slug):
+    check_cookie_status()
+
+    if not session.get("user"):
+        return redirect("/blog")
+    
+    user = session["user"]
+    uid = funcs.get_user_id_by_username(user)
+    if uid == None:
+        return redirect("/logout")
+    rank = funcs.get_user_rank(uid)
+    if not funcs.compare_ranks(rank, "mod"):
+        return redirect("/blog")
+    
+    if action == "approve":
+        funcs.approve_article(slug)
+
+        if session.get("newest_articles"):
+            session.pop("newest_articles")
+    elif action == "reject":
+        funcs.reject_article(slug)
+
+    return redirect("/blog")
+
+@app.route("/blog/search", methods=["POST"])
+def blog_search():
+    check_cookie_status()
+
+    query = request.form["query"]
+
+    # articles = funcs.search_articles(query)
+    # session["blog_search_results"] = articles
+    # return redirect("/blog")
+
+    return redirect(url_for("blog", search_query=query))
 
 # quick redirection urls
 
