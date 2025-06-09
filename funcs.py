@@ -1192,7 +1192,7 @@ def get_article_by_slug(slug: str):
                 article = cur.fetchone()
 
                 if article:
-                    return {
+                    return ["published", {
                         "id": article[0],
                         "title": article[1],
                         "text": article[2],
@@ -1203,14 +1203,28 @@ def get_article_by_slug(slug: str):
                         "views": article[7],
                         "published": article[8],
                         "author_username": get_username_by_user_id(article[5])
-                    }
+                    }]
                 else:
                     # If the article exists but is not published, return a specific message
                     cur.execute("""
-                        SELECT 1 FROM blog WHERE slug = %s
+                        SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                        FROM blog
+                        WHERE slug = %s
                     """, (slug,))
-                    if cur.fetchone():
-                        return "unpublished"
+                    unpublished_article = cur.fetchone()
+                    if unpublished_article:
+                        return ["unpublished", {
+                            "id": unpublished_article[0],
+                            "title": unpublished_article[1],
+                            "text": unpublished_article[2],
+                            "slug": unpublished_article[3],
+                            "img": unpublished_article[4],
+                            "author_id": unpublished_article[5],
+                            "created_at": unpublished_article[6],
+                            "views": unpublished_article[7],
+                            "published": unpublished_article[8],
+                            "author_username": get_username_by_user_id(unpublished_article[5])
+                        }]
                     return None
     except Exception as e:
         return {"error": str(e)}
@@ -1329,5 +1343,68 @@ def get_unpublished_articles():
                 ]
     except Exception as e:
         return {"error": str(e)}
+    finally:
+        conn.close()
+
+def get_unreviewed_articles(limit: int = 30):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
+                    FROM blog
+                    WHERE published = FALSE
+                    LIMIT %s
+                """, (limit,))
+                articles = cur.fetchall()
+
+                return [
+                    {
+                        "id": article[0],
+                        "title": article[1],
+                        "text": article[2],
+                        "slug": article[3],
+                        "img": article[4],
+                        "author_id": article[5],
+                        "created_at": article[6],
+                        "views": article[7],
+                        "published": article[8],
+                        "author_username": get_username_by_user_id(article[5])
+                    }
+                    for article in articles
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def approve_article(slug: str):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Update the article to set published to TRUE
+                cur.execute("UPDATE blog SET published = TRUE WHERE slug = %s", (slug,))
+                if cur.rowcount == 0:
+                    return False, "Article not found."
+        return True, "Article approved successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def reject_article(slug: str):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Update the article to set published to FALSE
+                cur.execute("UPDATE blog SET published = null WHERE slug = %s", (slug,))
+                if cur.rowcount == 0:
+                    return False, "Article not found."
+        return True, "Article rejected successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
     finally:
         conn.close()

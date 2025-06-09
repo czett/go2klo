@@ -4,8 +4,25 @@
 <div class="article-img">
     <img src="{{article.img}}" alt="">
 </div>
+
+<div class="heading-with-icon" style="margin-top: 2vh;">
+    <span class="material-symbols-rounded">summarize</span>
+    <div class="section-heading">{{article.title}}</div>
+</div>
+
 <p>{{ts.by}} <a href="/p/{{article.author_username}}">{{article.author_username}}</a>, {{article.created_at}}</p>
 <div id="article-content" class="article-content"></div>
+
+{% if article.published != True %}
+<div class="article-mod-actions">
+    <a href="/blog/mod/approve/{{article.slug}}" class="mod-action-approve">
+        {{ts.approve}}
+    </a>
+    <a href="/blog/mod/reject/{{article.slug}}" class="mod-action-reject">
+        {{ts.reject}}
+    </a>
+</div>
+{% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 

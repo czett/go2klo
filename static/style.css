@@ -1485,6 +1485,14 @@ button:disabled{
     -ms-text-fill-color: transparent;
 }
 
+.heading-with-icon span.mod-icon{
+    background: linear-gradient(45deg, #7B1FA2, #E91E63);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    -ms-text-fill-color: transparent;
+}
+
 .articles{
     width: 100%;
     background-color: var(--bg);
@@ -1653,6 +1661,46 @@ button:disabled{
 
 .article-content em {
     font-style: italic;
+}
+
+.article-mod-actions{
+    margin-bottom: 2vh;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.article-mod-actions a{
+    padding: 1vh 2vh;
+    border-radius: var(--brad);
+    background-color: var(--ac);
+    color: var(--bg);
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-decoration: none;
+    text-decoration: none;
+}
+
+a.mod-action-approve{
+    background-color: #318b35;
+}
+
+a.mod-action-reject{
+    background-color: #d4040d;
+}
+
+.write-article-btn{
+    text-decoration: none;
+    position: absolute;
+    inset: 12vh var(--rlpad) auto auto;
+    transform: translateY(0%);
+    background-color: var(--ac);
+    padding: 1vh 2vh;
+    border-radius: calc(var(--brad)/2);
+    color: var(--bg);
+    font-size: 1.3rem;
+    cursor: pointer;
 }
 
 /* responsive design (spooky) */
@@ -2163,5 +2211,16 @@ button:disabled{
     .article-img{
         margin-top: var(--rlpad);
         aspect-ratio: 1;
+    }
+
+    .write-article-btn{
+        position: static;
+        inset: auto auto auto auto;
+        transform: translate(0, 0);
+        margin: var(--rlpad) 0 !important;
+        width: 100% !important;
+        box-sizing: border-box;
+        text-align: center;
+        padding: 3vh 2vh;
     }
 }

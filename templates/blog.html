@@ -3,6 +3,16 @@
 {% block content %}
 <!-- <h1 class="explore-title">{{ts["title"]}}</h1> stolen from explore page excuse my laziness to rename class -->
 
+{% if msg != None %}
+    <div class="logreg-msg msg">{{msg}}</div>
+{% endif %}
+
+{% if session.logged_in %}
+<div class="write-article-btn" onmousedown="window.location.href = '/blog/write';">
+    {{ts.write}}
+</div>
+{% endif %}
+
 <div class="heading-with-icon">
     <span class="material-symbols-rounded fire-icon">local_fire_department</span>
     <div class="section-heading">{{ts["hot_articles"]}}</div>
@@ -83,6 +93,35 @@
     </a>
     {% endfor %}
 </div>
+{% endif %}
+
+{% if unreviewed_articles != None %}
+<div class="heading-with-icon">
+    <span class="material-symbols-rounded mod-icon">account_balance</span>
+    <div class="section-heading">{{ts["to_review"]}}</div>
+</div>
+
+{% if unreviewed_articles | length > 0 %}
+<div class="articles">
+    {% for article in unreviewed_articles %}
+    <a href="/blog/p/{{article.slug}}" style="text-decoration: none;">
+        <div class="article">
+            <div class="article-icon">
+                <span class="material-symbols-rounded">newspaper</span>
+            </div>
+            <div class="article-data">
+               <!-- <div class="article-title">{{ts["title"]}}</div> -->
+                <div class="article-title">{{article.title}}</div>
+                <div class="article-author">{{article.author_username}}</div>
+                <div class="article-views">
+                    <span class="material-symbols-rounded">visibility</span> {{article.views}}
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
 {% endif %}
 
 <!-- search reults here in a minute -->
