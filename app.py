@@ -27,6 +27,7 @@ def check_login_status():
 
 def check_cookie_status():
     # cookie banner removal for now because only essential cookies are used
+    session["lang"] = "english" # whoopsie daisy
     session["cookies"] = True
     return True
 
