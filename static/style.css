@@ -1229,19 +1229,23 @@ button:disabled{
 }
 
 .comments-list .comment-item.special-dev .comment-publisher .comment-rank *{
-    color: #318b35 !important;
+    color: #015734 !important;
 }
 
 .comments-list .comment-item.special-supporter .comment-publisher .comment-rank *{
-    color: #d4040d !important;
+    color: #ce224a !important;
 }
 
 .comments-list .comment-item.special-og .comment-publisher .comment-rank *{
-    color: #9c87f2 !important;
+    color: #095e80 !important;
 }
 
 .comments-list .comment-item.special-creator .comment-publisher .comment-rank *{
     color: #E07800 !important;
+}
+
+.comments-list .comment-item.special-recruiter .comment-publisher .comment-rank *{
+    color: #004E92 !important;
 }
 
 .comments-list .comment-item.special-mod .comment-publisher .comment-rank * {
