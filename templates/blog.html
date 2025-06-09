@@ -1,17 +1,64 @@
 {% extends "base.html" %}
 
-<textarea id="mytextarea" height="500px" width="500px">Hier kannst du deinen Text eingeben...</textarea>
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-  tinymce.init({
-    selector: '#mytextarea'
-  });
-</script>
+{% block content %}
+<!-- <h1 class="explore-title">{{ts["title"]}}</h1> stolen from explore page excuse my laziness to rename class -->
 
-<script>
-tinymce.init({
-  selector: '#mytextarea',
-  content_style: 'body { font-family: Arial; font-size: 14px; }'
-});
+<div class="heading-with-icon">
+    <span class="material-symbols-rounded fire-icon">local_fire_department</span>
+    <div class="section-heading">{{ts["hot_articles"]}}</div>
+</div>
 
-</script>
+<div class="articles">
+    {% for i in range(6) %}
+      <div class="article">
+            <div class="article-icon">
+                <span class="material-symbols-rounded">newspaper</span>
+            </div>
+            <div class="article-data">
+                <!-- <div class="article-title">{{ts["title"]}}</div> -->
+                <div class="article-title">Lorem ipsum dolor sit amet, consectetur adipisci</div>
+                <div class="article-author">{{ts["author"]}}</div>
+                <div class="article-views">
+                    <span class="material-symbols-rounded">visibility</span> 6587
+                </div>
+          </div>
+      </div>
+    {% endfor %}
+</div>
+
+<div class="heading-with-icon">
+    <span class="material-symbols-rounded">update</span>
+    <div class="section-heading">{{ts["newest"]}}</div>
+</div>
+
+<div class="articles">
+    {% for i in range(12) %}
+      <div class="article">
+            <div class="article-icon">
+                <span class="material-symbols-rounded">newspaper</span>
+            </div>
+            <div class="article-data">
+                <!-- <div class="article-title">{{ts["title"]}}</div> -->
+                <div class="article-title">Lorem ipsum dolor sit amet, consectetur adipisci</div>
+                <div class="article-author">{{ts["author"]}}</div>
+                <div class="article-views">
+                    <span class="material-symbols-rounded">visibility</span> 6587
+                </div>
+          </div>
+      </div>
+    {% endfor %}
+</div>
+
+<div class="explore-search">
+    <div class="search-title">
+        {{ts["search-title"]}}
+    </div>
+    <form action="/explore/search" enctype="multipart/form-data" method="post">
+        <input type="text" name="search-query" placeholder="{{ts['search-placeholder']}}" required>
+        <button type="submit">{{ts['search-button']}}</button>
+    </form>
+</div>
+
+<!-- search reults here in a minute -->
+
+{% endblock %}

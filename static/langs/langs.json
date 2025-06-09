@@ -125,6 +125,18 @@
                 "title": "Which loo is the talk of the town?",
                 "subtitle": "Check out the most rated toilets below!",
                 "leaderboard": "Leaderboard"
+            },
+            "blog": {
+                "title": "Blog",
+                "subtitle": "Latest news, tips and stories from the world of toilets",
+                "hot_articles": "Hot articles",
+                "read_more": "Read more",
+                "posted_on": "Posted on",
+                "by": "by",
+                "search-title": "Search for articles",
+                "search-placeholder": "Search for keywords in title or slug",
+                "search-button": "Search",
+                "newest": "Newest articles"
             }
         }, "german": {
             "index": {

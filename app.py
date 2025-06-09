@@ -746,11 +746,11 @@ def referral(username):
         
     return redirect("/")
 
-# @app.route("/blog")
-# def blog():
-#     check_cookie_status()
-#     ts = get_texts(session["lang"], "toilet")
-#     return render_template("blog.html", ts=ts, session=session)
+@app.route("/blog")
+def blog():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "blog")
+    return render_template("blog.html", ts=ts, session=session)
 
 # quick redirection urls
 
@@ -772,17 +772,17 @@ def toilet_referrer(tid):
 
     return redirect(f"/toilet/{tid}")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
