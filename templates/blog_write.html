@@ -11,23 +11,23 @@
 <form action="/blog/submit" method="post" type="multipart/form-data" class="blog-form">
     <div class="form-group">
         <label for="title">{{ts["label_title"]}}</label>
-        <input type="text" class="form-control" id="title" name="title" placeholder="{{ts['title_placeholder']}}" required>
+        <input type="text" class="form-control" id="title" name="title" placeholder="{{ts['title_placeholder']}}" required maxlength="100">
     </div>
 
     <div class="form-group">
         <label for="content">{{ts["label_content"]}}</label>
         <p>{{ts["markdown"]}} <a target="_blank" href="{{ts['markdown_help_url']}}">{{ts["markdown_help_url"]}}</a></p>
-        <textarea class="form-control" id="content" name="content" placeholder="{{ts['content_placeholder']}}" required oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+        <textarea class="form-control" id="content" name="content" placeholder="{{ts['content_placeholder']}}" maxlength="30000" required oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
     </div>
 
     <div class="form-group">
         <label for="content">{{ts["label_slug"]}}</label>
-        <input class="form-control" id="slug" name="slug" placeholder="{{ts['slug_placeholder']}}">
+        <input class="form-control" id="slug" name="slug" placeholder="{{ts['slug_placeholder']}}" maxlength="100" required>
     </div>
     
     <div class="form-group">
         <label for="content">{{ts["label_img"]}}</label>
-        <input class="form-control" id="img" name="img" placeholder="{{ts['img_placeholder']}}">
+        <input class="form-control" id="img" name="img" placeholder="{{ts['img_placeholder']}}" required>
     </div>
 
     <button type="submit">{{ts["submit"]}}</button>
