@@ -662,6 +662,61 @@ input[type="range"]::-webkit-slider-thumb {
     text-decoration: underline;
 }
 
+/* cluster marker style */
+.marker-cluster {
+    font-weight: bold; /* Schrift fett */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    aspect-ratio: 1 !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.marker-cluster-small {
+    background: var(--ac);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    width: 2vh !important;
+    height: 2vh !important;
+}
+
+.marker-cluster-medium {
+    background: var(--ac);
+    opacity: 1;
+    font-size: 1.1rem;
+    width: 3vh !important;
+    height: 3vh !important;
+}
+
+.marker-cluster-large {
+    background: var(--acalt);
+    opacity: 1;
+    font-size: 1.3rem;
+    width: 4vh !important;
+    height: 4vh !important;
+}
+
+.marker-cluster div {
+    box-sizing: border-box;
+    padding: 0;
+    line-height: initial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.marker-cluster div span {
+    color: var(--bg);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    text-align: center;
+    line-height: 100%;
+    font-size: inherit;
+}
+
 /* user profile */
 
 .user-profile{
@@ -1997,6 +2052,18 @@ a.mod-action-reject{
     
     #map{
         aspect-ratio: 1 !important;
+    }
+
+    .marker-cluster-small {
+        font-size: 0.7rem;
+    }
+
+    .marker-cluster-medium {
+        font-size: 0.9rem;
+    }
+
+    .marker-cluster-large {
+        font-size: 1.1rem;
     }
     
     .logreg-form{
