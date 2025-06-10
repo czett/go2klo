@@ -5,12 +5,13 @@
     <img src="{{article.img}}" alt="">
 </div>
 
-<div class="heading-with-icon" style="margin-top: 2vh;">
-    <span class="material-symbols-rounded">summarize</span>
+<div class="heading-with-icon article-page-title" style="margin-top: 2vh;">
+    <!-- dont feel like we neeed the icon atm -->
+    <!-- <span class="material-symbols-rounded">summarize</span> -->
     <div class="section-heading">{{article.title}}</div>
 </div>
 
-<p>{{ts.by}} <a href="/p/{{article.author_username}}">{{article.author_username}}</a>, {{article.created_at}}</p>
+<p>{{ts.by}} <a href="/p/{{article.author_username}}">{{article.author_username}}</a>, {{ts.posted_on}} {{article.created_at}}</p>
 <div id="article-content" class="article-content"></div>
 
 {% if article.published != True %}
