@@ -9,11 +9,11 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ## 📦 Features  
 
 ### 🗺️ Find Nearby Toilets  
-- Quickly locate the closest public restrooms using the map.
+- Quickly locate the nearest public restrooms using the map.
 - Trends now show you the top-10 most rated toilets!
 
 ### ⭐ Rate & Review  
-- Share your experience by rating restrooms on cleanliness, comfort, and convenience.  
+- Share your experience by rating restrooms on cleanliness, comfort, and supplies.  
 - Add funny or helpful comments to guide others (e.g., “Bring your own TP!”).
 - Earn crazy cool achievements (four implemented)!
 
@@ -28,6 +28,10 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - Leaderboard of users with most ratings.
 - Chunk Loading for explore page!
 - In Google Index since 15th January, 2025
+- Text Censoring/Filtering basically anywhere
+- User Auth and Password reset (email-based)
+- Caching for saving computation power
+- Addresses everywhere! (crazy for the OG users at least)
 
 ## 🛠️ Tech Stack  
 
@@ -35,11 +39,12 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Frontend**: HTML, CSS, and JavaScript  
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
+- **Mailing**: Brevo/sendinblue
 
 ## 🚧 Future Features/planned improvements
 
 - Discover the best-rated toilets with our *Royal Flush Rankings*.
-- QOL improvement -> showing toilet location as often as possible (currently not possible due to computational difficulties/inefficient ideas of mine)
+- further hardware usage optimizations -> Edge Requests!
 
 ## 🤔 Why go2klo?  
 
@@ -52,5 +57,7 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - geopy Nominatim, this project relies on you
 - icon-icons and Google Fonts for icons and logos
 - flag-icons for language switcher from [flagicons.lipis.dev](https://flagicons.lipis.dev/) <3
+- my friends for early- and stress-testing the app from (almost) day one
+- GPT-4o
 
-[go2klo](https://go2klo.com/), dev'ed 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.com/), in development since 11/24 (idea and prototype 10/2022)
