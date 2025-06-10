@@ -1776,6 +1776,25 @@ a.mod-action-reject{
     cursor: pointer;
 }
 
+/* legal */
+
+.legal-text{
+    font-size: 1.1rem;
+    margin-bottom: 2vh;
+}
+
+.legal-text .heading-with-icon{
+    margin: 2vh 0;
+}
+
+.legal-text .heading-with-icon span{
+    font-size: 4rem;
+}
+
+.legal-text .heading-with-icon .section-heading{
+    font-size: 2.5rem !important;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){

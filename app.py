@@ -915,17 +915,24 @@ def toilet_referrer(tid):
 
     return redirect(f"/toilet/{tid}")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+@app.route("/legal")
+def legal():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "index")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+    return render_template("legal.html", ts=ts, session=session)
+
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
+
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
     app.run(debug=True, port=7000)
