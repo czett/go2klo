@@ -542,7 +542,7 @@ def get_toilets_chunk(start_id, limit):
         return {"error": str(e)}
 
 
-def get_toilet_details(toilet_id):
+def get_toilet_details(toilet_id, uid):
     try:
         conn = get_db_connection()
         with conn:
@@ -559,9 +559,9 @@ def get_toilet_details(toilet_id):
 
                 latitude, longitude, location_str = toilet
 
-                # Get ratings for this toilet based on rated_user_id
+                # Get ratings for this toilet including rating_id
                 cur.execute("""
-                    SELECT cleanliness, supplies, privacy, comment, rated_user_id
+                    SELECT cleanliness, supplies, privacy, comment, rated_user_id, rating_id
                     FROM ratings
                     WHERE toilet_id = %s
                 """, (toilet_id,))
@@ -580,6 +580,16 @@ def get_toilet_details(toilet_id):
                         SELECT username, rank FROM users WHERE user_id = %s
                     """, (user_id,))
                     user = cur.fetchone()
+
+                    # Check if the current user (uid) has liked this rating
+                    liked = None
+                    if uid is not None:
+                        cur.execute(
+                            "SELECT 1 FROM likes WHERE user_id = %s AND rating_id = %s",
+                            (uid, r[5])
+                        )
+                        liked = cur.fetchone() is not None
+
                     rated_users.append({
                         "user": {
                             "username": user[0] if user else "Unknown",
@@ -588,7 +598,9 @@ def get_toilet_details(toilet_id):
                         "cleanliness": r[0],
                         "supplies": r[1],
                         "privacy": r[2],
-                        "comment": r[3]
+                        "comment": r[3],
+                        "rating_id": r[5],
+                        "liked": liked
                     })
 
                 return {
@@ -603,7 +615,6 @@ def get_toilet_details(toilet_id):
                 }
     except Exception as e:
         return {"error": str(e)}
-
 
 def get_user_ratings(user_id: int):
     try:
@@ -1404,6 +1415,26 @@ def reject_article(slug: str):
                 if cur.rowcount == 0:
                     return False, "Article not found."
         return True, "Article rejected successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def toggle_like_rating(uid, rid):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Check if the user has already liked this rating
+                cur.execute("SELECT 1 FROM likes WHERE user_id = %s AND rating_id = %s", (uid, rid))
+                if cur.fetchone():
+                    # User has already liked this rating, so we remove the like
+                    cur.execute("DELETE FROM likes WHERE user_id = %s AND rating_id = %s", (uid, rid))
+                    return True, "Like removed successfully."
+                else:
+                    # User has not liked this rating, so we add the like
+                    cur.execute("INSERT INTO likes (user_id, rating_id) VALUES (%s, %s)", (uid, rid))
+                    return True, "Like added successfully."
     except Exception as e:
         return False, f"Error: {e}"
     finally:

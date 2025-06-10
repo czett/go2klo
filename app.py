@@ -364,7 +364,10 @@ def rate_tid(tid):
         return redirect("/explore")
 
     # check if toilet exists
-    toilet = funcs.get_toilet_details(tid)
+
+    uid = funcs.get_user_id_by_username(session["user"])
+
+    toilet = funcs.get_toilet_details(tid, uid)
     if toilet == None:
         return redirect("/explore")
 
@@ -525,7 +528,15 @@ def toilet():
         return redirect("/explore")
 
     tid = session["tid"]
-    info = funcs.get_toilet_details(tid)
+
+    uid = None
+    if session.get("user"):
+        user = session["user"]
+        uid = funcs.get_user_id_by_username(user)
+    else:
+        uid = None
+
+    info = funcs.get_toilet_details(tid, uid)
 
     if info == None:
         return redirect("/explore") # redirect to explore if toilet does not exist
@@ -921,6 +932,24 @@ def legal():
     ts = get_texts(session["lang"], "index")
 
     return render_template("legal.html", ts=ts, session=session)
+
+@app.route("/api/like-rating/<tid>", methods=["POST"])
+def toggle_like_rating(tid):
+    if not check_login_status():
+        return jsonify({"error": "You must be logged in to like a rating."}), 401
+    
+    user = session["user"]
+    uid = funcs.get_user_id_by_username(user)
+    
+    if uid is None:
+        return jsonify({"error": "User not found."}), 404
+
+    response = funcs.toggle_like_rating(uid, tid)
+
+    if response[0]:
+        return jsonify({"success": True, "message": response[1]})
+    else:
+        return jsonify({"error": response[1]}), 400
 
 # @app.errorhandler(Exception)
 # def handle_error(e):

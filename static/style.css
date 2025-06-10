@@ -1239,6 +1239,7 @@ button:disabled{
     min-height: 12vh;
     cursor: pointer;
     background-color: var(--bg);
+    position: relative;
 }
 
 .comments-list .comment-item.special{
@@ -1252,6 +1253,27 @@ button:disabled{
     filter: saturate(1.1);
     cursor: pointer;
 }
+
+.comments-list .comment-item .like-rating-icon{
+    width: 2vh;
+    height: 2vh;
+    position: absolute;
+    inset: 1vh 1vh auto auto;
+    rotate: 15deg;
+}
+
+.comments-list .comment-item .like-rating-icon span{
+    color: var(--bgd);
+    font-size: 2vh;
+    font-variation-settings: 'FILL' 0;
+    cursor: pointer;
+}
+
+.comments-list .comment-item .like-rating-icon span.liked{
+    font-variation-settings: 'FILL' 1;
+}
+
+/* leaderboard */
 
 .leaderboard .entry a .user-rank{
     padding: .5vh 1.25vh;
