@@ -928,4 +928,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)

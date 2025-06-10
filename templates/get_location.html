@@ -8,14 +8,14 @@
         
         <div class="get-loc-map">
             <div id="map" style="width: 100%; height: 300px;"></div>
-            
+            <span class="material-symbols-rounded get-location-btn" onmousedown="getLocation()">my_location</span>
         </div>
 
         {% if msg != None %}
             <div class="logreg-msg msg">{{msg}}</div>
         {% endif %} 
 
-        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="30" id="location_str">
+        <input type="text" id="gl_query" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="30" id="location_str">
     
         {% if msg != None %}
             <button type="submit" disabled>{{ts["submit"]}}</button>
@@ -41,7 +41,7 @@ document.getElementById("location_str").value = "{{rating_coords}}";
     var marker;
 
     function updateLocationInput(latlng) {
-        document.getElementById("location_str").value = latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
+        document.getElementById("gl_query").value = latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
     }
 
     map.on('click', function(e) {
@@ -55,6 +55,35 @@ document.getElementById("location_str").value = "{{rating_coords}}";
         }
         updateLocationInput(e.latlng);
     });
+
+    // location getter
+    const inp = document.getElementById("gl_query");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            inp.value = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function success(position) {
+        inp.value = position.coords.latitude + ", " + position.coords.longitude;
+        var latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+        if (!marker) {
+            marker = L.marker(latlng, { draggable: true }).addTo(map);
+            marker.on('dragend', function() {
+                updateLocationInput(marker.getLatLng());
+            });
+        } else {
+            marker.setLatLng(latlng);
+        }
+        map.setView(latlng, 15);
+    }
+
+    function error() {
+        alert("Sorry, no position available.");
+    }
 </script>
 
 {% endblock %}

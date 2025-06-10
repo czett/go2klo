@@ -509,6 +509,20 @@ button{
 .rating-form .get-loc-map{
     margin-bottom: 2vh;
     aspect-ratio: 3;
+    position: relative;
+}
+
+.rating-form .get-loc-map .get-location-btn{
+    position: absolute;
+    inset: auto auto 0 0;
+    border-radius: 0 var(--brad) 0 0;
+    background: var(--bg);
+    color: var(--ac);
+    font-weight: 700;
+    font-size: 3rem;
+    padding: 1vh;
+    z-index: 1000;
+    cursor: pointer;
 }
 
 .rating-form form input, .rating-form form textarea{
