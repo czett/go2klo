@@ -723,6 +723,11 @@ def decline_report(rid):
         if has_rank[0] == True and has_rank[1] == "":
             funcs.delete_report_by_id(rid)
 
+        has_rank = funcs.has_user_rank(uid, "mod")
+
+        if has_rank[0] == True and has_rank[1] == "":
+            funcs.delete_report_by_id(rid)
+
     return redirect("/myprofile")
 
 @app.route("/report/accept/<tid>")
@@ -735,6 +740,11 @@ def accept_report(tid):
         uid = funcs.get_user_id_by_username(user)
 
         has_rank = funcs.has_user_rank(uid, "dev")
+
+        if has_rank[0] == True:
+            funcs.delete_toilet_by_id(int(tid))
+
+        has_rank = funcs.has_user_rank(uid, "mod")
 
         if has_rank[0] == True:
             funcs.delete_toilet_by_id(int(tid))
