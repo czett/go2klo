@@ -606,10 +606,11 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
-    if own == True and user_rank == "dev":
-        reports = []
-        reports = funcs.get_all_reports()
-        return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
+    if own == True:
+        if user_rank == "dev" or user_rank == "mod":
+            reports = []
+            reports = funcs.get_all_reports()
+            return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
 
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
     return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
