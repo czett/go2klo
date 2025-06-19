@@ -955,6 +955,13 @@ def toggle_like_rating(tid):
     else:
         return jsonify({"error": response[1]}), 400
 
+@app.route("/rfr")
+def rfr():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "rfr")
+
+    return render_template("rfr.html", ts=ts, session=session)
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500

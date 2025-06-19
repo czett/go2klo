@@ -152,6 +152,11 @@
                 "to_review": "Unreviewed articles",
                 "approve": "Approve",
                 "reject": "Reject"
+            },
+            "rfr": {
+                "title": "Royal Flush Ranking",
+                "bottom": "Explore the best of the best in your area",
+                "ranking": "Ranking"
             }
         }, "german": {
             "index": {

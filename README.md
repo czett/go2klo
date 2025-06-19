@@ -11,15 +11,18 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 ### 🗺️ Find Nearby Toilets  
 - Quickly locate the nearest public restrooms using the map.
 - Trends now show you the top-10 most rated toilets!
+- Toilet of the day shows you the most-rated loo of the past 24h.
 
 ### ⭐ Rate & Review  
 - Share your experience by rating restrooms on cleanliness, comfort, and supplies.  
 - Add funny or helpful comments to guide others (e.g., “Bring your own TP!”).
 - Earn crazy cool achievements (four implemented)!
+- Pinpoint your toilet by using your GPS location.
 
 ### 🤝 Community Contributions  
 - Add new public toilets to the map and help expand the database.  
 - Comment on toilets that are closed, under construction, or just plain terrifying.
+- You can also like ratings that are funny or helpful.
 
 ### 💻 Miscellaneous
 - Mutliple languages (9 in total)
@@ -32,6 +35,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - User Auth and Password reset (email-based)
 - Caching for saving computation power
 - Addresses everywhere! (crazy for the OG users at least)
+- User ranks that are visually distinguishable and ranked in a hierarchy for permissions (e.g. mod)
 
 ## 🛠️ Tech Stack  
 
@@ -43,12 +47,11 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 
 ## 🚧 Future Features/planned improvements
 
-- Discover the best-rated toilets with our *Royal Flush Rankings*.
-- further hardware usage optimizations -> Edge Requests!
+- Discover the best-rated toilets with our *Royal Flush Rankings*
 
 ## 🤔 Why go2klo?  
 
-Because everyone deserves a clean, accessible, and welcoming place to go when nature calls. **go2klo** isn't just an app; it's a mission to make public spaces better for everyone.  
+Because everyone deserves a clean, accessible, and welcoming place to go when nature calls. **go2klo** isn't just a web-app; it's a mission to make public spaces better for everyone.  
 
 So sit back, relax, and let go2klo take the *pressure* off. 😉  
 

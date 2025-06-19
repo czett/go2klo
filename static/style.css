@@ -506,13 +506,13 @@ button{
     width: 100%;
 }
 
-.rating-form .get-loc-map{
+.rating-form .get-loc-map, .map-wrapper{
     margin-bottom: 2vh;
     aspect-ratio: 3;
     position: relative;
 }
 
-.rating-form .get-loc-map .get-location-btn{
+.rating-form .get-loc-map .get-location-btn, .map-wrapper .get-location-btn{
     position: absolute;
     inset: auto auto 0 0;
     border-radius: 0 var(--brad) 0 0;
@@ -523,7 +523,7 @@ button{
     padding: 1vh;
     z-index: 1000;
     cursor: pointer;
-    user-select: none;
+    user-select: none !important;
 }
 
 .rating-form form input, .rating-form form textarea{
