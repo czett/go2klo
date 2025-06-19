@@ -1,3 +1,4 @@
+// js from base template
 function mobileMenu(){
     iconBtn = document.querySelector(".menu-icon");
     // let state = iconBtn.dataset.collapsed;
@@ -52,7 +53,6 @@ window.addEventListener("load", () => {
 document.querySelectorAll("a").forEach(link => {
 link.addEventListener("click", e => {
     const href = link.getAttribute("href");
-    console.log("soy gurt");
 
     if (href && !href.startsWith("#") && !href.startsWith("javascript") && link.target !== "_blank"){
         const loader = document.querySelector(".loading-box");
@@ -65,12 +65,26 @@ link.addEventListener("click", e => {
 });
 });
 
+// several js funcs collected from subpages
 function disableRatedWindow(){
     document.querySelector(".rated-banner").style.display = "none";
 }
 
 function redirect(url) {
-    window.location.href = url;
+    // window.location.href = url;
+
+    // loader implementation
+    const loader = document.querySelector(".loading-box");
+    if (!loader) return;
+
+    loader.classList.remove("hidden");
+    loader.classList.add("visible");
+    
+    // console.log("soy gurt");
+
+    setTimeout(() => {
+        window.location.href = url;
+    }, 300);
 }
 
 function updateValue(id, value) {

@@ -1822,22 +1822,6 @@ a.mod-action-reject{
 
 /* loading animation design */
 
-/* .loading-box{
-    position: absolute;
-    inset: 50% auto auto 50%;
-    transform: translate(-50%, -50%);
-
-    transition: 500ms;
-
-    background-color: red;
-    opacity: 1;
-    visibility: visible;
-
-    width: 100vw;
-    height: 100vh;
-    z-index: 2000;
-}*/
-
 .loading-box{
     visibility: hidden;
     opacity: 0;
