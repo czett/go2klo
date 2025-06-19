@@ -484,13 +484,10 @@ def search_toilets():
         distance = funcs.distance(t1_coords, t2_coords)
         zoom = funcs.get_zoom_level(distance)
 
-        print(round(distance, 0))
+        # print(round(distance, 0))
 
-    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
     if zoom == None:
         zoom = 6
-
-    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
 
     return render_template("explore.html", ts=ts, session=session, toilets=toilets, zoom=zoom, query=query, focus_coords=list(t1_coords))
 
@@ -765,7 +762,7 @@ def blog():
     search_query = request.args.get("search_query")
     search_results = None
     if search_query:
-        print(f"Search query: {search_query}")
+        # print(f"Search query: {search_query}")
         articles = funcs.search_articles(search_query)
         search_results = articles
 
@@ -918,7 +915,7 @@ def toilet_referrer(tid):
     check_cookie_status()
 
     if not re.match("^[0-9]*$", tid):
-        return redirect("/")
+        return redirect("/explore")
 
     return redirect(f"/toilet/{tid}")
 
@@ -947,17 +944,17 @@ def toggle_like_rating(tid):
     else:
         return jsonify({"error": response[1]}), 400
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     code = 500
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#     return redirect(f"/error/{code}")
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
 
-# @app.route("/error/<code>")
-# def error(code):
-#     ts = get_texts(session["lang"], "error")
-#     return render_template("error.html", ts=ts, code=f"error {code} :(")
+@app.route("/error/<code>")
+def error(code):
+    ts = get_texts(session["lang"], "error")
+    return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)

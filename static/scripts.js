@@ -102,11 +102,11 @@ function like(ratingId) {
     .then(data => {
         if (data.success) {
             // Update the like icon or count here if needed
-            console.log('Rating liked successfully:');
+            // console.log('Rating liked successfully:');
             document.getElementById('like-icon-span-'+ratingId).classList.toggle('liked'); // Toggle liked class for visual feedback
-        } else {
+        } /*else {
             console.error('Error liking the rating:', data.error);
-        }
+        }*/
     })
     .catch(error => console.error('Error:', error));
 }
