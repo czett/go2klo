@@ -503,51 +503,47 @@ def toilets_api(): # thanks GPT here :o
 
 @app.route("/toilet/<tid>")
 def toilet_num(tid):
-    # check_cookie_status()
-    # info = funcs.get_toilet_details(tid)
-    # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
-    # # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
-
-    # ts = get_texts(session["lang"], "toilet")
-
-    # return render_template("toilet.html", toilet=info, ts=ts, session=session)
-
+    # update june 2025 - migrated back to this url as toilet sharing is maybe something we'll want to have for the future
     check_cookie_status()
-
-    if session.get("tid"):
-        session.pop("tid")
-
-    session["tid"] = tid
-    return redirect("/toilet")
-
-@app.route("/toilet") # all because of adsense bro
-def toilet():
-    check_cookie_status()
-
-    if not session.get("tid"):
-        return redirect("/explore")
-
-    tid = session["tid"]
 
     uid = None
-    if session.get("user"):
-        user = session["user"]
-        uid = funcs.get_user_id_by_username(user)
-    else:
-        uid = None
+    if session.get("logged_in"):
+        username = session["user"]
+        uid = funcs.get_user_id_by_username(username)
 
     info = funcs.get_toilet_details(tid, uid)
 
+    # in case someone shares a faulty url >:(
     if info == None:
-        return redirect("/explore") # redirect to explore if toilet does not exist
-
-    # im sorry for this geopy, i left it in for too long without even using the address :(
-    # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
-    # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
-
+        return redirect("/explore")
+    
     ts = get_texts(session["lang"], "toilet")
 
     return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
+
+# @app.route("/toilet") # all because of adsense bro
+# def toilet():
+#     check_cookie_status()
+
+#     uid = None
+#     if session.get("user"):
+#         user = session["user"]
+#         uid = funcs.get_user_id_by_username(user)
+#     else:
+#         uid = None
+
+#     info = funcs.get_toilet_details(tid, uid)
+
+#     if info == None:
+#         return redirect("/explore") # redirect to explore if toilet does not exist
+
+#     # im sorry for this geopy, i left it in for too long without even using the address :(
+#     # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
+#     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
+
+#     ts = get_texts(session["lang"], "toilet")
+
+#     return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
 
 @app.route("/profile/<int:pid>")
 def profile(pid):
@@ -951,17 +947,17 @@ def toggle_like_rating(tid):
     else:
         return jsonify({"error": response[1]}), 400
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
     app.run(debug=True, port=7000)
