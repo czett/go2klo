@@ -599,10 +599,11 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
-    if own == True and user_rank == "dev":
-        reports = []
-        reports = funcs.get_all_reports()
-        return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
+    if own == True:
+        if user_rank == "dev" or user_rank == "mod":
+            reports = []
+            reports = funcs.get_all_reports()
+            return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
 
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
     return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
@@ -715,6 +716,11 @@ def decline_report(rid):
         if has_rank[0] == True and has_rank[1] == "":
             funcs.delete_report_by_id(rid)
 
+        has_rank = funcs.has_user_rank(uid, "mod")
+
+        if has_rank[0] == True and has_rank[1] == "":
+            funcs.delete_report_by_id(rid)
+
     return redirect("/myprofile")
 
 @app.route("/report/accept/<tid>")
@@ -727,6 +733,11 @@ def accept_report(tid):
         uid = funcs.get_user_id_by_username(user)
 
         has_rank = funcs.has_user_rank(uid, "dev")
+
+        if has_rank[0] == True:
+            funcs.delete_toilet_by_id(int(tid))
+
+        has_rank = funcs.has_user_rank(uid, "mod")
 
         if has_rank[0] == True:
             funcs.delete_toilet_by_id(int(tid))
@@ -964,4 +975,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=7000, host="0.0.0.0")
+    app.run(debug=False, port=7000)
