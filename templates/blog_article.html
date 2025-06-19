@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-<script src="{{url_for('static', filename='markdown.js')}}" defer></script>
-{% endblock %}
-
 {% block content %}
 <div class="article-img">
     <img src="{{article.img}}" alt="">
@@ -30,4 +26,23 @@
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+    const markdownText = `{{ article.text | safe }}`;
+
+    marked.setOptions({
+        gfm: true,
+        breaks: true,
+        sanitize: true
+    });
+
+    const htmlContent = marked.parse(markdownText);
+
+    const articleContentElement = document.getElementById('article-content');
+    if (articleContentElement) {
+        articleContentElement.innerHTML = htmlContent;
+    } else {
+        console.error("Fehler: HTML-Element mit der ID 'article-content' wurde nicht gefunden.");
+    }
+</script>
 {% endblock %}
