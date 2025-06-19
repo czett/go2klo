@@ -190,7 +190,7 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 const userLatLng = [position.coords.latitude, position.coords.longitude];
-                map.setView(userLatLng, 12);
+                map.setView(userLatLng, 13);
 
                 if (!userLocationMarker) {
                     userLocationMarker = L.marker(userLatLng, { icon: userIcon }).addTo(map);
