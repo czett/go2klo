@@ -484,13 +484,10 @@ def search_toilets():
         distance = funcs.distance(t1_coords, t2_coords)
         zoom = funcs.get_zoom_level(distance)
 
-        print(round(distance, 0))
+        # print(round(distance, 0))
 
-    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
     if zoom == None:
         zoom = 6
-
-    print(f"Zoom level: {zoom}")  # Debugging line to check zoom level
 
     return render_template("explore.html", ts=ts, session=session, toilets=toilets, zoom=zoom, query=query, focus_coords=list(t1_coords))
 
@@ -503,51 +500,47 @@ def toilets_api(): # thanks GPT here :o
 
 @app.route("/toilet/<tid>")
 def toilet_num(tid):
-    # check_cookie_status()
-    # info = funcs.get_toilet_details(tid)
-    # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
-    # # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
-
-    # ts = get_texts(session["lang"], "toilet")
-
-    # return render_template("toilet.html", toilet=info, ts=ts, session=session)
-
+    # update june 2025 - migrated back to this url as toilet sharing is maybe something we'll want to have for the future
     check_cookie_status()
-
-    if session.get("tid"):
-        session.pop("tid")
-
-    session["tid"] = tid
-    return redirect("/toilet")
-
-@app.route("/toilet") # all because of adsense bro
-def toilet():
-    check_cookie_status()
-
-    if not session.get("tid"):
-        return redirect("/explore")
-
-    tid = session["tid"]
 
     uid = None
-    if session.get("user"):
-        user = session["user"]
-        uid = funcs.get_user_id_by_username(user)
-    else:
-        uid = None
+    if session.get("logged_in"):
+        username = session["user"]
+        uid = funcs.get_user_id_by_username(username)
 
     info = funcs.get_toilet_details(tid, uid)
 
+    # in case someone shares a faulty url >:(
     if info == None:
-        return redirect("/explore") # redirect to explore if toilet does not exist
-
-    # im sorry for this geopy, i left it in for too long without even using the address :(
-    # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
-    # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
-
+        return redirect("/explore")
+    
     ts = get_texts(session["lang"], "toilet")
 
     return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
+
+# @app.route("/toilet") # all because of adsense bro
+# def toilet():
+#     check_cookie_status()
+
+#     uid = None
+#     if session.get("user"):
+#         user = session["user"]
+#         uid = funcs.get_user_id_by_username(user)
+#     else:
+#         uid = None
+
+#     info = funcs.get_toilet_details(tid, uid)
+
+#     if info == None:
+#         return redirect("/explore") # redirect to explore if toilet does not exist
+
+#     # im sorry for this geopy, i left it in for too long without even using the address :(
+#     # info["address"] = str(funcs.coords_to_address(info["latitude"], info["longitude"]))
+#     # {'toilet_id': 2, 'latitude': 51.5149633, 'longitude': 7.4548106, 'ratings': [{'rating_id': 1, 'cleanliness': 3, 'supplies': 3, 'privacy': 3, 'comment': '', 'user': 'czett'}]}
+
+#     ts = get_texts(session["lang"], "toilet")
+
+#     return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
 
 @app.route("/profile/<int:pid>")
 def profile(pid):
@@ -780,7 +773,7 @@ def blog():
     search_query = request.args.get("search_query")
     search_results = None
     if search_query:
-        print(f"Search query: {search_query}")
+        # print(f"Search query: {search_query}")
         articles = funcs.search_articles(search_query)
         search_results = articles
 
@@ -933,7 +926,7 @@ def toilet_referrer(tid):
     check_cookie_status()
 
     if not re.match("^[0-9]*$", tid):
-        return redirect("/")
+        return redirect("/explore")
 
     return redirect(f"/toilet/{tid}")
 

@@ -523,6 +523,7 @@ button{
     padding: 1vh;
     z-index: 1000;
     cursor: pointer;
+    user-select: none;
 }
 
 .rating-form form input, .rating-form form textarea{
@@ -1260,6 +1261,7 @@ button:disabled{
     position: absolute;
     inset: 1vh 1vh auto auto;
     rotate: 15deg;
+    user-select: none;
 }
 
 .comments-list .comment-item .like-rating-icon span{
@@ -1267,6 +1269,7 @@ button:disabled{
     font-size: 2vh;
     font-variation-settings: 'FILL' 0;
     cursor: pointer;
+    user-select: none;
 }
 
 .comments-list .comment-item .like-rating-icon span.liked{
@@ -1712,7 +1715,7 @@ button:disabled{
 .article-img{
     width: 100%;
     aspect-ratio: 3;
-    background-color: red;
+    background-color: var(--ac);
     overflow: hidden;
     border-radius: var(--brad);
 }
@@ -1815,6 +1818,45 @@ a.mod-action-reject{
 
 .legal-text .heading-with-icon .section-heading{
     font-size: 2.5rem !important;
+}
+
+/* loading animation design */
+
+.loading-box{
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.loading-box.visible{
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.loading-svg{
+    aspect-ratio: 1;
+    width: 10vh;
+
+    stroke: var(--ac);
+    stroke-width: 1.2;
+    stroke-dasharray: 92;
+    stroke-dashoffset: 92;
+    animation: dash 2s linear infinite;
+}
+
+@keyframes dash{
+    to{
+        stroke-dashoffset: 0;
+    }
 }
 
 /* responsive design (spooky) */

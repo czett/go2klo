@@ -13,6 +13,7 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='img/favicon.png')}}">
+    <script src="{{url_for('static', filename='scripts.js')}}" defer></script>
     {% block head %}
     {% endblock %}
 </head>
@@ -152,48 +153,10 @@
         {% endif%}
     {% endblock %}
 
-    <script>
-        function mobileMenu(){
-            iconBtn = document.querySelector(".menu-icon");
-            // let state = iconBtn.dataset.collapsed;
-
-            if (iconBtn.dataset.collapsed == "1"){
-                document.querySelector(".links").style.visibility = "visible";
-                document.querySelector(".lang-list").style.visibility = "visible";
-                document.querySelector(".menu-icon-span").style.rotate = "90deg";
-                iconBtn.dataset.collapsed = "0";
-            }else{
-                document.querySelector(".links").style.visibility = "hidden";
-                document.querySelector(".lang-list").style.visibility = "hidden";
-                document.querySelector(".menu-icon-span").style.rotate = "0deg";
-                iconBtn.dataset.collapsed = "1";
-            }
-        }
-        
-        function toggleLangs(){
-            langsBtn = document.querySelector(".mobile-lang-btn");
-            // let state = iconBtn.dataset.collapsed;
-
-            if (langsBtn.dataset.collapsed == "1"){
-                document.querySelector(".lang-switch").style.transform = "translate(-50%, 50%)";
-                langsBtn.dataset.collapsed = "0";
-            }else{
-                document.querySelector(".lang-switch").style.transform = "translate(-50%, -50%)";
-                langsBtn.dataset.collapsed = "1";
-            }
-        }
-
-        function notiToggler(){
-            const box = document.querySelector(".notifications-box");
-
-            if (box.dataset.collapsed == "1"){
-                box.style.visibility = "visible";
-                box.dataset.collapsed = "0";
-            }else{
-                box.style.visibility = "hidden";
-                box.dataset.collapsed = "1";
-            }
-        }
-    </script>
+    <div class="loading-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" class="loading-svg">
+            <path d="M21,9H9V3A2,2,0,0,0,7,1H3A2,2,0,0,0,1,3V9a5.006,5.006,0,0,0,5,5H7.073A7.061,7.061,0,0,0,11,19.319l-.925,2.31A1,1,0,0,0,11,23h8a1,1,0,0,0,.929-1.371L19,19.319A7.045,7.045,0,0,0,23,13V11A2,2,0,0,0,21,9Zm0,2v1H9V11ZM3,9V3H7v9H6A3,3,0,0,1,3,9Zm14.417,8.793a1,1,0,0,0-.645,1.33L17.523,21H12.477l.751-1.877a1,1,0,0,0-.645-1.33A5.034,5.034,0,0,1,9.1,14H20.9A5.034,5.034,0,0,1,17.417,17.793Z"/>
+        </svg>
+    </div>
 </body>
 </html>

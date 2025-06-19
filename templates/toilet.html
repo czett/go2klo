@@ -151,31 +151,4 @@
     marker.bindPopup("<b>Toilet #{{ toilet.toilet_id }}</b><br>Location: {{ toilet.latitude }}, {{ toilet.longitude }}").openPopup();
 </script>
 
-<script>
-    // Function to redirect to a new URL
-    function redirect(url) {
-        window.location.href = url;
-    }
-
-    function like(ratingId) {
-        fetch('/api/like-rating/' + ratingId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the like icon or count here if needed
-                console.log('Rating liked successfully:');
-                document.getElementById('like-icon-span-'+ratingId).classList.toggle('liked'); // Toggle liked class for visual feedback
-            } else {
-                console.error('Error liking the rating:', data.error);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-</script>
-
 {% endblock %}
