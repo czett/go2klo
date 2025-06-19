@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="banner">
+    <div class="bg-img">
+        <img src="{{url_for('static', filename='img/bg2.png')}}">
+    </div>
+    <div class="title-text">{{ts["title"]}}</div>
+    <div class="bottom-text">{{ts["bottom"]}}</div>
+    <div class="icon">
+        <span class="material-symbols-rounded">leaderboard</span>
+    </div>
+</div>
+
+<div class="leaderboard">
+    <div class="title">{{ts["ranking"]}}</div>
+    {% for entry in session.leaderboard %}
+        <div class="entry" onmousedown="redirect('/profile/{{ entry.username }}')">
+            <a href="/profile/{{entry.username}}">
+                {% if entry.rank != None and entry.rank != "None" %}
+                    <div class="username ranked-user">{{loop.index}}. @{{entry.username}}</div>
+                    <div class="user-rank user-rank-{{entry.rank}}">
+                        <span class="material-symbols-rounded">{{icon_map[entry.rank]}}</span>
+                        <div>{{entry.rank}}</div>
+                    </div>
+                {% else %}
+                    <div class="username norank-user">{{loop.index}}. @{{entry.username}}</div>
+                {% endif %}
+            </a>
+            <div class="ratings">{{entry.rating_count}}</div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

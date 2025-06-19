@@ -3,7 +3,11 @@
 {% block content %}
 <h1 class="explore-title">{{ts["title"]}}</h1>
 <div class="map-tip">{{ts["tip"]}}</div>
-<div id="map"></div>
+
+<div class="map-wrapper">
+    <div id="map"></div>
+    <span class="material-symbols-rounded get-location-btn" onmousedown="zoomToUserLocation()">my_location</span>
+</div>
 
 <div class="explore-search">
     <div class="search-title">
@@ -103,19 +107,17 @@
     integrity="sha256-20nQCchB9co0qIjGwYHTzADzQeek5e0vWOGeHTPUJTM="
     crossorigin=""></script>
     
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjGwYHTzADzQeek5e0vWOGeHTPUJTM=" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
 <script>
     L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
 
     {% if not zoom and not focus_coords %}
-    var map = L.map('map', {
-        zoomControl: false
-    }).setView([51.1657, 10.4515], 6);
+    var map = L.map('map', { zoomControl: false }).setView([51.1657, 10.4515], 6);
     {% else %}
-    var map = L.map('map', {
-        zoomControl: false
-    }).setView({{focus_coords}}, {{zoom}});
+    var map = L.map('map', { zoomControl: false }).setView({{ focus_coords }}, {{ zoom }});
     {% endif %}
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -130,12 +132,19 @@
     var loading = false;
     var allToiletsLoaded = false;
 
+    const userIcon = L.icon({
+        iconUrl: './static/icons/location_icon.svg',
+        iconSize: [48, 48],
+        iconAnchor: [16, 48],
+        className: 'user-marker'
+    });
+
     function addToiletMarker(toilet) {
         if (!markers[toilet.toilet_id]) {
-            var marker = L.marker([toilet.latitude, toilet.longitude])
+            const marker = L.marker([toilet.latitude, toilet.longitude])
                 .bindPopup('Toilet ID: ' + toilet.toilet_id + '<br><a href="/toilet/' + toilet.toilet_id + '">Details</a>');
 
-            marker.on('click', function() {
+            marker.on('click', function () {
                 window.location.href = '/toilet/' + toilet.toilet_id;
             });
 
@@ -152,9 +161,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
-                    data.forEach(function(toilet) {
-                        addToiletMarker(toilet);
-                    });
+                    data.forEach(addToiletMarker);
                     lastLoadedId = data[data.length - 1].toilet_id;
                 } else {
                     allToiletsLoaded = true;
@@ -169,16 +176,34 @@
     }
 
     fetchAndAddToilets();
-
-    map.on('moveend', function() {
-        fetchAndAddToilets();
-    });
+    map.on('moveend', fetchAndAddToilets);
 
     {% if toilets %}
-        {% for toilet in toilets %}
-            addToiletMarker({{ toilet | tojson }});
-        {% endfor %}
+    {% for toilet in toilets %}
+    addToiletMarker({{ toilet | tojson }});
+    {% endfor %}
     {% endif %}
+
+    let userLocationMarker = null;
+
+    function zoomToUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const userLatLng = [position.coords.latitude, position.coords.longitude];
+                map.setView(userLatLng, 12);
+
+                if (!userLocationMarker) {
+                    userLocationMarker = L.marker(userLatLng, { icon: userIcon }).addTo(map);
+                } else {
+                    userLocationMarker.setLatLng(userLatLng);
+                }
+            }, function (error) {
+                console.warn("Geolocation failed or was denied.");
+            });
+        } else {
+            console.warn("Geolocation is not supported by this browser.");
+        }
+    }
 </script>
 
 {% endblock %}
