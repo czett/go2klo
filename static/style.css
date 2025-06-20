@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=SUSE:wght@100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Outfit:wght@100..900&display=swap'); /*might switch to outfit, not sure yet*/
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* pixelated logo look at least for a while, i like this style for now*/
 
 :root{
     --fg: #131B23;
@@ -122,9 +123,11 @@ button{
 }
 
 .nav .links .logo div{
-    font-size: 2.5rem;
+    /* font-size: 2.5rem; */
+    font-size: 2rem;
     text-decoration: none;
-    font-family: 'SUSE';
+    /* font-family: 'SUSE'; */
+    font-family: "Press Start 2P";
     color: var(--ac);
     font-weight: 700;
     cursor: pointer;
