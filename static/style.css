@@ -12,6 +12,7 @@
 
     --spec1: #FF4500;
     --spec2: #FFA500;
+    --success: #199c1f;
 
     --rlpad: 15vw;
     --brad: 1.5rem;
@@ -1371,6 +1372,10 @@ button:disabled{
     background: linear-gradient(45deg, #095e80, #45d2dc);
 }
 
+.leaderboard .entry a .user-rank.user-rank-gambler, .comments-list .comment-item.special-gambler, .banner .title-text .user-rank.profile-rank-banner-gambler {
+    background: linear-gradient(45deg, #FFD700, #228B22);
+}
+
 .comments-list .comment-item.special .comment-publisher .comment-rank *{
     color: #795548 !important;
 }
@@ -1396,7 +1401,11 @@ button:disabled{
 }
 
 .comments-list .comment-item.special-mod .comment-publisher .comment-rank * {
-    color: #AD1457 !important; /* dunkles Pink für Text auf weißem BG */
+    color: #AD1457 !important;
+}
+
+.comments-list .comment-item.special-gambler .comment-publisher .comment-rank * {
+    color: #228B22 !important;
 }
 
 .comments-list .comment-item.special *:not(.comment-rank span){
@@ -1906,6 +1915,53 @@ a.mod-action-reject{
     animation: dash 2s linear infinite;
 }
 
+/* gambling page */
+
+.wof-wrap{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    margin-top: 3vh;
+    position: relative;
+}
+
+.wof-wrap .wheel-of-fortune{
+    aspect-ratio: 1;
+    background: conic-gradient(var(--success) 20deg, var(--bg) 20deg 340deg, var(--success) 340deg 360deg);
+    width: 20vw;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--bgd);
+    position: relative;
+    transition: 5000ms;
+    transition-timing-function: cubic-bezier(.32,.64,.31,1.03);
+    cursor: pointer;
+}
+
+.wof-wrap .needle{
+    position: absolute;
+    inset: -2.5% 50% auto auto;
+    aspect-ratio: 0.3;
+    /* aspect-ratio: 1; */
+    background-color: var(--fg);
+    width: 1.5vh;
+    transform: translateX(50%);
+    border-radius: 1rem;
+}
+
+/* .wof-wrap .wheel-of-fortune:hover{
+    rotate: 700deg;
+} */
+
+.wof-wrap .wheel-of-fortune span{
+    position: absolute;
+    inset: 3.5vw 50% auto auto;
+    transform: translate(50%, -50%);
+    font-size: 3.5rem;
+    color: var(--bg);
+}
+
 @keyframes dash{
     to{
         stroke-dashoffset: 0;
@@ -1995,7 +2051,13 @@ a.mod-action-reject{
         aspect-ratio: 2;
     }
 
-    
+    .wof-wrap .wheel-of-fortune{
+        width: 40vw;
+    }
+
+    .wof-wrap .wheel-of-fortune span{
+        top: 20%;
+    }
 }
 
 @media (width < 1100px){
@@ -2453,5 +2515,13 @@ a.mod-action-reject{
 
     .rating-form textarea{
         aspect-ratio: 2;
+    }
+
+    .wof-wrap .wheel-of-fortune{
+        width: 80vw;
+    }
+
+    .wof-wrap .wheel-of-fortune span{
+        top: 20%;
     }
 }

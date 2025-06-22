@@ -120,3 +120,30 @@ function updateUploadCounter(inp, toReplaceClass){
     document.querySelector("." + toReplaceClass).innerHTML = "" + len;
     return;
 }
+
+// gambling page!!!!
+
+function spinWheel(){
+    // const spin = 360;
+    const spin = 360 + (Math.random() * 2000);
+    const wheel = document.querySelector(".wheel-of-fortune");
+
+    wheel.style.rotate = "" + spin + "deg";
+    wheel.style.pointerEvents = "none";
+
+    // im such a genius for coming up w/ this
+    let dest = "";
+    if (spin % 360 < 20 || spin % 360 > 340){
+        console.log("win");
+        dest = "w";
+    }else{
+        console.log("loser");
+        dest = "l";
+    }
+
+    setTimeout(() => {
+        window.location.href = "/gambling/" + dest;
+    }, 6000);
+
+    return;
+}

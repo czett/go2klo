@@ -13,7 +13,7 @@ except:
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "mod": "gavel",  "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech"}
+rank_icon_map = {"dev": "data_object", "mod": "gavel",  "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech", "gambler": "playing_cards"}
 
 def check_login_status():
     if session.get("logged_in"):
@@ -965,6 +965,56 @@ def rfr():
     ts = get_texts(session["lang"], "rfr")
 
     return render_template("rfr.html", ts=ts, session=session)
+
+@app.route("/gambling")
+def gambling():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "index")
+
+    msg = None
+    if not check_login_status():
+        msg = "You have to be logged in to gamble"
+        return render_template("gambling.html", ts=ts, msg=msg, session=session)
+
+    if session.get("msg"):
+        msg = session["msg"]
+        session.pop("msg")
+
+    uid = funcs.get_user_id_by_username(session["user"])
+    rank = funcs.get_user_rank(uid)
+
+    if rank == "gambler":
+        msg = "You are already a gambling master. You can't win more :("
+
+    return render_template("gambling.html", ts=ts, msg=msg, session=session)
+
+@app.route("/gambling/<result>")
+def gambling_result(result):
+    check_cookie_status()
+    ts = get_texts(session["lang"], "index")
+
+    if not check_login_status():
+        return redirect("/error/404")
+    if result != "w" and result != "l":
+        return redirect("/error/404")
+
+    msg = "You lost! Too bad."
+    
+    if result == "w":
+        uid = funcs.get_user_id_by_username(session["user"])
+        rank = funcs.get_user_rank(uid)
+
+        if funcs.compare_ranks(rank, "gambler") == True:
+            msg = f"Gambler rank was not assigned because you rank '{rank}' is worth more. If you want to overwrite anyways, DM me on Instagram @go2klo :)"
+            session["msg"] = msg
+            return redirect("/gambling")
+
+        msg = "You won! Check out your new rank (you might need to log out and in again for the changes to take effect)"
+        funcs.assign_user_rank(uid, "gambler")
+    
+    session["msg"] = msg
+
+    return redirect("/gambling")
 
 @app.errorhandler(Exception)
 def handle_error(e):

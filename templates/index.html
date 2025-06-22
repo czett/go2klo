@@ -124,6 +124,19 @@
             </div>
         </div>
     </a>
+    {% if session.logged_in %}
+        <a href="/gambling" style="text-decoration: none;">
+            <div class="card">
+                <div class="card-icon">
+                    <span class="material-symbols-rounded">playing_cards</span>
+                </div>
+                <div class="card-texts">
+                    <div class="card-title">{{ts["gambling"]}}</div>
+                    <div class="card-text">{{ts["gambling_desc"]}}</div>
+                </div>
+            </div>
+        </a>
+    {% endif %}
 </div>
 
 {% if rated[0] %}
