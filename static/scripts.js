@@ -134,15 +134,16 @@ function spinWheel(){
     // im such a genius for coming up w/ this
     let dest = "";
     if (spin % 360 < 20 || spin % 360 > 340){
-        console.log("win");
+        // console.log("win");
         dest = "w";
     }else{
-        console.log("loser");
+        // console.log("loser");
         dest = "l";
     }
 
     setTimeout(() => {
-        window.location.href = "/gambling/" + dest;
+        let gamble_dest = "/gambling/" + dest;
+        redirect(gamble_dest);
     }, 6000);
 
     return;
