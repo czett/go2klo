@@ -983,7 +983,7 @@ def gambling():
     uid = funcs.get_user_id_by_username(session["user"])
     rank = funcs.get_user_rank(uid)
 
-    if rank == "gambler":
+    if rank == "gambler" and msg == None:
         msg = "You are already a gambling master. You can't win more :("
 
     return render_template("gambling.html", ts=ts, msg=msg, session=session)
