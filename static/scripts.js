@@ -110,3 +110,41 @@ function like(ratingId) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+// display amount of files uploaded on img upload when rating toilet
+
+function updateUploadCounter(inp, toReplaceClass){
+    let files = inp.files;
+    let len = files.length;
+
+    document.querySelector("." + toReplaceClass).innerHTML = "" + len;
+    return;
+}
+
+// gambling page!!!!
+
+function spinWheel(){
+    // const spin = 360;
+    const spin = 360 + (Math.random() * 2000);
+    const wheel = document.querySelector(".wheel-of-fortune");
+
+    wheel.style.rotate = "" + spin + "deg";
+    wheel.style.pointerEvents = "none";
+
+    // im such a genius for coming up w/ this
+    let dest = "";
+    if (spin % 360 < 20 || spin % 360 > 340){
+        // console.log("win");
+        dest = "w";
+    }else{
+        // console.log("loser");
+        dest = "l";
+    }
+
+    setTimeout(() => {
+        let gamble_dest = "/gambling/" + dest;
+        redirect(gamble_dest);
+    }, 6000);
+
+    return;
+}

@@ -34,8 +34,7 @@ api_key = os.getenv("MAIL")
 configuration = sib_api_v3_sdk.Configuration()
 configuration.api_key["api-key"] = api_key
 api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-
-rank_hierarchy = ["dev", "mod", "recruiter", "creator", "supporter", "og", "basic"]
+rank_hierarchy = ["dev", "mod", "recruiter", "creator", "gambler", "supporter", "og", "basic"]
 
 def get_rank_hierarchy():
     return rank_hierarchy

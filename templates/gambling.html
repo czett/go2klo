@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading-with-icon">
+    <span class="material-symbols-rounded">poker_chip</span>
+    <div class="section-heading">{{ts.gambling}}</div>
+</div>
+
+{% if msg != None %}
+<div class="msg">
+    {{msg}}
+</div>
+{% endif %}
+
+<div class="wof-wrap">
+    <div class="wheel-of-fortune" onmousedown="spinWheel()">
+        <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
+    </div>
+    <div class="needle"></div>
+</div>
+
+{% if msg != None %}
+<script>
+    document.querySelector(".wheel-of-fortune").style.pointerEvents = "none";
+</script>
+{% endif %}
+
+{% endblock %}
