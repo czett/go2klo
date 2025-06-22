@@ -110,3 +110,13 @@ function like(ratingId) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+// display amount of files uploaded on img upload when rating toilet
+
+function updateUploadCounter(inp, toReplaceClass){
+    let files = inp.files;
+    let len = files.length;
+
+    document.querySelector("." + toReplaceClass).innerHTML = "" + len;
+    return;
+}

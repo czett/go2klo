@@ -392,7 +392,11 @@ def process_rating():
     session["rating_coords"] = (lat, lng)
     ts = get_texts(session["lang"], "rate")
 
-    return render_template("rate.html", lat=lat, lng=lng, ts=ts, msg=None, session=session)
+    # rank fetching for img upload
+    uid = funcs.get_user_id_by_username(session["user"])
+    rank = funcs.get_user_rank(uid) # either none or rank, no other case possible (at least i hope so)
+
+    return render_template("rate.html", lat=lat, lng=lng, ts=ts, msg=None, session=session, rank=rank)
 
 @app.route("/rate/finish", methods=["POST"])
 def finish_rating():
@@ -975,4 +979,4 @@ def error(code):
     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
