@@ -13,6 +13,7 @@ from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
 import random, string, base64
 from geopy.distance import geodesic
+import base64, requests
 
 try:
     load_dotenv()
@@ -92,6 +93,47 @@ def generate_auth_code():
 
 def generate_password_reset_code():
     return "".join(random.choices(string.ascii_lowercase, k=16))
+
+def upload_rating_image(rating_id, image_file):
+    imgbb_api_key = os.getenv("IMGBB_KEY")
+    if not imgbb_api_key:
+        print("Missing API key")
+        return False, "Missing API key"
+
+    try:
+        image_data = base64.b64encode(image_file.read()).decode("utf-8")
+        response = requests.post("https://api.imgbb.com/1/upload", data={
+            "key": imgbb_api_key,
+            "image": image_data
+        })
+
+        print("imgbb upload status:", response.status_code)
+        print("imgbb response:", response.text)
+
+        if response.status_code == 200:
+            image_url = response.json()["data"]["url"]
+
+            try:
+                conn = get_db_connection()
+                cur = conn.cursor()
+                cur.execute("""
+                    INSERT INTO rating_images (rating_id, image_url, approved)
+                    VALUES (%s, %s, FALSE)
+                """, (rating_id, image_url))
+                conn.commit()
+                cur.close()
+                conn.close()
+                print("Image inserted into DB")
+                return True, image_url
+            except Exception as db_err:
+                print("DB error during image insert:", db_err)
+                return False, str(db_err)
+        else:
+            return False, f"Upload failed: {response.text}"
+
+    except Exception as e:
+        print("Exception during upload:", e)
+        return False, f"Exception during upload: {e}"
 
 def send_verification_email(recipient_email, auth_code):
     sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
@@ -485,7 +527,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         (json.dumps(updated_achievements), user_id)
                     )
 
-        return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
+        return True, rating_id
     except Exception as e:
         return False, f"Error: {e}"
     finally:

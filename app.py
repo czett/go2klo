@@ -421,9 +421,15 @@ def finish_rating():
         return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
     comment = profanity.censor(comment)
+
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
-    
+
     if response[0] == True:
+        img_file = request.files.get("img-input")
+        if img_file and img_file.filename:
+            funcs.upload_rating_image(response[1], img_file)  # response[1] = rating_id
+    
+
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
         session["rated"] = (True, random.choice(msgs))
 
@@ -934,6 +940,13 @@ def toilet_referrer(tid):
 
     return redirect(f"/toilet/{tid}")
 
+@app.route("/l/<page>")
+def logout_and_redirect(page):
+    check_cookie_status()
+    session.pop()
+
+    return redirect(f"/{page}")
+
 @app.route("/legal")
 def legal():
     check_cookie_status()
@@ -1016,17 +1029,17 @@ def gambling_result(result):
 
     return redirect("/gambling")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return redirect(f"/error/{code}")
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     code = 500
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#     return redirect(f"/error/{code}")
 
-@app.route("/error/<code>")
-def error(code):
-    ts = get_texts(session["lang"], "error")
-    return render_template("error.html", ts=ts, code=f"error {code} :(")
+# @app.route("/error/<code>")
+# def error(code):
+#     ts = get_texts(session["lang"], "error")
+#     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=True, port=7000)
