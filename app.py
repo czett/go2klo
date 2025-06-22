@@ -425,11 +425,13 @@ def finish_rating():
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
 
     if response[0] == True:
-        img_file = request.files.get("img-input")
-        if img_file and img_file.filename:
-            funcs.upload_rating_image(response[1], img_file)  # response[1] = rating_id
+        img_b64 = request.form["b64-img"]
+        if img_b64:
+            if img_b64.startswith("data:image"):
+                img_b64 = img_b64.split(",")[1]
+                
+            funcs.upload_rating_image(response[1], img_b64)  # response[1] = rating_id
     
-
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
         session["rated"] = (True, random.choice(msgs))
 
@@ -943,9 +945,22 @@ def toilet_referrer(tid):
 @app.route("/l/<page>")
 def logout_and_redirect(page):
     check_cookie_status()
-    session.pop()
+    session.clear()
 
     return redirect(f"/{page}")
+
+@app.route("/img")
+def image():
+    with open("img.txt", "r") as image:
+        base64_string = image.read()
+        if base64_string.startswith("data:image"):
+            base64_string = base64_string.split(",")[1]
+
+    res = funcs.upload_rating_image(324, base64_string)
+
+    print(res)
+
+    return ""
 
 @app.route("/legal")
 def legal():

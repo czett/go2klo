@@ -94,21 +94,16 @@ def generate_auth_code():
 def generate_password_reset_code():
     return "".join(random.choices(string.ascii_lowercase, k=16))
 
-def upload_rating_image(rating_id, image_file):
+def upload_rating_image(rating_id, image_data):
     imgbb_api_key = os.getenv("IMGBB_KEY")
     if not imgbb_api_key:
-        print("Missing API key")
         return False, "Missing API key"
 
     try:
-        image_data = base64.b64encode(image_file.read()).decode("utf-8")
         response = requests.post("https://api.imgbb.com/1/upload", data={
             "key": imgbb_api_key,
             "image": image_data
         })
-
-        print("imgbb upload status:", response.status_code)
-        print("imgbb response:", response.text)
 
         if response.status_code == 200:
             image_url = response.json()["data"]["url"]
@@ -123,10 +118,8 @@ def upload_rating_image(rating_id, image_file):
                 conn.commit()
                 cur.close()
                 conn.close()
-                print("Image inserted into DB")
                 return True, image_url
             except Exception as db_err:
-                print("DB error during image insert:", db_err)
                 return False, str(db_err)
         else:
             return False, f"Upload failed: {response.text}"
