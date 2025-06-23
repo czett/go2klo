@@ -430,7 +430,7 @@ def finish_rating():
             if img_b64.startswith("data:image"):
                 img_b64 = img_b64.split(",")[1]
 
-            funcs.upload_rating_image(response[1], img_b64)  # response[1] = rating_id
+            funcs.upload_rating_image(response[1], img_b64, uid)  # response[1] = rating_id
     
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
         session["rated"] = (True, random.choice(msgs))
@@ -1066,13 +1066,41 @@ def admin_dash():
 
     # real admin stuff
     # get unreviewed blog articles
+    unreviewed_articles = []
     unreviewed_articles = funcs.get_unreviewed_articles(30)
 
     # toilet reports
     reports = []
     reports = funcs.get_all_reports()
 
-    return render_template("admin_dashboard.html", ts=ts, session=session, unreviewed_articles=unreviewed_articles, reports=reports)
+    # get unreviewed img
+    images = []
+    images = funcs.get_unapproved_rating_images(24)
+
+    return render_template("admin_dashboard.html", ts=ts, session=session, images=images, unreviewed_articles=unreviewed_articles, reports=reports)
+
+@app.route("/img/<action>/<img_id>")
+def img_mod(action, img_id):
+    if not session.get("admin_dash_certified"):
+        session["admin_dash_certified"] = False
+
+    if session["admin_dash_certified"] == False:
+        user_id = funcs.get_user_id_by_username(session["user"])
+        rank = funcs.get_user_rank(user_id)
+
+        # nuh uh buddy, you're (hopefully) not getting in here
+        if not funcs.compare_ranks(rank, "mod"):
+            return redirect("/")
+            
+    session["admin_dash_certified"] = True
+    session.modified = True
+
+    if action == "a": # a = accept
+        funcs.approve_rating_image(img_id)
+    else:
+        funcs.decline_rating_image(img_id)
+
+    return redirect("/admin-dashboard")
 
 # @app.errorhandler(Exception)
 # def handle_error(e):

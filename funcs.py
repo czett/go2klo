@@ -94,7 +94,7 @@ def generate_auth_code():
 def generate_password_reset_code():
     return "".join(random.choices(string.ascii_lowercase, k=16))
 
-def upload_rating_image(rating_id, image_data):
+def upload_rating_image(rating_id, image_data, user_id):
     imgbb_api_key = os.getenv("IMGBB_KEY")
     if not imgbb_api_key:
         return False, "Missing API key"
@@ -112,9 +112,9 @@ def upload_rating_image(rating_id, image_data):
                 conn = get_db_connection()
                 cur = conn.cursor()
                 cur.execute("""
-                    INSERT INTO rating_images (rating_id, image_url, approved)
-                    VALUES (%s, %s, FALSE)
-                """, (rating_id, image_url))
+                    INSERT INTO rating_images (rating_id, image_url, user_id, approved)
+                    VALUES (%s, %s, %s, FALSE)
+                """, (rating_id, image_url, user_id))
                 conn.commit()
                 cur.close()
                 conn.close()
@@ -1480,10 +1480,10 @@ def get_unapproved_rating_images(limit: int = 50):
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT id, rating_id, image_url, approved
+                    SELECT image_id, rating_id, image_url, approved, user_id
                     FROM rating_images
                     WHERE approved = FALSE
-                    ORDER BY id DESC
+                    ORDER BY image_id DESC
                     LIMIT %s
                 """, (limit,))
                 images = cur.fetchall()
@@ -1493,7 +1493,8 @@ def get_unapproved_rating_images(limit: int = 50):
                         "id": img[0],
                         "rating_id": img[1],
                         "image_url": img[2],
-                        "approved": img[3]
+                        "approved": img[3],
+                        "user_id": img[4]
                     }
                     for img in images
                 ]
@@ -1501,3 +1502,30 @@ def get_unapproved_rating_images(limit: int = 50):
         return {"error": str(e)}
     finally:
         conn.close()
+
+def decline_rating_image(image_id: int):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    DELETE FROM rating_images
+                    WHERE image_id = %s
+                """, (image_id,))
+        return True
+    except Exception as e:
+        return {"error": str(e)}
+
+def approve_rating_image(image_id: int):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE rating_images
+                    SET approved = TRUE
+                    WHERE image_id = %s
+                """, (image_id,))
+        return True
+    except Exception as e:
+        return {"error": str(e)}

@@ -35,7 +35,7 @@
     {% endif %}
 {% endif %}
 
-{% if reports is not none and reports|length > 0 %}
+{% if reports|length > 0 %}
 <div class="section-mini-heading">Open Toilet Reports</div>
 <div class="dash-section-items reports-list">
     {% for report in reports %}
@@ -50,6 +50,27 @@
         <div class="report-actions">
             <a href="/report/decline/{{ report.id }}" class="resolve-report-btn">Decline Report</a>
             <a href="#" class="resolve-report-btn" onclick="if (confirm('Are you sure you want to remove this toilet?')) { window.location.href='/report/accept/{{ report.tid }}'; } return false;">Remove Toilet</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if images|length > 0 %}
+<div class="section-mini-heading">Unapproved Rating Images</div>
+<div class="dash-section-items reports-list">
+    {% for image in images %}
+    <div class="dash-section-item report-item">
+        <div class="report-details">
+            <div><strong>Image ID:</strong> {{ image.id }}</div>
+            <div><strong>Rating ID:</strong> <a href="/rating/{{ image.rating_id }}">{{ image.rating_id }}</a></div>
+            <div><strong>Image URL:</strong> <a href="{{ image.image_url }}" target="_blank">View Image</a></div>
+            <div><strong>User ID:</strong> <a href="/p/{{ image.user_id }}" target="_blank">{{image.user_id}}</a></div>
+            <div><strong>Approved:</strong> {{ image.approved }}</div>
+        </div>
+        <div class="report-actions">
+            <a href="/img/d/{{ image.id }}" class="resolve-report-btn">Decline</a>
+            <a href="/img/a/{{ image.id }}" class="resolve-report-btn">Approve</a>
         </div>
     </div>
     {% endfor %}
