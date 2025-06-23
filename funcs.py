@@ -1473,3 +1473,31 @@ def toggle_like_rating(uid, rid):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def get_unapproved_rating_images(limit: int = 50):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT id, rating_id, image_url, approved
+                    FROM rating_images
+                    WHERE approved = FALSE
+                    ORDER BY id DESC
+                    LIMIT %s
+                """, (limit,))
+                images = cur.fetchall()
+
+                return [
+                    {
+                        "id": img[0],
+                        "rating_id": img[1],
+                        "image_url": img[2],
+                        "approved": img[3]
+                    }
+                    for img in images
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()

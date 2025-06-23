@@ -429,7 +429,7 @@ def finish_rating():
         if img_b64:
             if img_b64.startswith("data:image"):
                 img_b64 = img_b64.split(",")[1]
-                
+
             funcs.upload_rating_image(response[1], img_b64)  # response[1] = rating_id
     
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
@@ -611,11 +611,11 @@ def profile(pid):
 
     ts = get_texts(session["lang"], "profile")
 
-    if own == True:
-        if user_rank == "dev" or user_rank == "mod":
-            reports = []
-            reports = funcs.get_all_reports()
-            return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
+    # if own == True:
+    #     if user_rank == "dev" or user_rank == "mod":
+    #         reports = []
+    #         reports = funcs.get_all_reports()
+    #         return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
 
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
     return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
@@ -733,7 +733,7 @@ def decline_report(rid):
         if has_rank[0] == True and has_rank[1] == "":
             funcs.delete_report_by_id(rid)
 
-    return redirect("/myprofile")
+    return redirect("/admin-dashboard")
 
 @app.route("/report/accept/<tid>")
 def accept_report(tid):
@@ -754,7 +754,7 @@ def accept_report(tid):
         if has_rank[0] == True:
             funcs.delete_toilet_by_id(int(tid))
         
-    return redirect("/myprofile")
+    return redirect("/admin-dashboard")
 
 @app.route("/rl/<username>")
 def referral(username):
@@ -805,16 +805,15 @@ def blog():
         session["hot_articles"] = hot_articles
 
     unreviewed_articles = None
-
     # give unreviewed articles to mods and devs
-    if session.get("user"):
-        user = session["user"]
-        uid = funcs.get_user_id_by_username(user)
+    # if session.get("user"):
+    #     user = session["user"]
+    #     uid = funcs.get_user_id_by_username(user)
 
-        if uid:
-            rank = funcs.get_user_rank(uid)
-            if funcs.compare_ranks(rank, "mod") == True:
-                unreviewed_articles = funcs.get_unreviewed_articles(30)
+    #     if uid:
+    #         rank = funcs.get_user_rank(uid)
+    #         if funcs.compare_ranks(rank, "mod") == True:
+    #             unreviewed_articles = funcs.get_unreviewed_articles(30)
 
     return render_template("blog.html", ts=ts, msg=msg, session=session, newest_articles=newest_articles, hot_articles=hot_articles, search_results=search_results, unreviewed_articles=unreviewed_articles)
 
@@ -850,7 +849,6 @@ def submit_blog():
         msg = "An error occurred while submitting your article: " + response[1]
 
     return redirect(url_for("blog", msg=msg))
-
 
 @app.route("/blog/p/<slug>")
 def blog_post(slug):
@@ -908,7 +906,7 @@ def blog_mod_action(action, slug):
     elif action == "reject":
         funcs.reject_article(slug)
 
-    return redirect("/blog")
+    return redirect("/admin-dashboard")
 
 @app.route("/blog/search", methods=["POST"])
 def blog_search():
@@ -1043,6 +1041,38 @@ def gambling_result(result):
     session["msg"] = msg
 
     return redirect("/gambling")
+
+@app.route("/admin-dashboard")
+def admin_dash():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "index")
+
+    if not session.get("user"):
+        return redirect("/")
+    
+    if not session.get("admin_dash_certified"):
+        session["admin_dash_certified"] = False
+
+    if session["admin_dash_certified"] == False:
+        user_id = funcs.get_user_id_by_username(session["user"])
+        rank = funcs.get_user_rank(user_id)
+
+        # nuh uh buddy, you're (hopefully) not getting in here
+        if not funcs.compare_ranks(rank, "mod"):
+            return redirect("/")
+            
+    session["admin_dash_certified"] = True
+    session.modified = True
+
+    # real admin stuff
+    # get unreviewed blog articles
+    unreviewed_articles = funcs.get_unreviewed_articles(30)
+
+    # toilet reports
+    reports = []
+    reports = funcs.get_all_reports()
+
+    return render_template("admin_dashboard.html", ts=ts, session=session, unreviewed_articles=unreviewed_articles, reports=reports)
 
 # @app.errorhandler(Exception)
 # def handle_error(e):
