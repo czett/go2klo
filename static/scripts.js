@@ -118,6 +118,21 @@ function updateUploadCounter(inp, toReplaceClass){
     let len = files.length;
 
     document.querySelector("." + toReplaceClass).innerHTML = "" + len;
+
+    // stackoverflow
+    var file = document.querySelector("#img-input")["files"][0];
+    var reader = new FileReader();
+    var baseString;
+    
+    reader.onloadend = function (){
+        baseString = reader.result;
+        console.log(baseString);
+
+        var textarea_dummy = document.querySelector("#b64-img");
+        textarea_dummy.value = baseString;
+    };
+    reader.readAsDataURL(file);
+
     return;
 }
 

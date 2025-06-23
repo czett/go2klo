@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="heading-with-icon">
+    <span class="material-symbols-rounded">admin_panel_settings</span>
+    <div class="section-heading">Admin Dashboard</div>
+</div>
+
+{% if unreviewed_articles != None %}
+    {% if unreviewed_articles | length > 0 %}
+        <div class="section-mini-heading">Unreviewed Blog Articles</div>
+        <div class="dash-section-items">
+            {% for i in range(12) %}
+            {% endfor %}
+            
+            {% for article in unreviewed_articles %}
+                <div class="dash-section-item" onmousedown="redirect('/blog/p/{{article.slug}}')">
+                    <div class="article">
+                        <div class="article-icon">
+                            <span class="material-symbols-rounded">newspaper</span>
+                        </div>
+                        <div class="article-data">
+                        <!-- <div class="article-title">{{ts["title"]}}</div> -->
+                            <div class="article-title">{{article.title}}</div>
+                            <div class="article-author">{{article.author_username}}</div>
+                            <div class="article-views">
+                                <span class="material-symbols-rounded">visibility</span> {{article.views}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}
+
+{% if reports|length > 0 %}
+<div class="section-mini-heading">Open Toilet Reports</div>
+<div class="dash-section-items reports-list">
+    {% for report in reports %}
+    <div class="report-item dash-section-item">
+        <div class="report-details">
+            <div><strong>Report ID:</strong> {{ report.id }}</div>
+            <div><strong>Toilet ID:</strong> <a href="/toilet/{{ report.tid }}">{{ report.tid }}</a></div>
+            <div><strong>User ID:</strong> <a href="/profile/{{ report.user_id }}">{{ report.user_id }}</a></div>
+            <div><strong>Description:</strong> {{ report.description }}</div>
+            <div><strong>Report Date:</strong> {{ report.report_date }}</div>
+        </div>
+        <div class="report-actions">
+            <a href="/report/decline/{{ report.id }}" class="resolve-report-btn">Decline Report</a>
+            <a href="#" class="resolve-report-btn" onclick="if (confirm('Are you sure you want to remove this toilet?')) { window.location.href='/report/accept/{{ report.tid }}'; } return false;">Remove Toilet</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if images|length > 0 %}
+<div class="section-mini-heading">Unapproved Rating Images</div>
+<div class="dash-section-items reports-list">
+    {% for image in images %}
+    <div class="dash-section-item report-item">
+        <div class="report-details">
+            <div><strong>Image ID:</strong> {{ image.id }}</div>
+            <div><strong>Rating ID:</strong> <a href="/rating/{{ image.rating_id }}">{{ image.rating_id }}</a></div>
+            <div><strong>Image URL:</strong> <a href="{{ image.image_url }}" target="_blank">View Image</a></div>
+            <div><strong>User ID:</strong> <a href="/p/{{ image.user_id }}" target="_blank">{{image.user_id}}</a></div>
+            <div><strong>Approved:</strong> {{ image.approved }}</div>
+        </div>
+        <div class="report-actions">
+            <a href="/img/d/{{ image.id }}" class="resolve-report-btn">Decline</a>
+            <a href="/img/a/{{ image.id }}" class="resolve-report-btn">Approve</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

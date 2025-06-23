@@ -13,6 +13,7 @@ from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
 import random, string, base64
 from geopy.distance import geodesic
+import base64, requests
 
 try:
     load_dotenv()
@@ -92,6 +93,40 @@ def generate_auth_code():
 
 def generate_password_reset_code():
     return "".join(random.choices(string.ascii_lowercase, k=16))
+
+def upload_rating_image(rating_id, toilet_id, image_data, user_id):
+    imgbb_api_key = os.getenv("IMGBB_KEY")
+    if not imgbb_api_key:
+        return False, "Missing API key"
+
+    try:
+        response = requests.post("https://api.imgbb.com/1/upload", data={
+            "key": imgbb_api_key,
+            "image": image_data
+        })
+
+        if response.status_code == 200:
+            image_url = response.json()["data"]["url"]
+
+            try:
+                conn = get_db_connection()
+                cur = conn.cursor()
+                cur.execute("""
+                    INSERT INTO rating_images (rating_id, toilet_id, image_url, user_id, approved)
+                    VALUES (%s, %s, %s, %s, FALSE)
+                """, (rating_id, toilet_id, image_url, user_id))
+                conn.commit()
+                cur.close()
+                conn.close()
+                return True, image_url
+            except Exception as db_err:
+                return False, str(db_err)
+        else:
+            return False, f"Upload failed: {response.text}"
+
+    except Exception as e:
+        print("Exception during upload:", e)
+        return False, f"Exception during upload: {e}"
 
 def send_verification_email(recipient_email, auth_code):
     sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
@@ -485,7 +520,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         (json.dumps(updated_achievements), user_id)
                     )
 
-        return True, f"Rating added successfully with ID {rating_id} for toilet {toilet_id}"
+        return True, rating_id, toilet_id
     except Exception as e:
         return False, f"Error: {e}"
     finally:
@@ -1438,3 +1473,83 @@ def toggle_like_rating(uid, rid):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
+def get_unapproved_rating_images(limit: int = 50):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT image_id, rating_id, image_url, approved, user_id
+                    FROM rating_images
+                    WHERE approved = FALSE
+                    ORDER BY image_id DESC
+                    LIMIT %s
+                """, (limit,))
+                images = cur.fetchall()
+
+                return [
+                    {
+                        "id": img[0],
+                        "rating_id": img[1],
+                        "image_url": img[2],
+                        "approved": img[3],
+                        "user_id": img[4]
+                    }
+                    for img in images
+                ]
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+def decline_rating_image(image_id: int):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    DELETE FROM rating_images
+                    WHERE image_id = %s
+                """, (image_id,))
+        return True
+    except Exception as e:
+        return {"error": str(e)}
+
+def approve_rating_image(image_id: int):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE rating_images
+                    SET approved = TRUE
+                    WHERE image_id = %s
+                """, (image_id,))
+        return True
+    except Exception as e:
+        return {"error": str(e)}
+    
+def get_images_by_toilet_id(toilet_id: int):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT image_url, user_id, rating_id, uploaded_at
+                    FROM rating_images
+                    WHERE toilet_id = %s AND approved = TRUE
+                    ORDER BY uploaded_at DESC
+                """, (toilet_id,))
+                results = cur.fetchall()
+                return [
+                    {
+                        "url": row[0],
+                        "user_id": row[1],
+                        "rating_id": row[2],
+                        "created_at": row[3]
+                    }
+                    for row in results
+                ]
+    except Exception as e:
+        return {"error": str(e)}

@@ -1491,6 +1491,28 @@ button:disabled{
     cursor: pointer;
 }
 
+/* still rating page but img */
+
+.img-bar{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2vh;
+    margin-bottom: 2vh;
+}
+
+.img-bar .img-box{
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--brad);
+}
+
+.img-bar .img-box img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* coming soon i guess :3 */
 
 .like-toilet-btn{
@@ -1676,7 +1698,7 @@ button:disabled{
     box-sizing: border-box;
 }
 
-.articles .article{
+.articles .article, .dash-section-item .article{
     height: 100%;
     display: flex;
     justify-content: start;
@@ -1687,14 +1709,14 @@ button:disabled{
     border: 2px solid var(--bgd);
 }
 
-.articles .article .article-icon{
+.articles .article .article-icon, .dash-section-item .article .article-icon{
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.articles .article .article-icon span{
+.articles .article .article-icon span, .dash-section-item .article .article-icon span{
     font-size: 5rem;
     background: linear-gradient(45deg, var(--ac), var(--acalt));
     background-clip: text;
@@ -1703,18 +1725,18 @@ button:disabled{
     -ms-text-fill-color: transparent;
 }
 
-.articles .article .article-data{
+.articles .article .article-data, .dash-section-item .article .article-data{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
 }
 
-.articles .article .article-data .article-title{
+.articles .article .article-data .article-title, .dash-section-item .article .article-data .article-title{
     font-size: 1.4rem;
 }
 
-.articles .article .article-data .article-views{
+.articles .article .article-data .article-views, .dash-section-item .article .article-views{
     display: flex;
     justify-content: start;
     align-items: center;
@@ -1966,6 +1988,26 @@ a.mod-action-reject{
     to{
         stroke-dashoffset: 0;
     }
+}
+
+/* admin dashboard */
+
+.section-mini-heading{
+    font-size: 2rem;
+}
+
+.dash-section-items{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1vh;
+    margin: 2vh 0;
+}
+
+.dash-section-items .dash-section-item{
+    /* aspect-ratio: 2; */
+    background-color: var(--bg);
+    cursor: pointer;
 }
 
 /* responsive design (spooky) */
