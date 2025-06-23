@@ -430,7 +430,7 @@ def finish_rating():
             if img_b64.startswith("data:image"):
                 img_b64 = img_b64.split(",")[1]
 
-            funcs.upload_rating_image(response[1], img_b64, uid)  # response[1] = rating_id
+            funcs.upload_rating_image(response[1], response[2], img_b64, uid)  # response[1] = rating_id, 2nd one is toilet id
     
         msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
         session["rated"] = (True, random.choice(msgs))
@@ -521,6 +521,7 @@ def toilet_num(tid):
         uid = funcs.get_user_id_by_username(username)
 
     info = funcs.get_toilet_details(tid, uid)
+    imgs = funcs.get_images_by_toilet_id(tid)
 
     # in case someone shares a faulty url >:(
     if info == None:
@@ -528,7 +529,7 @@ def toilet_num(tid):
     
     ts = get_texts(session["lang"], "toilet")
 
-    return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
+    return render_template("toilet.html", toilet=info, imgs=imgs, ts=ts, session=session, icon_map=rank_icon_map)
 
 # @app.route("/toilet") # all because of adsense bro
 # def toilet():
@@ -747,6 +748,7 @@ def accept_report(tid):
         has_rank = funcs.has_user_rank(uid, "dev")
 
         if has_rank[0] == True:
+            print("hello?")
             funcs.delete_toilet_by_id(int(tid))
 
         has_rank = funcs.has_user_rank(uid, "mod")
@@ -947,19 +949,6 @@ def logout_and_redirect(page):
 
     return redirect(f"/{page}")
 
-@app.route("/img")
-def image():
-    with open("img.txt", "r") as image:
-        base64_string = image.read()
-        if base64_string.startswith("data:image"):
-            base64_string = base64_string.split(",")[1]
-
-    res = funcs.upload_rating_image(324, base64_string)
-
-    print(res)
-
-    return ""
-
 @app.route("/legal")
 def legal():
     check_cookie_status()
@@ -1102,17 +1091,17 @@ def img_mod(action, img_id):
 
     return redirect("/admin-dashboard")
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     code = 500
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#     return redirect(f"/error/{code}")
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
 
-# @app.route("/error/<code>")
-# def error(code):
-#     ts = get_texts(session["lang"], "error")
-#     return render_template("error.html", ts=ts, code=f"error {code} :(")
+@app.route("/error/<code>")
+def error(code):
+    ts = get_texts(session["lang"], "error")
+    return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)

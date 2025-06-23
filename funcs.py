@@ -94,7 +94,7 @@ def generate_auth_code():
 def generate_password_reset_code():
     return "".join(random.choices(string.ascii_lowercase, k=16))
 
-def upload_rating_image(rating_id, image_data, user_id):
+def upload_rating_image(rating_id, toilet_id, image_data, user_id):
     imgbb_api_key = os.getenv("IMGBB_KEY")
     if not imgbb_api_key:
         return False, "Missing API key"
@@ -112,9 +112,9 @@ def upload_rating_image(rating_id, image_data, user_id):
                 conn = get_db_connection()
                 cur = conn.cursor()
                 cur.execute("""
-                    INSERT INTO rating_images (rating_id, image_url, user_id, approved)
-                    VALUES (%s, %s, %s, FALSE)
-                """, (rating_id, image_url, user_id))
+                    INSERT INTO rating_images (rating_id, toilet_id, image_url, user_id, approved)
+                    VALUES (%s, %s, %s, %s, FALSE)
+                """, (rating_id, toilet_id, image_url, user_id))
                 conn.commit()
                 cur.close()
                 conn.close()
@@ -520,7 +520,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         (json.dumps(updated_achievements), user_id)
                     )
 
-        return True, rating_id
+        return True, rating_id, toilet_id
     except Exception as e:
         return False, f"Error: {e}"
     finally:
@@ -1527,5 +1527,29 @@ def approve_rating_image(image_id: int):
                     WHERE image_id = %s
                 """, (image_id,))
         return True
+    except Exception as e:
+        return {"error": str(e)}
+    
+def get_images_by_toilet_id(toilet_id: int):
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT image_url, user_id, rating_id, uploaded_at
+                    FROM rating_images
+                    WHERE toilet_id = %s AND approved = TRUE
+                    ORDER BY uploaded_at DESC
+                """, (toilet_id,))
+                results = cur.fetchall()
+                return [
+                    {
+                        "url": row[0],
+                        "user_id": row[1],
+                        "rating_id": row[2],
+                        "created_at": row[3]
+                    }
+                    for row in results
+                ]
     except Exception as e:
         return {"error": str(e)}

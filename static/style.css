@@ -1491,6 +1491,28 @@ button:disabled{
     cursor: pointer;
 }
 
+/* still rating page but img */
+
+.img-bar{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2vh;
+    margin-bottom: 2vh;
+}
+
+.img-bar .img-box{
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--brad);
+}
+
+.img-bar .img-box img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* coming soon i guess :3 */
 
 .like-toilet-btn{

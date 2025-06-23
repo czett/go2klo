@@ -136,6 +136,18 @@
     {% endfor %}
 </div>
 
+{% if imgs|length > 0 %}
+<h2>User submitted images:</h2>
+
+<div class="img-bar">
+    {% for img in imgs %}
+        <div class="img-box">
+            <img src="{{img.url}}">
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <script>
     // Create the map
     var map = L.map('map', {
