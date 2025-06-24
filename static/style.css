@@ -1590,6 +1590,7 @@ button:disabled{
     align-items: center;
     padding: .75vh;
     border-bottom-left-radius: calc(var(--brad)/2);
+    border-top-right-radius: var(--brad);
     cursor: pointer;
 }
 
