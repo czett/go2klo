@@ -123,14 +123,20 @@
             </div>
             
             {% if session.logged_in %}
-            <div class="like-rating-icon">
-                {% if rating.liked == True %}
-                    <span class="material-symbols-rounded liked" id="like-icon-span-{{rating.rating_id}}" onmousedown="like({{rating.rating_id}})">favorite</span>
+                <!-- enable liking the rating if not own, if own rating, then ability to edit it -->
+                {% if session.user_id == rating.user.user_id %}
+                    <div class="like-rating-icon editing-edition" onmousedown="toggleEditRatingWindow()">
+                        <span class="material-symbols-rounded" id="edit-rating-icon" onmousedown="like({{rating.rating_id}})">edit</span>
+                    </div>
                 {% else %}
-                    <span class="material-symbols-rounded" id="like-icon-span-{{rating.rating_id}}" onmousedown="like({{rating.rating_id}})">favorite_border</span>
+                    <div class="like-rating-icon">
+                        {% if rating.liked == True %}
+                            <span class="material-symbols-rounded liked" id="like-icon-span-{{rating.rating_id}}" onmousedown="like({{rating.rating_id}})">favorite</span>
+                        {% else %}
+                            <span class="material-symbols-rounded" id="like-icon-span-{{rating.rating_id}}" onmousedown="like({{rating.rating_id}})">favorite_border</span>
+                        {% endif %}
+                    </div>
                 {% endif %}
-                <!-- <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1">favorite</span> -->
-            </div>
             {% endif %}
         </div>
     {% endfor %}
@@ -147,6 +153,23 @@
     {% endfor %}
 </div>
 {% endif %}
+
+<div class="edit-rating-window">
+    <div class="popup-title">
+        {{ts.edit_title}}
+    </div>
+
+    <form action="/rate/edit-rating/{{toilet.toilet_id}}" method="post" enctype="multipart/form-data">
+        <textarea name="edited-rating-text"></textarea>
+        <button type="submit">
+            <span class="material-symbols-rounded">edit</span>
+        </button>
+    </form>
+
+    <div class="close-popup" onmousedown="toggleEditRatingWindow()">
+        <span class="material-symbols-rounded">close</span>
+    </div>
+</div>
 
 <script>
     // Create the map

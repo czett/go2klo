@@ -526,6 +526,36 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     finally:
         conn.close()
 
+def edit_rating(toilet_id, new_comment, user_id):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # Check if the user has rated this toilet
+                cur.execute("""
+                    SELECT rating_id FROM ratings
+                    WHERE toilet_id = %s AND rated_user_id = %s
+                """, (toilet_id, user_id))
+                result = cur.fetchone()
+
+                if not result:
+                    return False, "You have not rated this toilet."
+
+                rating_id = result[0]
+
+                # Update the comment for the rating
+                cur.execute("""
+                    UPDATE ratings
+                    SET comment = %s
+                    WHERE rating_id = %s
+                """, (new_comment, rating_id))
+
+        return True, "Rating updated successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
 def get_toilets(num=10): # just for initial click on explore, to be concise the cards below map.
     try:
         conn = get_db_connection()
@@ -611,7 +641,7 @@ def get_toilet_details(toilet_id, uid):
                 for r in ratings:
                     user_id = r[4]
                     cur.execute("""
-                        SELECT username, rank FROM users WHERE user_id = %s
+                        SELECT username, user_id, rank FROM users WHERE user_id = %s
                     """, (user_id,))
                     user = cur.fetchone()
 
@@ -627,7 +657,8 @@ def get_toilet_details(toilet_id, uid):
                     rated_users.append({
                         "user": {
                             "username": user[0] if user else "Unknown",
-                            "rank": user[1] if user else None
+                            "user_id": user[1] if user else None,
+                            "rank": user[2] if user else None
                         },
                         "cleanliness": r[0],
                         "supplies": r[1],
