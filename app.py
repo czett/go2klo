@@ -1091,6 +1091,13 @@ def img_mod(action, img_id):
 
     return redirect("/admin-dashboard")
 
+@app.route("/flush-or-pass")
+def flush_or_pass():
+    check_cookie_status()
+    ts = get_texts(session["lang"], "index")
+    
+    return render_template("flush_or_pass.html", ts=ts, session=session)
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
