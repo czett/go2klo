@@ -163,3 +163,19 @@ function spinWheel(){
 
     return;
 }
+
+// flush or pass
+
+function flushOrPass(action){
+    const image = document.querySelector(".fop-box img");
+    filename = parseInt(image.dataset.filename);
+
+    if (filename <= 4){
+        image.dataset.filename = filename + 1;
+    }else{
+        image.dataset.filename = 1;
+        filename = 0;
+    }
+
+    image.src = `/static/img/fop/${filename + 1}.png`;   
+}

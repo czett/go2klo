@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flush-or-pass">
+    <div class="special-title">
+        Flush or Pass
+    </div>
+
+    <div class="fop-box">
+        <div class="img">
+            <img src="{{url_for('static', filename='img/fop/1.png')}}" data-filename="1">
+        </div>
+        <div class="fop-btns">
+            <button class="flush-btn" onmousedown="flushOrPass('flush')">Flush</button>
+            <button class="pass-btn" onmousedown="flushOrPass('pass')">Pass</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
