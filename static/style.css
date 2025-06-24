@@ -1533,7 +1533,7 @@ button:disabled{
     padding: 2vh;
     /* overflow: hidden; */
     transition: 200ms;
-    /* display: none; */
+    display: none;
 }
 
 .edit-rating-window .popup-title{
