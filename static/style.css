@@ -1531,7 +1531,7 @@ button:disabled{
     z-index: 1001;
     box-sizing: border-box;
     padding: 2vh;
-    overflow: hidden;
+    /* overflow: hidden; */
     transition: 200ms;
     display: none;
 }
@@ -1596,6 +1596,13 @@ button:disabled{
 .edit-rating-window .close-popup span{
     color: var(--bg);
     font-weight: 700;
+}
+
+.edit-rating-window .scoobert{
+    position: absolute;
+    inset: 0vh 35% auto auto;
+    width: 20%;
+    transform: translate(-100%, -93%);
 }
 
 /* coming soon i guess :3 */
@@ -2751,7 +2758,7 @@ a.mod-action-reject{
         width: 75%;
     }
     
-    /* .edit-rating-window form textarea{
-        aspect-ratio: 1;
-    } */
+    .edit-rating-window .scoobert{
+        width: 30%;
+    }
 }
