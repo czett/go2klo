@@ -179,3 +179,14 @@ function flushOrPass(action){
 
     image.src = `/static/img/fop/${filename + 1}.png`;   
 }
+
+function toggleEditRatingWindow(){
+    const editWindow = document.querySelector(".edit-rating-window");
+    const isVisible = editWindow.style.display === "block";
+
+    if (isVisible) {
+        editWindow.style.display = "none";
+    } else {
+        editWindow.style.display = "block";
+    }
+}

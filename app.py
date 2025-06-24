@@ -448,6 +448,45 @@ def finish_rating():
         ts = get_texts(session["lang"], "rate")
         return render_template("rate.html", msg=response[1], session=session, ts=ts)
     
+@app.route("/rate/edit-rating/<tid>", methods=["POST"])
+def edit_rating(tid):
+    if not check_login_status():
+        return redirect("/")
+    
+    new_comment = request.form["edited-rating-text"]
+
+    if profanity.contains_profanity(new_comment) or "gustav" in new_comment.lower():
+        return redirect(f"/toilet/{tid}")
+    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", new_comment, re.UNICODE):
+        return redirect(f"/toilet/{tid}")
+    
+    if not new_comment:
+        return redirect(f"/toilet/{tid}")
+    
+    if len(new_comment) > 500:
+        return redirect(f"/toilet/{tid}")
+    
+    uid = funcs.get_user_id_by_username(session["user"])
+    if uid == None:
+        return redirect("/logout")
+    
+    response = funcs.edit_rating(tid, new_comment, uid)
+
+    if response[0] == True:
+        # clear trends and leaderboard
+        if session.get("trends"): 
+            session.pop("trends")
+        if session.get("leaderboard"):
+            session.pop("leaderboard")
+
+        msgs = ["Your rating has been updated!", "Thanks for keeping your feedback fresh!"]
+        session["rated"] = (True, random.choice(msgs))
+
+        return redirect(f"/toilet/{tid}")
+    else:
+        ts = get_texts(session["lang"], "rate")
+        return render_template("rate.html", msg=response[1], session=session, ts=ts)
+
 @app.route("/explore")
 def explore():
     check_cookie_status()
@@ -519,6 +558,7 @@ def toilet_num(tid):
     if session.get("logged_in"):
         username = session["user"]
         uid = funcs.get_user_id_by_username(username)
+        session["user_id"] = uid
 
     info = funcs.get_toilet_details(tid, uid)
     imgs = funcs.get_images_by_toilet_id(tid)
