@@ -14,10 +14,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='img/favicon.png')}}">
     <script src="{{url_for('static', filename='scripts.js')}}" defer></script>
+
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+
     {% block head %}
     {% endblock %}
 </head>
 <body>
+    <amp-auto-ads type="adsense"
+        data-ad-client="ca-pub-7897701212361213">
+    </amp-auto-ads>
+    
     {% block navbar %}
     <div class="nav">
         <div class="nopc nomobile menu-icon" onmousedown="mobileMenu()" data-collapsed="1">
