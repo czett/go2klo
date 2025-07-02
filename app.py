@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, request, url_for, jsonify
+from flask import Flask, render_template, redirect, session, send_from_directory, request, url_for, jsonify
 import funcs, re, random, json, os
 from werkzeug.exceptions import HTTPException
 from datetime import datetime
@@ -1137,6 +1137,10 @@ def flush_or_pass():
     ts = get_texts(session["lang"], "index")
     
     return render_template("flush_or_pass.html", ts=ts, session=session)
+
+@app.route('/ads.txt')
+def ads():
+    return send_from_directory('public', 'ads.txt')
 
 @app.errorhandler(Exception)
 def handle_error(e):
