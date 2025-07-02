@@ -1,15 +1,22 @@
 {
-    "version": 2,
-    "builds": [
-        { "src": "app.py", "use": "@vercel/python" }
-    ],
-    "routes": [
-        { "src": "/(.*)", "dest": "app.py" },
-        {
-            "src": "static/style.css",
-            "headers": {
-                "Cache-Control": "no-cache, no-store, must-revalidate"
-            }
-        }
-    ]
+  "version": 2,
+  "builds": [
+    { "src": "app.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    {
+      "src": "/ads.txt",
+      "dest": "/ads.txt"
+    },
+    {
+      "src": "/static/style.css",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ]
 }
