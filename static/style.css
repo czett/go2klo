@@ -1640,8 +1640,6 @@ button:disabled{
     box-shadow: 0 0 30px 1px rgba(20, 20, 20, 0.13);
 }
 
-.smart-flush-box
-
 .smart-flush-box .smart-flush-icon{
     font-size: 2rem;
     width: 3rem;
@@ -2818,5 +2816,20 @@ a.mod-action-reject{
     
     .edit-rating-window .scoobert{
         width: 30%;
+    }
+
+    /* smart flush ai overview box design */
+    .smart-flush-box{
+        margin: 3vh 0;
+        padding: 2.5vh;
+    }
+
+    .smart-flush-box .smart-flush-icon{
+        width: 4rem;
+    }
+
+    .smart-flush-box .smart-flush-title{
+        font-size: 1.6rem;
+        gap: 2vh;
     }
 }
