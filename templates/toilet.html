@@ -53,6 +53,58 @@
 <!-- Toilet details -->
 <!-- <p class="nomobile"><strong>{{ts["address"]}}</strong> {{toilet.address}} <br> <strong>{{ts["location"]}}</strong> {{ts["latitude"]}} {{ toilet.latitude }}, {{ts["longitude"]}} {{ toilet.longitude }}</p> -->
 
+<div class="smart-flush-box">
+    <div class="smart-flush-title">
+        <div class="smart-flush-icon">
+            <span class="material-symbols-rounded">emoji_objects</span>
+        </div>
+        Smart Flush AI Overview
+    </div>
+    <div class="smart-flush-text">
+        {{toilet.smart_flush | safe}}
+        <!-- <div class="smart-flush-time-est" style="font-style: italic;"></div> -->
+    </div>
+</div>
+
+{% if toilet.smart_flush == None %}
+<script>
+    document.querySelector(".smart-flush-text").innerText = "Smart Flush is being generated...";
+    // document.querySelector(".smart-flush-time-est").innerText = "Est. generation time: 10s";
+
+    fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector(".smart-flush-text").innerHTML = data.content;
+        } else {
+            document.querySelector(".smart-flush-text").innerText = "AI error";
+        }
+    })
+    .catch(() => {
+        document.querySelector(".smart-flush-text").innerText = "Network error";
+    });
+</script>
+{% elif toilet.smart_flush == false %}
+<script>
+    fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector(".smart-flush-text").innerHTML = data.content;
+        } else {
+            document.querySelector(".smart-flush-text").innerText = "AI error";
+        }
+    })
+    .catch(() => {
+        document.querySelector(".smart-flush-text").innerText = "Network error";
+    });
+</script>
+{% endif %}
+
 <!-- Average Ratings -->
 <h2>Average Rating:</h2>
 <div class="avg-ratings">

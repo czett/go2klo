@@ -1,5 +1,5 @@
 import psycopg
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from psycopg import sql
 import bcrypt
 from geopy.geocoders import Nominatim
@@ -7,13 +7,14 @@ import requests
 from math import radians, sin, cos, sqrt, atan2
 import json
 import app
-import os
+import os, re
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
 import random, string, base64
 from geopy.distance import geodesic
 import base64, requests
+from groq import Groq
 
 try:
     load_dotenv()
@@ -30,6 +31,7 @@ DB_CONFIG = {
 
 alphabet = string.ascii_lowercase
 enc_key = os.getenv("ENC_KEY")
+deepseek_api_key = os.getenv("GROQ_KEY")
 
 api_key = os.getenv("MAIL")
 configuration = sib_api_v3_sdk.Configuration()
@@ -605,8 +607,7 @@ def get_toilets_chunk(start_id, limit):
     except Exception as e:
         return {"error": str(e)}
 
-
-def get_toilet_details(toilet_id, uid):
+def get_toilet_details(toilet_id, uid, with_smart_flush=True):
     try:
         conn = get_db_connection()
         with conn:
@@ -632,9 +633,16 @@ def get_toilet_details(toilet_id, uid):
                 ratings = cur.fetchall()
 
                 # Calculate average ratings
-                avg_cleanliness = sum(r[0] for r in ratings) / len(ratings) if ratings else 0
-                avg_supplies = sum(r[1] for r in ratings) / len(ratings) if ratings else 0
-                avg_privacy = sum(r[2] for r in ratings) / len(ratings) if ratings else 0
+                avg_cleanliness = (
+                    sum(r[0] for r in ratings) / len(ratings) if ratings else 0
+                ) or 0
+                avg_supplies = (
+                    sum(r[1] for r in ratings) / len(ratings) if ratings else 0
+                ) or 0
+                avg_privacy = (
+                    sum(r[2] for r in ratings) / len(ratings) if ratings else 0
+                ) or 0
+
 
                 # Fetch the username associated with each rating using user_id
                 rated_users = []
@@ -668,6 +676,39 @@ def get_toilet_details(toilet_id, uid):
                         "liked": liked
                     })
 
+                smart_flush_okay = True
+
+                if not with_smart_flush:
+                    # Skip smart flush generation to avoid recursion
+                    smart_flush_okay = None
+                else:
+                    # SMART FLUSH LOGIC :3
+                    sf_result = None
+                    with conn.cursor() as cur:
+                        cur.execute("""
+                            SELECT id, created_at, updated_at, summary_content
+                            FROM smart_flush
+                            WHERE toilet_id = %s
+                        """, (toilet_id,))
+                        sf_result = cur.fetchone()
+
+                    # smart_flush_okay = None
+
+                    # outside DB context
+                    if sf_result:
+                        sf_id, created_at, updated_at, summary_content = sf_result
+                        if updated_at is None or updated_at < datetime.utcnow() - timedelta(days=3):
+                            smart_flush_okay = False
+                        else:
+                            # Markdown __bold__ zu HTML <strong> inline ersetzen
+                            if summary_content:
+                                smart_flush_okay = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', summary_content)
+                            else:
+                                smart_flush_okay = summary_content
+                    else:
+                        smart_flush_okay = None
+
+                # return all info
                 return {
                     "toilet_id": toilet_id,
                     "latitude": latitude,
@@ -676,7 +717,8 @@ def get_toilet_details(toilet_id, uid):
                     "ratings": rated_users,
                     "avg_cleanliness": avg_cleanliness,
                     "avg_supplies": avg_supplies,
-                    "avg_privacy": avg_privacy
+                    "avg_privacy": avg_privacy,
+                    "smart_flush": smart_flush_okay
                 }
     except Exception as e:
         return {"error": str(e)}
@@ -1584,3 +1626,133 @@ def get_images_by_toilet_id(toilet_id: int):
                 ]
     except Exception as e:
         return {"error": str(e)}
+    
+def smart_flush(toilet_id: int):
+    info = get_toilet_details(toilet_id, None, with_smart_flush=False)
+
+    # check if toilet even exists
+    if info is None:
+        return None
+
+    str_info = json.dumps(info, ensure_ascii=False)
+
+    with open("ai_config.json", "r") as config_file:
+        config = json.loads(config_file.read())
+
+    prompt = f"{config['prefix']} {config['reponse_style']} Make the summary detailed and rich, around {config['response_length_words']} words (do not go below 70). Focus on covering all key ratings and trends in a way that's concise yet detailed. Highlight up to 3 key words/phrases with '__'. Info is in JSON: {str_info}"
+
+    try:
+        client = Groq()
+        completion = client.chat.completions.create(
+            model="gemma2-9b-it",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=1,
+            max_completion_tokens=1024,
+            top_p=1,
+            stream=True
+        )
+
+        raw_reply = ""
+        for chunk in completion:
+            delta = chunk.choices[0].delta.content
+            if delta:
+                raw_reply += delta
+
+    except Exception as e:
+        return f"Groq API Error: {str(e)}"
+
+    # Cleaning output
+    cleaned_reply = raw_reply.replace('**', '')
+    cleaned_reply = cleaned_reply.replace('*', '')
+    cleaned_reply = re.sub(r'^\n+|\s*\(\d+\s*words?\)\s*$', '', cleaned_reply).strip()
+    cleaned_reply = re.sub(r'\n{2,}', '\n\n', cleaned_reply)
+
+    return cleaned_reply
+
+def check_smart_flush(toilet_id: int):
+    conn = get_db_connection()
+
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM smart_flush WHERE toilet_id = %s", (toilet_id,))
+            smart_flush_result = cur.fetchone()
+            if smart_flush_result:
+                # returning current smart flush if it exists next to bool
+
+                smart_flush_out = {
+                    "id": smart_flush_result[0],
+                    "created_at": smart_flush_result[1],
+                    "toilet_id": smart_flush_result[2],
+                    "summary_content": smart_flush_result[3],
+                    "updated_at": smart_flush_result[4],
+                }
+
+                return True, smart_flush_out
+            else:
+                return False, None
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def create_smart_flush(toilet_id: int):
+    # I ASSUME WE ONLY RUN THIS AFTER CHECKING THE STATUS OF THE SMART FLUSH AND LOO BEFOREHAND
+
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # create sf text
+                smart_flush_content = smart_flush(toilet_id)
+
+                if not smart_flush_content or smart_flush_content.startswith("API Error"):
+                    return False, f"Could not create Smart Flush: {smart_flush_content}"
+
+                # Insert the new sf overview into db
+                cur.execute(
+                    """
+                    INSERT INTO smart_flush (created_at, toilet_id, summary_content, updated_at)
+                    VALUES (NOW(), %s, %s, NOW())
+                    """,
+                    (toilet_id, smart_flush_content)
+                )
+        return True, smart_flush_content
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+def update_smart_flush(toilet_id: int):
+    conn = get_db_connection()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                # check if smart flush exists
+                cur.execute("SELECT id FROM smart_flush WHERE toilet_id = %s", (toilet_id,))
+                existing = cur.fetchone()
+                if not existing:
+                    return False, f"No Smart Flush exists for toilet {toilet_id}."
+
+                # generate new AI summary
+                smart_flush_content = smart_flush(toilet_id)
+                if not smart_flush_content or smart_flush_content.startswith("API Error"):
+                    return False, f"Could not update Smart Flush: {smart_flush_content}"
+
+                # update existing record
+                cur.execute(
+                    """
+                    UPDATE smart_flush
+                    SET summary_content = %s, updated_at = NOW()
+                    WHERE toilet_id = %s
+                    """,
+                    (smart_flush_content, toilet_id)
+                )
+        return True, "Smart Flush updated successfully."
+    except Exception as e:
+        return False, f"Error: {e}"
+    finally:
+        conn.close()
+
+# print(smart_flush(340))

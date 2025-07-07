@@ -6,6 +6,7 @@
     --fg: #131B23;
     --bg: #F8F4F9;
     --ac: #3C91E6;
+    --aclight: #bdd7f1;
     --acalt: #054585;
     --bgd: #d4d4d4;
     --bgd2: #bababa;
@@ -1619,6 +1620,71 @@ button:disabled{
     /* background-color: red; */
 }
 
+/* smart flush ai overview box design */
+.smart-flush-box{
+    margin: 2vh 0;
+    width: 100%;
+    height: fit-content;
+    padding: 2vh;
+    box-sizing: border-box;
+    background-color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1vh;
+    cursor: pointer;
+    transition: var(--trans);
+
+    border-radius: var(--brad);
+    /* border: 2px solid var(--bgd); */
+
+    box-shadow: 0 0 30px 1px rgba(20, 20, 20, 0.13);
+}
+
+.smart-flush-box:hover{
+    box-shadow: 0 0 30px 1px rgba(20, 20, 20, 0.22);
+}
+
+.smart-flush-box .smart-flush-icon{
+    font-size: 2rem;
+    width: 3rem;
+    border-radius: 50%;
+    aspect-ratio: 1 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--aclight);
+    /* transform: translate(-25%, -25%); */
+}
+
+.smart-flush-box .smart-flush-icon span{
+    font-size: inherit;
+    color: var(--ac);
+}
+
+.smart-flush-box .smart-flush-title{
+    font-size: 1.8rem;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    gap: 1vh;
+    align-items: center;
+    border-bottom: 1px solid var(--bgd);
+    padding-bottom: 2vh;
+}
+
+.smart-flush-box .smart-flush-text{
+    font-size: 1.15rem;
+    padding-top: 1vh;
+    font-weight: 500;
+}
+
+.smart-flush-highlight{
+    background-color: var(--aclight);
+    padding: 0 0.25ch;
+    font-weight: 600;
+}
+
 /* reports list for dev rank users */
 
 .reports{
@@ -2761,5 +2827,20 @@ a.mod-action-reject{
     
     .edit-rating-window .scoobert{
         width: 30%;
+    }
+
+    /* smart flush ai overview box design */
+    .smart-flush-box{
+        margin: 3vh 0;
+        padding: 2.5vh;
+    }
+
+    .smart-flush-box .smart-flush-icon{
+        width: 4rem;
+    }
+
+    .smart-flush-box .smart-flush-title{
+        font-size: 1.6rem;
+        gap: 2vh;
     }
 }
