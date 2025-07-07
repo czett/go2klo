@@ -1160,17 +1160,17 @@ def api_new_smart_flush(toilet_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     code = 500
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#     return redirect(f"/error/{code}")
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return redirect(f"/error/{code}")
 
-# @app.route("/error/<code>")
-# def error(code):
-#     ts = get_texts(session["lang"], "error")
-#     return render_template("error.html", ts=ts, code=f"error {code} :(")
+@app.route("/error/<code>")
+def error(code):
+    ts = get_texts(session["lang"], "error")
+    return render_template("error.html", ts=ts, code=f"error {code} :(")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=False, port=7000)

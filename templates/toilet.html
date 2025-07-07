@@ -62,12 +62,14 @@
     </div>
     <div class="smart-flush-text">
         {{toilet.smart_flush | safe}}
+        <!-- <div class="smart-flush-time-est" style="font-style: italic;"></div> -->
     </div>
 </div>
 
 {% if toilet.smart_flush == None %}
 <script>
     document.querySelector(".smart-flush-text").innerText = "Smart Flush is being generated...";
+    // document.querySelector(".smart-flush-time-est").innerText = "Est. generation time: 10s";
 
     fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
         method: "POST"

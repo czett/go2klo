@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import random, string, base64
 from geopy.distance import geodesic
 import base64, requests
+from groq import Groq
 
 try:
     load_dotenv()
@@ -30,7 +31,7 @@ DB_CONFIG = {
 
 alphabet = string.ascii_lowercase
 enc_key = os.getenv("ENC_KEY")
-deepseek_api_key = os.getenv("DEEPSEEK_KEY")
+deepseek_api_key = os.getenv("GROQ_KEY")
 
 api_key = os.getenv("MAIL")
 configuration = sib_api_v3_sdk.Configuration()
@@ -1630,7 +1631,7 @@ def smart_flush(toilet_id: int):
     info = get_toilet_details(toilet_id, None, with_smart_flush=False)
 
     # check if toilet even exists
-    if info == None:
+    if info is None:
         return None
 
     str_info = json.dumps(info, ensure_ascii=False)
@@ -1638,46 +1639,33 @@ def smart_flush(toilet_id: int):
     with open("ai_config.json", "r") as config_file:
         config = json.loads(config_file.read())
 
-    prompt = f"{config['prefix']} {config['reponse_style']} Answer in {config['response_length_words']} words. Info is in JSON format as follows: {str_info}"
+    prompt = f"{config['prefix']} {config['reponse_style']} Make the summary detailed and rich, around {config['response_length_words']} words (do not go below 70). Focus on covering all key ratings and trends in a way that's concise yet detailed. Highlight up to 3 key words/phrases with '__'. Info is in JSON: {str_info}"
 
-    response = requests.post(
-        url="https://openrouter.ai/api/v1/chat/completions",
-        timeout=10,
-        headers={
-            "Authorization": f"Bearer {deepseek_api_key}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "go2klo.com", # Optional. Site URL for rankings on openrouter.ai.
-            "X-Title": "go2klo", # Optional. Site title for rankings on openrouter.ai.
-        },
-        data=json.dumps({
-            "model": "deepseek/deepseek-chat-v3-0324:free",
-            "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-            ],
-        })
-    )
-
-    response_data = response.json()
-
-    if response.status_code != 200:
-        return f"API Error: {response.status_code} {response.text}"
-
-    response_data = response.json()
     try:
-        raw_reply = response_data["choices"][0]["message"]["content"]
-    except (KeyError, IndexError):
-        return "AI response malformed or empty"
+        client = Groq()
+        completion = client.chat.completions.create(
+            model="gemma2-9b-it",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=1,
+            max_completion_tokens=1024,
+            top_p=1,
+            stream=True
+        )
 
+        raw_reply = ""
+        for chunk in completion:
+            delta = chunk.choices[0].delta.content
+            if delta:
+                raw_reply += delta
 
-    raw_reply = response_data["choices"][0]["message"]["content"]
+    except Exception as e:
+        return f"Groq API Error: {str(e)}"
 
-    # cleaning output from markdown etc
+    # Cleaning output
     cleaned_reply = raw_reply.replace('**', '')
     cleaned_reply = cleaned_reply.replace('*', '')
-    
     cleaned_reply = re.sub(r'^\n+|\s*\(\d+\s*words?\)\s*$', '', cleaned_reply).strip()
     cleaned_reply = re.sub(r'\n{2,}', '\n\n', cleaned_reply)
 
