@@ -61,9 +61,47 @@
         Smart Flush AI Overview
     </div>
     <div class="smart-flush-text">
-        {{toilet.smart_flush}}
+        {{toilet.smart_flush | safe}}
     </div>
 </div>
+
+{% if toilet.smart_flush == None %}
+<script>
+    document.querySelector(".smart-flush-text").innerText = "Smart Flush is being generated...";
+
+    fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector(".smart-flush-text").innerHTML = data.content;
+        } else {
+            document.querySelector(".smart-flush-text").innerText = "AI error";
+        }
+    })
+    .catch(() => {
+        document.querySelector(".smart-flush-text").innerText = "Network error";
+    });
+</script>
+{% elif toilet.smart_flush == false %}
+<script>
+    fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector(".smart-flush-text").innerHTML = data.content;
+        } else {
+            document.querySelector(".smart-flush-text").innerText = "AI error";
+        }
+    })
+    .catch(() => {
+        document.querySelector(".smart-flush-text").innerText = "Network error";
+    });
+</script>
+{% endif %}
 
 <!-- Average Ratings -->
 <h2>Average Rating:</h2>

@@ -1640,6 +1640,10 @@ button:disabled{
     box-shadow: 0 0 30px 1px rgba(20, 20, 20, 0.13);
 }
 
+.smart-flush-box:hover{
+    box-shadow: 0 0 30px 1px rgba(20, 20, 20, 0.22);
+}
+
 .smart-flush-box .smart-flush-icon{
     font-size: 2rem;
     width: 3rem;
@@ -1672,6 +1676,12 @@ button:disabled{
     font-size: 1.15rem;
     padding-top: 1vh;
     font-weight: 500;
+}
+
+.smart-flush-highlight{
+    background-color: var(--aclight);
+    padding: 0 0.25ch;
+    font-weight: 600;
 }
 
 /* reports list for dev rank users */

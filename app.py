@@ -561,6 +561,9 @@ def toilet_num(tid):
         session["user_id"] = uid
 
     info = funcs.get_toilet_details(tid, uid)
+
+    # return str(info)
+
     imgs = funcs.get_images_by_toilet_id(tid)
 
     # in case someone shares a faulty url >:(
@@ -1142,10 +1145,20 @@ def flush_or_pass():
 def ads():
     return send_from_directory('public', 'ads.txt')
 
-@app.route("/smtest")
-def smtest():
-    sm = funcs.smart_flush(42)
-    return sm
+@app.route("/api/smart-flush/<toilet_id>", methods=["POST"])
+def api_new_smart_flush(toilet_id):
+    try:
+        sm_response = funcs.create_smart_flush(toilet_id)
+
+        if not sm_response:
+            return redirect("/error/500")
+        
+        smart_flush_text = sm_response[1]
+        smart_flush_text = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', smart_flush_text)
+        
+        return jsonify({"success": True, "content": smart_flush_text})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # @app.errorhandler(Exception)
 # def handle_error(e):

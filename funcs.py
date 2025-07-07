@@ -632,9 +632,16 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                 ratings = cur.fetchall()
 
                 # Calculate average ratings
-                avg_cleanliness = sum(r[0] for r in ratings) / len(ratings) if ratings else 0
-                avg_supplies = sum(r[1] for r in ratings) / len(ratings) if ratings else 0
-                avg_privacy = sum(r[2] for r in ratings) / len(ratings) if ratings else 0
+                avg_cleanliness = (
+                    sum(r[0] for r in ratings) / len(ratings) if ratings else 0
+                ) or 0
+                avg_supplies = (
+                    sum(r[1] for r in ratings) / len(ratings) if ratings else 0
+                ) or 0
+                avg_privacy = (
+                    sum(r[2] for r in ratings) / len(ratings) if ratings else 0
+                ) or 0
+
 
                 # Fetch the username associated with each rating using user_id
                 rated_users = []
@@ -668,9 +675,11 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                         "liked": liked
                     })
 
+                smart_flush_okay = True
+
                 if not with_smart_flush:
                     # Skip smart flush generation to avoid recursion
-                    smart_flush_out = None
+                    smart_flush_okay = None
                 else:
                     # SMART FLUSH LOGIC :3
                     sf_result = None
@@ -682,33 +691,21 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                         """, (toilet_id,))
                         sf_result = cur.fetchone()
 
-                    smart_flush_out = None
+                    # smart_flush_okay = None
 
                     # outside DB context
                     if sf_result:
                         sf_id, created_at, updated_at, summary_content = sf_result
-
-                        # Check if last update was more than 24h ago
-                        # if updated_at is None or updated_at < datetime.utcnow() - timedelta(seconds=10):
                         if updated_at is None or updated_at < datetime.utcnow() - timedelta(days=3):
-                            new_content = smart_flush(toilet_id)  # <-- API call
-                            with conn.cursor() as cur:
-                                cur.execute("""
-                                    UPDATE smart_flush
-                                    SET summary_content = %s, updated_at = NOW()
-                                    WHERE toilet_id = %s
-                                """, (new_content, toilet_id))
-                            smart_flush_out = new_content
+                            smart_flush_okay = False
                         else:
-                            smart_flush_out = summary_content
+                            # Markdown __bold__ zu HTML <strong> inline ersetzen
+                            if summary_content:
+                                smart_flush_okay = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', summary_content)
+                            else:
+                                smart_flush_okay = summary_content
                     else:
-                        new_content = smart_flush(toilet_id)  # <-- API call
-                        with conn.cursor() as cur:
-                            cur.execute("""
-                                INSERT INTO smart_flush (created_at, toilet_id, summary_content, updated_at)
-                                VALUES (NOW(), %s, %s, NOW())
-                            """, (toilet_id, new_content))
-                        smart_flush_out = new_content
+                        smart_flush_okay = None
 
                 # return all info
                 return {
@@ -720,7 +717,7 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     "avg_cleanliness": avg_cleanliness,
                     "avg_supplies": avg_supplies,
                     "avg_privacy": avg_privacy,
-                    "smart_flush": smart_flush_out
+                    "smart_flush": smart_flush_okay
                 }
     except Exception as e:
         return {"error": str(e)}
@@ -1733,7 +1730,7 @@ def create_smart_flush(toilet_id: int):
                     """,
                     (toilet_id, smart_flush_content)
                 )
-        return True, "Smart flush created."
+        return True, smart_flush_content
     except Exception as e:
         return False, f"Error: {e}"
     finally:
