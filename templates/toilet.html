@@ -53,6 +53,18 @@
 <!-- Toilet details -->
 <!-- <p class="nomobile"><strong>{{ts["address"]}}</strong> {{toilet.address}} <br> <strong>{{ts["location"]}}</strong> {{ts["latitude"]}} {{ toilet.latitude }}, {{ts["longitude"]}} {{ toilet.longitude }}</p> -->
 
+<div class="smart-flush-box">
+    <div class="smart-flush-title">
+        <div class="smart-flush-icon">
+            <span class="material-symbols-rounded">emoji_objects</span>
+        </div>
+        Smart Flush AI Overview
+    </div>
+    <div class="smart-flush-text">
+        {{toilet.smart_flush}}
+    </div>
+</div>
+
 <!-- Average Ratings -->
 <h2>Average Rating:</h2>
 <div class="avg-ratings">
@@ -73,8 +85,6 @@
     </div>
 </div>
 
-<h2>{{toilet.smart_flush}}</h2>
-<br>
 <h2>All User Ratings:</h2>
 
 <div class="comments-list">

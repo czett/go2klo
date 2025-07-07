@@ -689,7 +689,8 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                         sf_id, created_at, updated_at, summary_content = sf_result
 
                         # Check if last update was more than 24h ago
-                        if updated_at is None or updated_at < datetime.utcnow() - timedelta(seconds=10):
+                        # if updated_at is None or updated_at < datetime.utcnow() - timedelta(seconds=10):
+                        if updated_at is None or updated_at < datetime.utcnow() - timedelta(days=3):
                             new_content = smart_flush(toilet_id)  # <-- API call
                             with conn.cursor() as cur:
                                 cur.execute("""
