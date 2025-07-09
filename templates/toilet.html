@@ -70,7 +70,7 @@
 <script>
     document.querySelector(".smart-flush-text").innerText = "Smart Flush is being generated...";
     // document.querySelector(".smart-flush-time-est").innerText = "Est. generation time: 10s";
-
+    
     fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
         method: "POST"
     })
@@ -88,6 +88,7 @@
 </script>
 {% elif toilet.smart_flush == false %}
 <script>
+    document.querySelector(".smart-flush-text").innerText = "A new Smart Flush is being generated...";
     fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
         method: "POST"
     })
