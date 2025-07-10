@@ -88,6 +88,8 @@
 </script>
 {% elif toilet.smart_flush == false %}
 <script>
+    document.querySelector(".smart-flush-text").innerText = "Your new Smart Flush is being created...";
+
     fetch("/api/smart-flush/" + "{{ toilet.toilet_id }}", {
         method: "POST"
     })
