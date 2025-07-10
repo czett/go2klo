@@ -2240,6 +2240,50 @@ a.mod-action-reject{
     background-color: var(--spec1);
 }
 
+/* Tag Picker input design */
+
+.center-contents{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20vh;
+}
+
+.tag-picker-box{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tag-picker-box input, .tag-picker-box .tag-display{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tag-picker-box .tag-display{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1vh;
+    padding: 1.5vh 2vh;
+}
+
+.tag-picker-box .tag-display .tag{
+    padding: 1.5vh 2.25vh;
+    color: var(--ac);
+    cursor: pointer;
+    font-size: 1.15rem;
+    border: 3px solid var(--ac);
+    background-color: var(--aclight);
+    border-radius: var(--brad);
+}
+
+input.tag-input{
+    padding: 2vh;
+    font-size: 1.3rem;
+}
+
 /* responsive design (spooky) */
 
 @media (width < 1650px){
