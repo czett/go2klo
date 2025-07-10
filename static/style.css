@@ -2440,6 +2440,10 @@ a.mod-action-reject{
     .flush-or-pass .img{
         width: 75%;
     }
+
+    .img-bar{
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 @media (width < 850px){    
@@ -2843,4 +2847,8 @@ a.mod-action-reject{
         font-size: 1.6rem;
         gap: 2vh;
     }
+
+    .img-bar{
+        grid-template-columns: repeat(2, 1fr);
+    }    
 }
