@@ -409,6 +409,17 @@ def finish_rating():
     supplies = request.form["supplies"]
     privacy = request.form["privacy"]
     comment = request.form["comment"]
+    tags = request.form["tags"]
+    tags_list = tags.split(",")
+
+    if len(tags_list) > 0:
+        for index, tag in enumerate(tags_list):
+            if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", tag):
+                tags_list.pop(index)
+
+            if profanity.contains_profanity(tag):
+                tags_list.pop(index)
+
     user = session["user"]
     uid = funcs.get_user_id_by_username(user)
 
@@ -423,6 +434,10 @@ def finish_rating():
     comment = profanity.censor(comment)
 
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
+
+    # upload tags if any were supplied
+    if len(tags_list) > 0:
+        funcs.create_tags(response[2], uid, tags_list)
 
     if response[0] == True:
         img_b64 = request.form["b64-img"]
@@ -455,7 +470,7 @@ def edit_rating(tid):
     
     new_comment = request.form["edited-rating-text"]
 
-    if profanity.contains_profanity(new_comment) or "gustav" in new_comment.lower():
+    if profanity.contains_profanity(new_comment):
         return redirect(f"/toilet/{tid}")
     if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", new_comment, re.UNICODE):
         return redirect(f"/toilet/{tid}")
@@ -1163,6 +1178,13 @@ def api_new_smart_flush(toilet_id):
 @app.route("/tests")
 def tests_page():
     ts = get_texts(session["lang"], "index")
+
+    tags = ["test", "dummy", "tag32"]
+
+    response = funcs.create_tags(342, 19, tags)
+
+    return str(response)
+
     return render_template("tests.html", ts=ts)
 
 # @app.errorhandler(Exception)

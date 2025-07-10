@@ -207,6 +207,23 @@
 </div>
 {% endif %}
 
+<!-- tags are displayed here -->
+{% if toilet.tags | length > 0 %}
+<h2>Tags:</h2>
+<div class="tags-box">
+    {% for tag in toilet.tags %}
+    <div class="tag-bubble">
+        <div class="tag-text">
+            {{tag[0]}}
+        </div>
+        <div class="tag-count">
+            {{tag[1]}}x
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="edit-rating-window">
     <div class="popup-title">
         {{ts.edit_title}}

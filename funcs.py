@@ -410,6 +410,25 @@ def coords_to_nice_address(latitude, longitude):
         return ", ".join(filter(None, components))
     else:
         return "Unknown location"
+    
+def create_tags(toilet_id, user_id, tags):
+    conn = get_db_connection()
+
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                for tag_text in tags:
+                    cur.execute(
+                        """
+                        INSERT INTO toilet_tags (tag_text, toilet_id, user_id)
+                        VALUES (%s, %s, %s)
+                        """,
+                        (tag_text, toilet_id, user_id)
+                    )
+
+        return True, "All given tags were added"
+    except:
+        return False, "Could not add tags to db"
 
 def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user_id: int):
     latitude, longitude = coords
@@ -521,6 +540,8 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         "UPDATE users SET achievements = %s WHERE user_id = %s",
                         (json.dumps(updated_achievements), user_id)
                     )
+
+                # tag adding is a unique method above
 
         return True, rating_id, toilet_id
     except Exception as e:
@@ -715,6 +736,17 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     else:
                         smart_flush_okay = None
 
+                # fetch tags
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT tag_text, COUNT(tag_text) AS tag_count
+                        FROM toilet_tags
+                        WHERE toilet_id = %s
+                        GROUP BY tag_text
+                        ORDER BY tag_count DESC;""", (toilet_id,)
+                    )
+                    tags = cur.fetchall()
+
                 # return all info
                 return {
                     "toilet_id": toilet_id,
@@ -725,7 +757,8 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     "avg_cleanliness": avg_cleanliness,
                     "avg_supplies": avg_supplies,
                     "avg_privacy": avg_privacy,
-                    "smart_flush": smart_flush_okay
+                    "smart_flush": smart_flush_okay,
+                    "tags": tags
                 }
     except Exception as e:
         return {"error": str(e)}
@@ -1761,5 +1794,3 @@ def update_smart_flush(toilet_id: int):
         return False, f"Error: {e}"
     finally:
         conn.close()
-
-# print(smart_flush(340))
