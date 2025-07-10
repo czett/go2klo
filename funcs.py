@@ -694,12 +694,18 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
 
                     # smart_flush_okay = None
 
-                    # outside DB context
                     if sf_result:
                         sf_id, created_at, updated_at, summary_content = sf_result
                         if updated_at is None or updated_at < datetime.utcnow() - timedelta(days=1):
                         # if updated_at is None or updated_at < datetime.utcnow() - timedelta(minutes=1):
                             smart_flush_okay = False
+                            now = datetime.now()
+
+                            with conn.cursor() as cur:
+                                cur.execute(
+                                    "UPDATE smart_flush SET created_at = %s WHERE id = %s",
+                                    (now, sf_id)
+                                )
                         else:
                             # Markdown __bold__ zu HTML <strong> inline ersetzen
                             if summary_content:
