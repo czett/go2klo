@@ -2,7 +2,7 @@
 
 # 🚽 go2klo (visit [here](https://go2klo.com/) now!)
 
-**The quirky public toilet rating app!**  
+**The public toilet rating app!**  
 
 Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** is your one-stop solution for finding and reviewing public toilets wherever you go. Whether you're in a new city, on a road trip, or just in a hurry, let go2klo guide you to the throne you deserve.  
 
@@ -35,7 +35,8 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - User Auth and Password reset (email-based)
 - Caching for saving computation power
 - Addresses everywhere! (crazy for the OG users at least)
-- User ranks that are visually distinguishable and ranked in a hierarchy for permissions (e.g. mod)
+- User ranks that are visually distinguishable and ranked in a hierarchy for permissions (e.g. mod).
+- Smart Flush AI now summarizes all our data of the loo you're looking at, so you don't have to read all the comments.
 
 ## 🛠️ Tech Stack  
 
@@ -44,6 +45,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
 - **Mailing**: Brevo/sendinblue
+- **Smart Flush**: Gemma 9b from groq
 
 ## 🚧 Future Features/planned improvements
 
@@ -59,8 +61,8 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 
 - geopy Nominatim, this project relies on you
 - icon-icons and Google Fonts for icons and logos
-- flag-icons for language switcher from [flagicons.lipis.dev](https://flagicons.lipis.dev/) <3
-- my friends for early- and stress-testing the app from (almost) day one
+- flag-icons for language switcher from [flagicons.lipis.dev](https://flagicons.lipis.dev/)
+- my friends and family for early- and stress-testing the app from (almost) day one
 - GPT-4o
 
 [go2klo](https://go2klo.com/), in development since 11/24 (idea and prototype 10/2022)
