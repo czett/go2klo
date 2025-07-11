@@ -15,7 +15,7 @@
             <div class="logreg-msg msg">{{msg}}</div>
         {% endif %} 
 
-        <input type="text" id="gl_query" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="80" id="location_str">
+        <input type="text" name="location_query" required placeholder="{{ts['input_placeholder']}}" maxlength="80" id="location_str">
     
         {% if msg != None %}
             <button type="submit" disabled>{{ts["submit"]}}</button>
@@ -30,6 +30,7 @@
 document.getElementById("location_str").value = "{{rating_coords}}";
 </script>
 {% endif %}
+
 <script>
     var map = L.map('map').setView([51.1657, 10.4515], 3);
 

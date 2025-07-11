@@ -364,7 +364,6 @@ def rate_tid(tid):
         return redirect("/explore")
 
     # check if toilet exists
-
     uid = funcs.get_user_id_by_username(session["user"])
 
     toilet = funcs.get_toilet_details(tid, uid)
@@ -372,7 +371,6 @@ def rate_tid(tid):
         return redirect("/explore")
 
     lat, lng = toilet["latitude"], toilet["longitude"]
-    
     session["rating_coords"] = f"{lat}, {lng}"
     
     return redirect("/rate")
