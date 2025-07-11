@@ -228,7 +228,8 @@ function updateTags(inputElement){
     let currentText = inputElement.value;
 
     // checking for tag splitting characters, probably only comma in the end tho
-    if (currentText.endsWith(",") || currentText.endsWith(" ")){
+    if (currentText.endsWith(",")){
+    // if (currentText.endsWith(",") || currentText.endsWith(" ")){
         const currentTextLength = currentText.length;
         // trimming entered text to everything but the separating char
         currentText = currentText.slice(0, currentTextLength - 1);
