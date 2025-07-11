@@ -1245,13 +1245,40 @@ def search_toilets(query: str):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
+                # the following is claude haiku, aint no way i would figure this out myself. works great tho
                 cur.execute("""
-                    select toilets.toilet_id, toilets.latitude, toilets.longitude, toilets.location_str, count(ratings.rating_id) as rating_count, max(ratings.rating_date) as latest_rating_date
-                    from toilets, ratings
-                    where toilets.toilet_id = ratings.toilet_id and unaccent(toilets.location_str) ILIKE unaccent(%s)
-                    group by toilets.toilet_id, toilets.location_str
-                    order by latest_rating_date desc nulls last, toilets.toilet_id desc;
-                """, (f"%{query}%",))
+                    WITH tag_counts AS (
+                        SELECT toilet_id, tag_text, COUNT(*) as tag_frequency
+                        FROM toilet_tags
+                        GROUP BY toilet_id, tag_text
+                    ),
+                    location_matches AS (
+                        SELECT toilets.toilet_id, 
+                            toilets.latitude, 
+                            toilets.longitude, 
+                            toilets.location_str, 
+                            COUNT(ratings.rating_id) as rating_count, 
+                            MAX(ratings.rating_date) as latest_rating_date,
+                            COALESCE(MAX(tag_counts.tag_frequency), 0) as max_tag_frequency
+                        FROM toilets
+                        LEFT JOIN ratings ON toilets.toilet_id = ratings.toilet_id
+                        LEFT JOIN tag_counts ON toilets.toilet_id = tag_counts.toilet_id
+                        WHERE (
+                            unaccent(toilets.location_str) ILIKE unaccent(%s) OR 
+                            toilets.toilet_id IN (
+                                SELECT toilet_id 
+                                FROM toilet_tags 
+                                WHERE unaccent(tag_text) ILIKE unaccent(%s)
+                            )
+                        )
+                        GROUP BY toilets.toilet_id, toilets.location_str
+                        ORDER BY 
+                            max_tag_frequency DESC,  -- Toiletten mit häufigsten Tags zuerst
+                            latest_rating_date DESC NULLS LAST, 
+                            toilets.toilet_id DESC
+                    )
+                    SELECT * FROM location_matches;
+                """, (f"%{query}%", f"%{query}%"))
 
                 # i hate joins, 10 ands in where are better
                 # change my mind

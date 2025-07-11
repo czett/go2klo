@@ -1175,17 +1175,17 @@ def api_new_smart_flush(toilet_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/tests")
-def tests_page():
-    ts = get_texts(session["lang"], "index")
+# @app.route("/tests")
+# def tests_page():
+#     ts = get_texts(session["lang"], "index")
 
-    tags = ["test", "dummy", "tag32"]
+#     tags = ["test", "dummy", "tag32"]
 
-    response = funcs.create_tags(342, 19, tags)
+#     response = funcs.create_tags(342, 19, tags)
 
-    return str(response)
+#     return str(response)
 
-    return render_template("tests.html", ts=ts)
+#     return render_template("tests.html", ts=ts)
 
 # @app.errorhandler(Exception)
 # def handle_error(e):
