@@ -42,7 +42,7 @@ document.getElementById("location_str").value = "{{rating_coords}}";
     var marker;
 
     function updateLocationInput(latlng) {
-        document.getElementById("gl_query").value = latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
+        document.getElementById("location_str").value = latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
     }
 
     map.on('click', function(e) {
@@ -58,7 +58,7 @@ document.getElementById("location_str").value = "{{rating_coords}}";
     });
 
     // location getter
-    const inp = document.getElementById("gl_query");
+    const inp = document.getElementById("location_str");
 
     function getLocation() {
         if (navigator.geolocation) {
