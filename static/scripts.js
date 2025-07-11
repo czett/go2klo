@@ -112,26 +112,54 @@ function like(ratingId) {
 }
 
 // display amount of files uploaded on img upload when rating toilet
-
-function updateUploadCounter(inp, toReplaceClass){
+function updateUploadCounter(inp, toReplaceClass) {
     let files = inp.files;
     let len = files.length;
 
     document.querySelector("." + toReplaceClass).innerHTML = "" + len;
 
-    // stackoverflow
-    var file = document.querySelector("#img-input")["files"][0];
-    var reader = new FileReader();
-    var baseString;
-    
-    reader.onloadend = function (){
-        baseString = reader.result;
-        console.log(baseString);
+    if (len > 0) {
+        var file = files[0];
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            var img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
+                let width = img.width;
+                let height = img.height;
 
-        var textarea_dummy = document.querySelector("#b64-img");
-        textarea_dummy.value = baseString;
-    };
-    reader.readAsDataURL(file);
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                // set dummy ta value to base64 img
+                var textarea_dummy = document.querySelector("#b64-img");
+                textarea_dummy.value = compressedBase64;
+
+                // console.log("Compressed image size:", compressedBase64.length);
+            }
+            img.src = e.target.result;
+        };    
+        reader.readAsDataURL(file);
+    }
 
     return;
 }
@@ -189,4 +217,63 @@ function toggleEditRatingWindow(){
     } else {
         editWindow.style.display = "block";
     }
+}
+
+// tag input logic :3
+
+let tags = [];
+const maxTagsAmount = 8;
+
+function updateTags(inputElement){
+    let currentText = inputElement.value;
+
+    // checking for tag splitting characters, probably only comma in the end tho
+    if (currentText.endsWith(",")){
+    // if (currentText.endsWith(",") || currentText.endsWith(" ")){
+        const currentTextLength = currentText.length;
+        // trimming entered text to everything but the separating char
+        currentText = currentText.slice(0, currentTextLength - 1);
+
+        inputElement.value = "";
+        
+        if (currentText != "" && !currentText.includes(",")){
+            // check if entered tag would be a duplicate (we dont want those)
+            if (tags.includes(currentText) || tags.length >= maxTagsAmount){
+                return;
+            }
+
+            tags.push(currentText);
+
+            // create the new tag html element accordingly
+            const new_tag = document.createElement("div");
+            new_tag.classList.add("tag");
+            new_tag.classList.add("tag-" + currentText);
+            new_tag.innerHTML = currentText;
+            document.querySelector(".tag-display").appendChild(new_tag);
+
+            // set onmousedown event to call removal function below
+            new_tag.onclick = function (){
+                deleteTag(new_tag);
+            }
+
+            // set dummy input value to joined array with original separator as one again
+            let stringTags = tags.join(",");
+            document.querySelector(".tags-dummy-input").value = stringTags;
+
+            return 200;
+        }
+    }
+
+    return;
+}
+
+function deleteTag(clickedTag){
+    // get index in tags array of to-delete tag and then splice it
+    const tagIndex = tags.indexOf(clickedTag.innerHTML);
+    tags.splice(tagIndex, 1);
+
+    // remove visible .tag element from above
+    clickedTag.remove();
+
+    return;
 }
