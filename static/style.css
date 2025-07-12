@@ -2261,9 +2261,19 @@ a.mod-action-reject{
     display: flex;
     justify-content: start;
     align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 1vh;
     padding: 0 2vh;
     height: 4rem;
+}
+
+.tags-box{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 }
 
 .tag-picker-box .tag-display .tag, .tags-box .tag-bubble{

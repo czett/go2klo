@@ -238,6 +238,8 @@ function updateTags(inputElement){
         
         if (currentText != "" && !currentText.includes(",")){
             // check if entered tag would be a duplicate (we dont want those)
+            currentText = currentText.toLowerCase();
+            
             if (tags.includes(currentText) || tags.length >= maxTagsAmount){
                 return;
             }
