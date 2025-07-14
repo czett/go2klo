@@ -285,6 +285,18 @@ button{
     background-color: var(--bg);
 }
 
+.benefit-cards .card.explore-card{
+    border-color: transparent;
+    /* border-color: var(--aclight); */
+    box-shadow: 0 0 30px 1px var(--bgd2);
+    transition: calc(2 * var(--trans));
+    background-color: #fbfbfd;
+}
+
+.benefit-cards .card.explore-card:hover{
+    scale: 1.02;
+}
+
 .benefit-cards .card .card-icon{
     width: 33%;
     height: 100%;
