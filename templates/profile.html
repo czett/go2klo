@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}@{{session["username_" + pid]}}{% endblock %}
+
 {% block content %}
 
 <div class="user-profile">
