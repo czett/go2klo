@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}{{toilet.location_str}}{% endblock %}
+
 {% block content %}
 <div class="toilet-top-info">
     <h1>{{ts["title"]}}{{ toilet.toilet_id }} ({{toilet.location_str}})</h1>
