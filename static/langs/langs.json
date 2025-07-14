@@ -3,8 +3,8 @@
         "english": {
             "index": {
                 "user_warning": "If you registered with spaces in your name, try logging in without them. They were now removed in the database. For example: 'Joe Public' turns into 'JoePublic'",
-                "banner_title": "Scared of toilets? Not anymore!",
-                "banner_bottom": "Join go2klo now to rate toilets and always know where to go",
+                "banner_title": "Find a public toilet near you in seconds!",
+                "banner_bottom": "See toilets around you instantly. Ratings and reviews: All in browser",
                 "li_banner_title": "Got something to share?",
                 "li_banner_bottom": "Start rating toilets now or explore nearby ones!",
                 "benefit_header": "Why should you use go2klo?",

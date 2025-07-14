@@ -32,6 +32,23 @@
 </div>
 {% endif %}
 
+<!-- app stats for trust -->
+
+<div class="app-stats-block">
+    <div class="app-stat">
+        <div class="value-text" data-value="25" data-append-text="+">120</div>
+        <div class="value-subtitle">active users</div>
+    </div>
+    <div class="app-stat">
+        <div class="value-text" data-value="120" data-append-text="+">120</div>
+        <div class="value-subtitle">rated toilets</div>
+    </div>
+    <div class="app-stat">
+        <div class="value-text" data-value="140" data-append-text="+">120</div>
+        <div class="value-subtitle">submitted ratings</div>
+    </div>
+</div>
+
 {% if not session["logged_in"] %}
 <div class="benefit-header">{{ts["benefit_header"]}}</div>
 
