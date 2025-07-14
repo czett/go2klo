@@ -285,6 +285,18 @@ button{
     background-color: var(--bg);
 }
 
+.benefit-cards .card.explore-card{
+    border-color: transparent;
+    /* border-color: var(--aclight); */
+    box-shadow: 0 0 30px 1px var(--bgd2);
+    transition: calc(2 * var(--trans));
+    background-color: #fbfbfd;
+}
+
+.benefit-cards .card.explore-card:hover{
+    scale: 1.02;
+}
+
 .benefit-cards .card .card-icon{
     width: 33%;
     height: 100%;
@@ -392,6 +404,33 @@ button{
 
 .get-started .action-btns button:hover{
     filter: brightness(1.1);
+}
+
+/* app stats section */
+
+.app-stats-block{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vw;
+    margin: 4vh 0;
+}
+
+.app-stats-block .app-stat{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-stats-block .app-stat .value-text{
+    color: var(--acalt);
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.app-stats-block .app-stat .value-subtitle{
+    font-size: 1.3rem;
+    font-weight: 500;
 }
 
 /* login form */
@@ -2919,4 +2958,14 @@ input.tag-input{
     .img-bar{
         grid-template-columns: repeat(2, 1fr);
     }    
+
+    .app-stats-block .app-stat .value-text{
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .app-stats-block .app-stat .value-subtitle{
+        font-size: 1rem;
+        text-align: center;
+    }
 }
