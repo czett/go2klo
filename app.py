@@ -505,7 +505,7 @@ def explore():
     check_cookie_status()
     ts = get_texts(session["lang"], "explore")
 
-    toilets = funcs.get_toilets(20)
+    toilets = funcs.get_toilets(21)
     
     return render_template("explore.html", ts=ts, session=session, toilets=toilets)
 
