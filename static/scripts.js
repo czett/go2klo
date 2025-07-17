@@ -41,12 +41,20 @@ function notiToggler(){
     }
 }
 
-// loading page when loading done (fade out :3)
-window.addEventListener("load", () => {
+function hideLoader() {
     const loader = document.querySelector(".loading-box");
-    
-    if (loader){
+    if (loader) {
         loader.classList.add("hidden");
+    }
+}
+
+window.addEventListener("load", hideLoader);
+
+// "pageshow" wird auch beim Zurückgehen ausgelöst
+window.addEventListener("pageshow", (event) => {
+    // Wenn die Seite aus dem BFCache (Back-Forward Cache) geladen wurde
+    if (event.persisted) {
+        hideLoader();
     }
 });
 
@@ -218,108 +226,3 @@ function toggleEditRatingWindow(){
         editWindow.style.display = "block";
     }
 }
-
-// tag input logic :3
-
-let tags = [];
-const maxTagsAmount = 8;
-
-function updateTags(inputElement){
-    let currentText = inputElement.value;
-
-    // checking for tag splitting characters, probably only comma in the end tho
-    if (currentText.endsWith(",")){
-    // if (currentText.endsWith(",") || currentText.endsWith(" ")){
-        const currentTextLength = currentText.length;
-        // trimming entered text to everything but the separating char
-        currentText = currentText.slice(0, currentTextLength - 1);
-
-        inputElement.value = "";
-        
-        if (currentText != "" && !currentText.includes(",")){
-            // check if entered tag would be a duplicate (we dont want those)
-            currentText = currentText.toLowerCase();
-            
-            if (tags.includes(currentText) || tags.length >= maxTagsAmount){
-                return;
-            }
-
-            tags.push(currentText);
-
-            // create the new tag html element accordingly
-            const new_tag = document.createElement("div");
-            new_tag.classList.add("tag");
-            new_tag.classList.add("tag-" + currentText);
-            new_tag.innerHTML = currentText;
-            document.querySelector(".tag-display").appendChild(new_tag);
-
-            // set onmousedown event to call removal function below
-            new_tag.onclick = function (){
-                deleteTag(new_tag);
-            }
-
-            // set dummy input value to joined array with original separator as one again
-            let stringTags = tags.join(",");
-            document.querySelector(".tags-dummy-input").value = stringTags;
-
-            return 200;
-        }
-    }
-
-    return;
-}
-
-function deleteTag(clickedTag){
-    // get index in tags array of to-delete tag and then splice it
-    const tagIndex = tags.indexOf(clickedTag.innerHTML);
-    tags.splice(tagIndex, 1);
-
-    // remove visible .tag element from above
-    clickedTag.remove();
-
-    return;
-}
-
-// app stats number flow
-function appStatsAnimation() {
-    const appStatsBox = document.querySelector(".app-stats-block");
-
-    if (!appStatsBox) {
-        console.error("Element with class 'app-stats-block' not found.");
-        return;
-    }
-
-    appStatsBox.childNodes.forEach((appStat) => {
-        if (appStat.nodeType === Node.ELEMENT_NODE) {
-            const valueTextElement = appStat.firstElementChild;
-
-            if (valueTextElement && valueTextElement.dataset.value) {
-                const finalValue = parseInt(valueTextElement.dataset.value);
-                const appendText = valueTextElement.dataset.appendText || '';
-
-                let currentValue = 0;
-                const duration = 2000;
-                const startTime = performance.now();
-
-                function animateValue() {
-                    const now = performance.now();
-                    const progress = (now - startTime) / duration;
-
-                    if (progress < 1) {
-                        currentValue = Math.min(finalValue, Math.ceil(finalValue * progress));
-                        valueTextElement.innerHTML = `${currentValue}${appendText}`;
-                        requestAnimationFrame(animateValue);
-                    } else {
-                        currentValue = finalValue;
-                        valueTextElement.innerHTML = `${currentValue}${appendText}`;
-                    }
-                }
-
-                requestAnimationFrame(animateValue);
-            }
-        }
-    });
-}
-
-document.addEventListener("DOMContentLoaded", appStatsAnimation);
-appStatsAnimation();
