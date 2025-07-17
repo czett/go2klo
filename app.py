@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, send_from_directory, request, url_for, jsonify
-import funcs, re, random, json, os
+import funcs, re, random, json, os, regex
 from werkzeug.exceptions import HTTPException
 from datetime import datetime
 from better_profanity import profanity
@@ -424,11 +424,11 @@ def finish_rating():
     if uid == None:
         return redirect("/logout")
     
-    profanity.load_censor_words()
-
-    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", comment, re.UNICODE):
+    # way more generous regex than before including emojis and other languages :)
+    if not regex.fullmatch(r"^[\p{L}\p{N}\p{P}\p{Zs}\p{So}]*$", comment):
         return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
+    profanity.load_censor_words()
     comment = profanity.censor(comment)
 
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
