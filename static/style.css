@@ -2124,6 +2124,12 @@ a.mod-action-reject{
     pointer-events: auto;
 }
 
+.loading-box.hidden{
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
 .loading-svg{
     aspect-ratio: 1;
     width: 10vh;

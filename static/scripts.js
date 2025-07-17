@@ -41,12 +41,20 @@ function notiToggler(){
     }
 }
 
-// loading page when loading done (fade out :3)
-window.addEventListener("load", () => {
+function hideLoader() {
     const loader = document.querySelector(".loading-box");
-    
-    if (loader){
+    if (loader) {
         loader.classList.add("hidden");
+    }
+}
+
+window.addEventListener("load", hideLoader);
+
+// "pageshow" wird auch beim Zurückgehen ausgelöst
+window.addEventListener("pageshow", (event) => {
+    // Wenn die Seite aus dem BFCache (Back-Forward Cache) geladen wurde
+    if (event.persisted) {
+        hideLoader();
     }
 });
 
