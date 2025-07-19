@@ -278,13 +278,13 @@ button{
 .banner{
     width: 100%;
     height: fit-content;
-    /* margin: 3vh 0; */
     aspect-ratio: auto !important;
     padding: 5vh 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: var(--brad);
 }
 
 .banner .title{
@@ -328,6 +328,12 @@ button{
     box-sizing: border-box;
     padding: 3vh;
     border-radius: 1rem;
+}
+
+.app-stats-block .app-stat.invis{
+    visibility: hidden;
+    padding: 0 !important;
+    height: 0px !important;
 }
 
 .app-stats-block .app-stat .value-text{
