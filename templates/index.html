@@ -8,11 +8,7 @@
 
 {% block content %}
 
-{% if not session["logged_in"] %}
-<!-- <div class="username-warning">
-    <span class="material-symbols-rounded">warning</span>
-    <h2>{{ts["user_warning"]}}</h2>
-</div> -->
+<!-- {% if not session["logged_in"] %}
 <div class="banner">
     <div class="bg-img">
         <img src="{{url_for('static', filename='img/bg2.png')}}">
@@ -36,22 +32,34 @@
         <a href="/rate"><span class="material-symbols-rounded">share_location</span></a>
     </div>
 </div>
-{% endif %}
+{% endif %} -->
 
-<!-- app stats for trust -->
+<!-- banner with app stats for trust -->
 
-<div class="app-stats-block">
-    <div class="app-stat">
-        <div class="value-text" data-value="25" data-append-text="+">120</div>
-        <div class="value-subtitle">active users</div>
+<div class="banner">
+    <div class="title">
+        Stop Hunting. <br> Start peeing happy.
     </div>
-    <div class="app-stat">
-        <div class="value-text" data-value="120" data-append-text="+">120</div>
-        <div class="value-subtitle">rated toilets</div>
+    <div class="subtitle">
+        Your shortcut to clean, accessible and rated public toilets. go2klo: Because bad toilets should be a thing of the past.
     </div>
-    <div class="app-stat">
-        <div class="value-text" data-value="140" data-append-text="+">120</div>
-        <div class="value-subtitle">submitted ratings</div>
+    <div class="app-stats-block">
+        <div class="app-stat" style="background: #e6f5d0;">
+            <div class="value-text" data-value="25" data-append-text="+">120</div>
+            <div class="value-subtitle">active users</div>
+        </div>
+        <div class="app-stat" style="background: #e7eefa;">
+            <div class="value-text" data-value="120" data-append-text="+">120</div>
+            <div class="value-subtitle">rated toilets</div>
+        </div>
+        <div class="app-stat" style="background: #eae9f0;">
+            <div class="value-text" data-value="140" data-append-text="+">120</div>
+            <div class="value-subtitle">submitted ratings</div>
+        </div>
+        <div class="app-stat" style="background: #dfe9ed;">
+            <div class="value-text" data-value="9" data-append-text="">9</div>
+            <div class="value-subtitle">languages</div>
+        </div>
     </div>
 </div>
 

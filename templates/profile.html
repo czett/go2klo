@@ -2,14 +2,18 @@
 
 {% block title %}@{{session["username_" + pid]}}{% endblock %}
 
+{% block head %}
+<script src="{{url_for('static', filename='index.js')}}" defer></script>
+{% endblock %}
+
 {% block content %}
 
 <div class="user-profile">
     <div class="banner">
-        <div class="bg-img">
+        <!-- <div class="bg-img">
             <img src="{{url_for('static', filename='img/bg2.png')}}">
-        </div>
-        <div class="title-text">
+        </div> -->
+        <div class="title">
             @{{session["username_" + pid]}}
             {% if rank is not none %}
                 <div class="user-rank profile-rank-banner-{{rank}}">
@@ -18,12 +22,25 @@
                 </div>
             {% endif %}
         </div>
-        <div class="bottom-text">@{{session["username_" + pid]}} {{ts["has"]}} {{session["user_ratings_" + pid]|length}} {{ts["ratings"]}}</div>
-        <div class="icon">
+        <div class="subtitle">@{{session["username_" + pid]}} {{ts["has"]}} {{session["user_ratings_" + pid]|length}} {{ts["ratings"]}}</div>
+        <!-- <div class="icon">
             {% if own %}
             <a href="/logout"><span class="material-symbols-rounded">logout</span></a>
             {% else%}
             {% endif %}
+        </div> -->
+        <div class="app-stats-block">
+            <div class="app-stat invis nomobile" style="background: #e6f5d0;"></div>
+            <div class="app-stat" style="background: #e6f5d0;">
+                <div class="value-text" data-value='{{session["user_achievements_" + pid] | length}}' data-append-text=""></div>
+                <div class="value-subtitle">earned achievements</div>
+            </div>
+            <div class="app-stat" style="background: #e7eefa;">
+                <div class="value-text" data-value='{{session["user_ratings_" + pid]|length}}' data-append-text=""></div>
+                <div class="value-subtitle">rated toilets</div>
+            </div>
+            <div class="app-stat invis" style="background: #e7eefa;"></div>
+            <div class="app-stat invis nopc" style="background: #e6f5d0;"></div>
         </div>
     </div>
 

@@ -1,26 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=SUSE:wght@100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Outfit:wght@100..900&display=swap'); /*might switch to outfit, not sure yet*/
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* pixelated logo look at least for a while, i like this style for now*/
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
-/* @font-face {
-  font-family: bazaroni;
-  src: url(fonts/bazaroni.ttf);
-}
-
-@font-face {
-  font-family: receipt;
-  src: url(fonts/receipt.ttf);
-} */
 
 :root{
-    --fg: #131B23;
-    --bg: #F8F4F9;
+    --bg: #00001a;
+    --fg: #ddddee;
     --ac: #3C91E6;
     --aclight: #bdd7f1;
     --acalt: #054585;
-    --bgd: #d4d4d4;
-    --bgd2: #bababa;
+    --bgd: #150063;
+    --bgd2: #1d00ac;
 
     --spec1: #FF4500;
     --spec2: #FFA500;
@@ -61,15 +50,15 @@ body, html {
 }
 
 body{
-    background: radial-gradient(#DFDFDF 10%, transparent 10%) 0 0 / 20px 20px;
-    background-attachment: fixed;
-
-    /* background-image: 
+    /* background: radial-gradient(var(--bgd) 10%, transparent 10%) 0 0 / 20px 20px;
+    background-attachment: fixed; */
+    
+    background-image: 
         linear-gradient(to right, var(--bgd) 1px, transparent 1px),
         linear-gradient(to bottom, var(--bgd) 1px, transparent 1px);
     background-size: 20px 20px;
     background-attachment: fixed;
-    background-color: var(--bg); */
+    background-color: var(--bg);
 }
 
 *{
@@ -143,14 +132,14 @@ button{
 }
 
 .nav .links .logo div{
-    font-size: 2.5rem;
-    /* font-size: 2rem; */
+    /* font-size: 2.5rem; */
+    font-size: 2rem;
     text-decoration: none;
-    font-family: 'SUSE';
-    /* font-family: "Press Start 2P"; */
-    color: var(--fg);
+    /* font-family: 'SUSE'; */
+    font-family: "Press Start 2P";
+    color: var(--ac);
     /* color: var(--spec2); */
-    font-weight: 800;
+    font-weight: 700;
     cursor: pointer;
 }
 
@@ -160,9 +149,7 @@ button{
     width: 100vw;
     box-sizing: border-box;
     padding: 2vh 0;
-    background-color: var(--bg);
-    filter: brightness(0.975);
-    border-top: 2px solid var(--bgd2);
+    background-color: var(--ac);
 }
 
 .footer .flinks{
@@ -173,7 +160,7 @@ button{
 }
 
 .footer .flinks *{
-    color: var(--fg);
+    color: var(--bg);
     text-decoration: none;
     cursor: pointer;
 }
@@ -186,8 +173,8 @@ button{
 }
 
 .footer .flinks a img{
-    width: 1.5vw !important;
-    filter: brightness(0) saturate(0);
+    width: 1.5vw;
+    filter: brightness(0.9);
 }
 
 .footer .flinks a span{
@@ -196,15 +183,17 @@ button{
 
 /* index content */
 
-/* .banner{
+.banner{
     margin: var(--tbmar) 0;
     margin-top: 5vh;
     aspect-ratio: 4;
     width: 100%;
     background-color: var(--bg);
+    /* background: linear-gradient(45deg, var(--ac), var(--acalt)); */
     border-radius: var(--brad);
     overflow: hidden;
     box-sizing: border-box;
+    /* border: 2px solid var(--ac); */
     position: relative;
 }
 
@@ -222,6 +211,15 @@ button{
     object-fit: cover;
     object-position: center;
 }
+
+/* .blur-layer{
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20,20,20,0.5);
+    /* filter: blur(20px); */
 
 .banner .icon{
     position: absolute;
@@ -242,11 +240,9 @@ button{
     display: flex;
     align-items: center;
     gap: 2vh;
-}*/
+}
 
-.banner .title .user-rank{
-    width: fit-content;
-    height: fit-content;
+.banner .title-text .user-rank{
     display: flex;
     justify-content: space-between;
     gap: 1vh;
@@ -260,12 +256,10 @@ button{
     color: var(--bg) !important;
 }
 
-.banner .title .user-rank span{
+.banner .title-text .user-rank span{
     font-size: 2rem !important;
     color: var(--bg) !important;
 }
-
-/*
 
 .banner .bottom-text{
     position: absolute;
@@ -273,81 +267,7 @@ button{
     color: var(--fg);
     font-weight: 500;
     font-size: 1.35rem;
-} */
-
-.banner{
-    width: 100%;
-    height: fit-content;
-    aspect-ratio: auto !important;
-    padding: 5vh 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: var(--brad);
 }
-
-.banner .title{
-    /* font-family: Montserrat; */
-    font-weight: 700;
-    font-size: 3.75rem;
-    max-width: 50%;
-    text-align: center;
-    display: flex;
-    gap: 1ch;
-    justify-content: center;
-    align-items: center;
-}
-
-.banner .subtitle{
-    font-weight: 500;
-    font-size: 1.1rem;
-    max-width: 50%;
-    text-align: center;
-    margin-bottom: 4vh;
-    margin-top: 1vh;
-}
-
-/* app stats section */
-
-.app-stats-block{
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2vw;
-    margin: 2vh 0;
-    /* padding: 0 4vh; */
-    box-sizing: border-box;
-}
-
-.app-stats-block .app-stat{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: green;
-    box-sizing: border-box;
-    padding: 3vh;
-    border-radius: 1rem;
-}
-
-.app-stats-block .app-stat.invis{
-    visibility: hidden;
-    padding: 0 !important;
-    height: 0px !important;
-}
-
-.app-stats-block .app-stat .value-text{
-    color: var(--fg);
-    font-size: 3.5rem;
-    font-weight: 700;
-}
-
-.app-stats-block .app-stat .value-subtitle{
-    font-size: 1.3rem;
-    font-weight: 500;
-}
-
-/* cards on index page */
 
 .benefit-cards{
     margin: var(--tbmar) 0;
@@ -370,6 +290,18 @@ button{
     align-items: center;
     height: 100%;
     background-color: var(--bg);
+}
+
+.benefit-cards .card.explore-card{
+    border-color: transparent;
+    /* border-color: var(--aclight); */
+    box-shadow: 0 0 30px 1px var(--bgd2);
+    transition: calc(2 * var(--trans));
+    background-color: #fbfbfd;
+}
+
+.benefit-cards .card.explore-card:hover{
+    scale: 1.02;
 }
 
 .benefit-cards .card .card-icon{
@@ -481,6 +413,33 @@ button{
     filter: brightness(1.1);
 }
 
+/* app stats section */
+
+.app-stats-block{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vw;
+    margin: 4vh 0;
+}
+
+.app-stats-block .app-stat{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-stats-block .app-stat .value-text{
+    color: var(--acalt);
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.app-stats-block .app-stat .value-subtitle{
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
 /* login form */
 
 .logreg-form{
@@ -565,6 +524,13 @@ button{
     align-self: center;
 }
 
+/* logged in index banner */
+
+.banner a{
+    color: var(--bg);
+    cursor: pointer;
+}
+
 /* rating form */
 
 .rating-form{
@@ -599,36 +565,15 @@ button{
     position: relative;
 }
 
-.get-me-there{
-    position: absolute;
-    inset: auto auto 0 0;
-    border-radius: 0 var(--brad) 0 0;
-    background: var(--bg);
-    z-index: 1000;
-    padding: 1vh;
-    border-radius: 0 var(--brad) 0 0;
-}
-
 .rating-form .get-loc-map .get-location-btn, .map-wrapper .get-location-btn{
     position: absolute;
     inset: auto auto 0 0;
     border-radius: 0 var(--brad) 0 0;
     background: var(--bg);
-    color: var(--fg);
+    color: var(--ac);
     font-weight: 700;
     font-size: 3rem;
     padding: 1vh;
-    z-index: 1000;
-    cursor: pointer;
-    user-select: none !important;
-}
-
-.get-me-there span{
-    color: var(--fg);
-    background: var(--bg);
-    color: var(--fg);
-    font-weight: 700;
-    font-size: 3rem;
     z-index: 1000;
     cursor: pointer;
     user-select: none !important;
@@ -1454,31 +1399,31 @@ button:disabled{
     font-size: 1.25rem;
 }
 
-.leaderboard .entry a .user-rank.user-rank-dev, .comments-list .comment-item.special-dev, .banner .title .user-rank.profile-rank-banner-dev {
+.leaderboard .entry a .user-rank.user-rank-dev, .comments-list .comment-item.special-dev, .banner .title-text .user-rank.profile-rank-banner-dev {
     background: linear-gradient(45deg, #015734, #00ff7b);
 }
 
-.leaderboard .entry a .user-rank.user-rank-mod, .comments-list .comment-item.special-mod, .banner .title .user-rank.profile-rank-banner-mod {
+.leaderboard .entry a .user-rank.user-rank-mod, .comments-list .comment-item.special-mod, .banner .title-text .user-rank.profile-rank-banner-mod {
     background: linear-gradient(45deg, #7B1FA2, #E91E63);
 }
 
-.leaderboard .entry a .user-rank.user-rank-recruiter, .comments-list .comment-item.special-recruiter, .banner .title .user-rank.profile-rank-banner-recruiter {
+.leaderboard .entry a .user-rank.user-rank-recruiter, .comments-list .comment-item.special-recruiter, .banner .title-text .user-rank.profile-rank-banner-recruiter {
     background: linear-gradient(45deg, #004E92, #000428);
 }
 
-.leaderboard .entry a .user-rank.user-rank-creator, .comments-list .comment-item.special-creator, .banner .title .user-rank.profile-rank-banner-creator {
+.leaderboard .entry a .user-rank.user-rank-creator, .comments-list .comment-item.special-creator, .banner .title-text .user-rank.profile-rank-banner-creator {
     background: linear-gradient(45deg, #d45d0d, #ffde4d);
 }
 
-.leaderboard .entry a .user-rank.user-rank-supporter, .comments-list .comment-item.special-supporter, .banner .title .user-rank.profile-rank-banner-supporter {
+.leaderboard .entry a .user-rank.user-rank-supporter, .comments-list .comment-item.special-supporter, .banner .title-text .user-rank.profile-rank-banner-supporter {
     background: linear-gradient(45deg, #ce224a, #ff2b2b);
 }
 
-.leaderboard .entry a .user-rank.user-rank-og, .comments-list .comment-item.special-og, .banner .title .user-rank.profile-rank-banner-og {
+.leaderboard .entry a .user-rank.user-rank-og, .comments-list .comment-item.special-og, .banner .title-text .user-rank.profile-rank-banner-og {
     background: linear-gradient(45deg, #095e80, #45d2dc);
 }
 
-.leaderboard .entry a .user-rank.user-rank-gambler, .comments-list .comment-item.special-gambler, .banner .title .user-rank.profile-rank-banner-gambler {
+.leaderboard .entry a .user-rank.user-rank-gambler, .comments-list .comment-item.special-gambler, .banner .title-text .user-rank.profile-rank-banner-gambler {
     background: linear-gradient(45deg, #FFD700, #228B22);
 }
 
@@ -1579,7 +1524,7 @@ button:disabled{
     font-size: 1.1rem;
 }
 
-.like-toilet-btn{
+.get-me-there, .like-toilet-btn{
     aspect-ratio: 1;
     width: 6rem;
     border: 3px solid var(--ac);
@@ -1714,7 +1659,7 @@ button:disabled{
     inset: auto auto .2vw calc(.2vw + 7rem);
 }
 
-.like-toilet-btn span{
+.get-me-there span, .like-toilet-btn span{
     font-size: 3rem;
     color: var(--ac);
     font-variation-settings: 'wght' 600;
@@ -2421,6 +2366,10 @@ input.tag-input{
     :root{
         --rlpad: 10vw;
     }
+    
+    .banner{
+        aspect-ratio: 2.5;
+    }
 
     .banner .bottom-text{
         top: 7vw;
@@ -2518,6 +2467,10 @@ input.tag-input{
 @media (width < 1100px){
     :root{
         --rlpad: 5vw;
+    }
+    
+    .banner{
+        aspect-ratio: 2.5;
     }
     
     .banner .bottom-text{
@@ -2680,18 +2633,6 @@ input.tag-input{
 
     .banner{
         margin-top: var(--rlpad);
-        padding: 0;
-    }
-
-    .banner .title{
-        max-width: 90%;
-        font-size: 2.5rem;
-    }
-    
-    .banner .subtitle{
-        max-width: 90%;
-        font-size: 1rem;
-        margin-top: 1vh;
     }
     
     .nav .menu-icon{
@@ -2713,11 +2654,11 @@ input.tag-input{
         aspect-ratio: 1;
     }
     
-    /* .banner .title{
+    .banner .title-text{
         inset: 5vw auto auto 5vw;
         width: calc(100% - 10vw);
         font-size: 2.5rem;
-    } */
+    }
     
     .banner .bottom-text{
         inset: auto auto 5vw 5vw;
@@ -3030,10 +2971,6 @@ input.tag-input{
     .img-bar{
         grid-template-columns: repeat(2, 1fr);
     }    
-
-    .app-stats-block{
-        grid-template-columns: repeat(2, 1fr);
-    }
 
     .app-stats-block .app-stat .value-text{
         font-size: 2rem;

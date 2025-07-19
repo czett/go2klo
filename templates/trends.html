@@ -1,17 +1,34 @@
 {% extends "base.html" %}
 
 {% block title %}trending toilets{% endblock %}
+{% block head %}
+<script src="{{url_for('static', filename='index.js')}}" defer></script>
+{% endblock %}
 
 {% block content %}
 
 <div class="banner">
-    <div class="bg-img">
+    <!-- <div class="bg-img">
         <img src="{{url_for('static', filename='img/bg2.png')}}">
-    </div>
-    <div class="title-text">{{ts["title"]}}</div>
-    <div class="bottom-text">{{ts["subtitle"]}}</div>
-    <div class="icon">
+    </div> -->
+    <div class="title">{{ts["title"]}}</div>
+    <div class="subtitle">{{ts["subtitle"]}}</div>
+    <!-- <div class="icon">
         <span class="material-symbols-rounded">leaderboard</span>
+    </div> -->
+
+    <div class="app-stats-block">
+        <div class="app-stat invis nomobile" style="background: #e6f5d0;"></div>
+        <div class="app-stat" style="background: #e6f5d0;">
+            <div class="value-text" data-value='{{session["trends"]|length}}' data-append-text=""></div>
+            <div class="value-subtitle">trending toilets</div>
+        </div>
+        <div class="app-stat" style="background: #e7eefa;">
+            <div class="value-text" data-value='{{session["trends"][0].rating_count}}' data-append-text=""></div>
+            <div class="value-subtitle">most ratings</div>
+        </div>
+        <div class="app-stat invis" style="background: #e7eefa;"></div>
+        <div class="app-stat invis nopc" style="background: #e6f5d0;"></div>
     </div>
 </div>
 
