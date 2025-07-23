@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
+{% block title %}home{% endblock %}
+
+{% block head %}
+<script src="{{url_for('static', filename='index.js')}}" defer></script>
+{% endblock %}
+
 {% block content %}
 
-{% if not session["logged_in"] %}
-<!-- <div class="username-warning">
-    <span class="material-symbols-rounded">warning</span>
-    <h2>{{ts["user_warning"]}}</h2>
-</div> -->
+<!-- {% if not session["logged_in"] %}
 <div class="banner">
     <div class="bg-img">
         <img src="{{url_for('static', filename='img/bg2.png')}}">
@@ -30,41 +32,36 @@
         <a href="/rate"><span class="material-symbols-rounded">share_location</span></a>
     </div>
 </div>
-{% endif %}
+{% endif %} -->
 
-{% if not session["logged_in"] %}
-<div class="benefit-header">{{ts["benefit_header"]}}</div>
+<!-- banner with app stats for trust -->
 
-<div class="benefit-cards">
-    <div class="card">
-        <div class="card-icon">
-            <span class="material-symbols-rounded">warning</span>
-        </div>
-        <div class="card-texts">
-            <div class="card-title">{{ts["card_1_title"]}}</div>
-            <div class="card-text">{{ts["card_1_text"]}}</div>
-        </div>
+<div class="banner">
+    <div class="title">
+        Stop Hunting. <br> Start peeing happy.
     </div>
-    <div class="card">
-        <div class="card-icon">
-            <span class="material-symbols-rounded">map</span>
-        </div>
-        <div class="card-texts">
-            <div class="card-title">{{ts["card_2_title"]}}</div>
-            <div class="card-text">{{ts["card_2_text"]}}</div>
-        </div>
+    <div class="subtitle">
+        Your shortcut to clean, accessible and rated public toilets. go2klo: Because bad toilets should be a thing of the past.
     </div>
-    <div class="card">
-        <div class="card-icon">
-            <span class="material-symbols-rounded">star</span>
+    <div class="app-stats-block">
+        <div class="app-stat" style="background: #e6f5d0;">
+            <div class="value-text" data-value="25" data-append-text="+">120</div>
+            <div class="value-subtitle">active users</div>
         </div>
-        <div class="card-texts">
-            <div class="card-title">{{ts["card_3_title"]}}</div>
-            <div class="card-text">{{ts["card_3_text"]}}</div>
+        <div class="app-stat" style="background: #e7eefa;">
+            <div class="value-text" data-value="120" data-append-text="+">120</div>
+            <div class="value-subtitle">rated toilets</div>
+        </div>
+        <div class="app-stat" style="background: #eae9f0;">
+            <div class="value-text" data-value="140" data-append-text="+">120</div>
+            <div class="value-subtitle">submitted ratings</div>
+        </div>
+        <div class="app-stat" style="background: #dfe9ed;">
+            <div class="value-text" data-value="9" data-append-text="">9</div>
+            <div class="value-subtitle">languages</div>
         </div>
     </div>
 </div>
-{% endif %}
 
 <div class="benefit-header">{{ts["explore_header"]}}</div>
 
@@ -81,7 +78,7 @@
         </div>
     </a>
     <a href="/explore" style="text-decoration: none;">
-        <div class="card">
+        <div class="card explore-card">
             <div class="card-icon">
                 <span class="material-symbols-rounded">public</span>
             </div>
@@ -119,7 +116,7 @@
                 <span class="material-symbols-rounded">auto_stories</span>
             </div>
             <div class="card-texts">
-                <div class="card-title">{{ts["blog"]}} (EARLY ACCESS)</div>
+                <div class="card-title">{{ts["blog"]}}</div>
                 <div class="card-text">{{ts["blog_desc"]}}</div>
             </div>
         </div>
@@ -138,6 +135,40 @@
         </a>
     {% endif %}
 </div>
+
+{% if not session["logged_in"] %}
+<div class="benefit-header">{{ts["benefit_header"]}}</div>
+
+<div class="benefit-cards">
+    <div class="card">
+        <div class="card-icon">
+            <span class="material-symbols-rounded">warning</span>
+        </div>
+        <div class="card-texts">
+            <div class="card-title">{{ts["card_1_title"]}}</div>
+            <div class="card-text">{{ts["card_1_text"]}}</div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon">
+            <span class="material-symbols-rounded">map</span>
+        </div>
+        <div class="card-texts">
+            <div class="card-title">{{ts["card_2_title"]}}</div>
+            <div class="card-text">{{ts["card_2_text"]}}</div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon">
+            <span class="material-symbols-rounded">star</span>
+        </div>
+        <div class="card-texts">
+            <div class="card-title">{{ts["card_3_title"]}}</div>
+            <div class="card-text">{{ts["card_3_text"]}}</div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% if rated[0] %}
 <div class="rated-banner">

@@ -1,3 +1,5 @@
 credentials.yml
 .env
 test.py
+__pycache__/
+*.pyc

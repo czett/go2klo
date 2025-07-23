@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}{{toilet.location_str}}{% endblock %}
+
 {% block content %}
 <div class="toilet-top-info">
     <h1>{{ts["title"]}}{{ toilet.toilet_id }} ({{toilet.location_str}})</h1>
@@ -42,12 +44,9 @@
 
 <!-- Map container -->
 <div id="map">
-    <a class="get-me-there" href="https://www.google.com/maps/search/?api=1&query={{toilet.latitude}},{{toilet.longitude}}" target="_blank">
+    <a href="https://www.google.com/maps/search/?api=1&query={{toilet.latitude}},{{toilet.longitude}}" class="get-me-there" target="_blank">
         <span class="material-symbols-rounded">directions</span>
     </a>
-    <!-- <a class="like-toilet-btn" href="https://www.google.com/maps/search/?api=1&query={{toilet.latitude}},{{toilet.longitude}}" target="_blank">
-        <span class="material-symbols-rounded">favorite</span>
-    </a> -->
 </div>
 
 <!-- Toilet details -->
@@ -203,6 +202,23 @@
         <div class="img-box">
             <img src="{{img.url}}">
         </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- tags are displayed here -->
+{% if toilet.tags | length > 0 %}
+<h2>Tags:</h2>
+<div class="tags-box">
+    {% for tag in toilet.tags %}
+    <div class="tag-bubble">
+        <div class="tag-text">
+            {{tag[0]}}
+        </div>
+        <div class="tag-count">
+            {{tag[1]}}x
+        </div>
+    </div>
     {% endfor %}
 </div>
 {% endif %}

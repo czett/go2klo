@@ -14,3 +14,4 @@ python-dotenv==1.0.0
 better_profanity==0.6.0
 sib_api_v3_sdk==7.6.0
 groq
+regex

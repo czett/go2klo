@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, send_from_directory, request, url_for, jsonify
-import funcs, re, random, json, os
+import funcs, re, random, json, os, regex
 from werkzeug.exceptions import HTTPException
 from datetime import datetime
 from better_profanity import profanity
@@ -364,7 +364,6 @@ def rate_tid(tid):
         return redirect("/explore")
 
     # check if toilet exists
-
     uid = funcs.get_user_id_by_username(session["user"])
 
     toilet = funcs.get_toilet_details(tid, uid)
@@ -372,7 +371,6 @@ def rate_tid(tid):
         return redirect("/explore")
 
     lat, lng = toilet["latitude"], toilet["longitude"]
-    
     session["rating_coords"] = f"{lat}, {lng}"
     
     return redirect("/rate")
@@ -409,20 +407,35 @@ def finish_rating():
     supplies = request.form["supplies"]
     privacy = request.form["privacy"]
     comment = request.form["comment"]
+    tags = request.form["tags"]
+    tags_list = tags.split(",")
+
+    if len(tags_list) > 0:
+        for index, tag in enumerate(tags_list):
+            if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", tag):
+                tags_list.pop(index)
+
+            if profanity.contains_profanity(tag):
+                tags_list.pop(index)
+
     user = session["user"]
     uid = funcs.get_user_id_by_username(user)
 
     if uid == None:
         return redirect("/logout")
     
-    profanity.load_censor_words()
-
-    if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", comment, re.UNICODE):
+    # way more generous regex than before including emojis and other languages :)
+    if not regex.fullmatch(r"^[\p{L}\p{N}\p{P}\p{Zs}\p{So}]*$", comment):
         return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
 
+    profanity.load_censor_words()
     comment = profanity.censor(comment)
 
     response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
+
+    # upload tags if any were supplied
+    if len(tags_list) > 0:
+        funcs.create_tags(response[2], uid, tags_list)
 
     if response[0] == True:
         img_b64 = request.form["b64-img"]
@@ -455,7 +468,7 @@ def edit_rating(tid):
     
     new_comment = request.form["edited-rating-text"]
 
-    if profanity.contains_profanity(new_comment) or "gustav" in new_comment.lower():
+    if profanity.contains_profanity(new_comment):
         return redirect(f"/toilet/{tid}")
     if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", new_comment, re.UNICODE):
         return redirect(f"/toilet/{tid}")
@@ -492,7 +505,7 @@ def explore():
     check_cookie_status()
     ts = get_texts(session["lang"], "explore")
 
-    toilets = funcs.get_toilets(20)
+    toilets = funcs.get_toilets(21)
     
     return render_template("explore.html", ts=ts, session=session, toilets=toilets)
 
@@ -1159,6 +1172,19 @@ def api_new_smart_flush(toilet_id):
         return jsonify({"success": True, "content": smart_flush_text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# TEST ROUTE:
+# @app.route("/tests")
+# def tests_page():
+#     ts = get_texts(session["lang"], "index")
+
+#     tags = ["test", "dummy", "tag32"]
+
+#     response = funcs.create_tags(342, 19, tags)
+
+#     return str(response)
+
+#     return render_template("tests.html", ts=ts)
 
 @app.errorhandler(Exception)
 def handle_error(e):

@@ -410,6 +410,25 @@ def coords_to_nice_address(latitude, longitude):
         return ", ".join(filter(None, components))
     else:
         return "Unknown location"
+    
+def create_tags(toilet_id, user_id, tags):
+    conn = get_db_connection()
+
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                for tag_text in tags:
+                    cur.execute(
+                        """
+                        INSERT INTO toilet_tags (tag_text, toilet_id, user_id)
+                        VALUES (%s, %s, %s)
+                        """,
+                        (tag_text, toilet_id, user_id)
+                    )
+
+        return True, "All given tags were added"
+    except:
+        return False, "Could not add tags to db"
 
 def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user_id: int):
     latitude, longitude = coords
@@ -521,6 +540,8 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         "UPDATE users SET achievements = %s WHERE user_id = %s",
                         (json.dumps(updated_achievements), user_id)
                     )
+
+                # tag adding is a unique method above
 
         return True, rating_id, toilet_id
     except Exception as e:
@@ -694,12 +715,18 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
 
                     # smart_flush_okay = None
 
-                    # outside DB context
                     if sf_result:
                         sf_id, created_at, updated_at, summary_content = sf_result
                         if updated_at is None or updated_at < datetime.utcnow() - timedelta(days=1):
                         # if updated_at is None or updated_at < datetime.utcnow() - timedelta(minutes=1):
                             smart_flush_okay = False
+                            now = datetime.now()
+
+                            with conn.cursor() as cur:
+                                cur.execute(
+                                    "UPDATE smart_flush SET created_at = %s WHERE id = %s",
+                                    (now, sf_id)
+                                )
                         else:
                             if summary_content:
                                 smart_flush_okay = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', summary_content)
@@ -707,6 +734,17 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                                 smart_flush_okay = summary_content
                     else:
                         smart_flush_okay = None
+
+                # fetch tags
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT tag_text, COUNT(tag_text) AS tag_count
+                        FROM toilet_tags
+                        WHERE toilet_id = %s
+                        GROUP BY tag_text
+                        ORDER BY tag_count DESC;""", (toilet_id,)
+                    )
+                    tags = cur.fetchall()
 
                 # return all info
                 return {
@@ -718,7 +756,8 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     "avg_cleanliness": avg_cleanliness,
                     "avg_supplies": avg_supplies,
                     "avg_privacy": avg_privacy,
-                    "smart_flush": smart_flush_okay
+                    "smart_flush": smart_flush_okay,
+                    "tags": tags
                 }
     except Exception as e:
         return {"error": str(e)}
@@ -1205,13 +1244,40 @@ def search_toilets(query: str):
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
+                # the following is claude haiku, aint no way i would figure this out myself. works great tho
                 cur.execute("""
-                    select toilets.toilet_id, toilets.latitude, toilets.longitude, toilets.location_str, count(ratings.rating_id) as rating_count, max(ratings.rating_date) as latest_rating_date
-                    from toilets, ratings
-                    where toilets.toilet_id = ratings.toilet_id and unaccent(toilets.location_str) ILIKE unaccent(%s)
-                    group by toilets.toilet_id, toilets.location_str
-                    order by latest_rating_date desc nulls last, toilets.toilet_id desc;
-                """, (f"%{query}%",))
+                    WITH tag_counts AS (
+                        SELECT toilet_id, tag_text, COUNT(*) as tag_frequency
+                        FROM toilet_tags
+                        GROUP BY toilet_id, tag_text
+                    ),
+                    location_matches AS (
+                        SELECT toilets.toilet_id, 
+                            toilets.latitude, 
+                            toilets.longitude, 
+                            toilets.location_str, 
+                            COUNT(ratings.rating_id) as rating_count, 
+                            MAX(ratings.rating_date) as latest_rating_date,
+                            COALESCE(MAX(tag_counts.tag_frequency), 0) as max_tag_frequency
+                        FROM toilets
+                        LEFT JOIN ratings ON toilets.toilet_id = ratings.toilet_id
+                        LEFT JOIN tag_counts ON toilets.toilet_id = tag_counts.toilet_id
+                        WHERE (
+                            unaccent(toilets.location_str) ILIKE unaccent(%s) OR 
+                            toilets.toilet_id IN (
+                                SELECT toilet_id 
+                                FROM toilet_tags 
+                                WHERE unaccent(tag_text) ILIKE unaccent(%s)
+                            )
+                        )
+                        GROUP BY toilets.toilet_id, toilets.location_str
+                        ORDER BY 
+                            max_tag_frequency DESC,  -- Toiletten mit häufigsten Tags zuerst
+                            latest_rating_date DESC NULLS LAST, 
+                            toilets.toilet_id DESC
+                    )
+                    SELECT * FROM location_matches;
+                """, (f"%{query}%", f"%{query}%"))
 
                 # i hate joins, 10 ands in where are better
                 # change my mind
@@ -1754,5 +1820,3 @@ def update_smart_flush(toilet_id: int):
         return False, f"Error: {e}"
     finally:
         conn.close()
-
-# print(smart_flush(340))

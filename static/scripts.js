@@ -41,12 +41,20 @@ function notiToggler(){
     }
 }
 
-// loading page when loading done (fade out :3)
-window.addEventListener("load", () => {
+function hideLoader() {
     const loader = document.querySelector(".loading-box");
-    
-    if (loader){
+    if (loader) {
         loader.classList.add("hidden");
+    }
+}
+
+window.addEventListener("load", hideLoader);
+
+// "pageshow" wird auch beim Zurückgehen ausgelöst
+window.addEventListener("pageshow", (event) => {
+    // Wenn die Seite aus dem BFCache (Back-Forward Cache) geladen wurde
+    if (event.persisted) {
+        hideLoader();
     }
 });
 
@@ -112,26 +120,54 @@ function like(ratingId) {
 }
 
 // display amount of files uploaded on img upload when rating toilet
-
-function updateUploadCounter(inp, toReplaceClass){
+function updateUploadCounter(inp, toReplaceClass) {
     let files = inp.files;
     let len = files.length;
 
     document.querySelector("." + toReplaceClass).innerHTML = "" + len;
 
-    // stackoverflow
-    var file = document.querySelector("#img-input")["files"][0];
-    var reader = new FileReader();
-    var baseString;
-    
-    reader.onloadend = function (){
-        baseString = reader.result;
-        console.log(baseString);
+    if (len > 0) {
+        var file = files[0];
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            var img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
+                let width = img.width;
+                let height = img.height;
 
-        var textarea_dummy = document.querySelector("#b64-img");
-        textarea_dummy.value = baseString;
-    };
-    reader.readAsDataURL(file);
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                // set dummy ta value to base64 img
+                var textarea_dummy = document.querySelector("#b64-img");
+                textarea_dummy.value = compressedBase64;
+
+                // console.log("Compressed image size:", compressedBase64.length);
+            }
+            img.src = e.target.result;
+        };    
+        reader.readAsDataURL(file);
+    }
 
     return;
 }
