@@ -66,6 +66,12 @@ def get_texts(lang:str, template:str) -> dict:
 
     return req_content
 
+def trim_session_for_registration():
+    keep_keys = {"creds", "auth_code", "lang", "referral", "referral_name", "referral_uid"}
+    keys_to_remove = [k for k in session.keys() if k not in keep_keys]
+    for key in keys_to_remove:
+        session.pop(key, None)
+
 @app.route("/session")
 def session_out():
     return str(dict(session))
@@ -230,12 +236,16 @@ def switchlang_picked(lang):
 @app.route("/register")
 def register():
     check_cookie_status()
+    trim_session_for_registration()
+    
     ts = get_texts(session["lang"], "logreg")
     return render_template("logreg.html", action="register", ts=ts, msg=None, session=session)
 
 @app.route("/register/auth")
 def register_auth():
     check_cookie_status()
+    trim_session_for_registration()
+    
     ts = get_texts(session["lang"], "logreg")
     auth_code = funcs.generate_auth_code()
 
@@ -250,6 +260,8 @@ def register_auth():
 @app.route("/register/auth/check", methods=["POST"])
 def process_register_auth():
     check_cookie_status()
+    trim_session_for_registration()
+    
     ts = get_texts(session["lang"], "logreg")
     auth_code = session["auth_code"]
 
@@ -286,6 +298,8 @@ def process_register_auth():
 @app.route("/register/process", methods=["POST"])
 def process_register():
     check_cookie_status()
+    trim_session_for_registration()
+    
     ts = get_texts(session["lang"], "logreg")
     
     try:

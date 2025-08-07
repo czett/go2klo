@@ -728,7 +728,6 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                                     (now, sf_id)
                                 )
                         else:
-                            # Markdown __bold__ zu HTML <strong> inline ersetzen
                             if summary_content:
                                 smart_flush_okay = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', summary_content)
                             else:
