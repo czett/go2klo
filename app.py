@@ -89,6 +89,7 @@ def startpoint():
         session.pop("report")
 
     ts = get_texts(session["lang"], "index")
+    session["cooldown"] = 0
 
     session["rated"] = (False, "")
     return render_template("index.html", session=session, rated=rated, ts=ts, report=report)
@@ -358,7 +359,11 @@ def rate():
 
     ts = get_texts(session["lang"], "get_location")
 
-    if not session.get("cooldown"):
+    username = session["user"]
+    user_id = funcs.get_user_id_by_username(username)
+    rank = funcs.get_user_rank(user_id) # either none or rank, no other case possible (at least i hope so)
+
+    if not session.get("cooldown") or funcs.compare_ranks(rank, "creator") == True:
         session["cooldown"] = 0
     else:
         cooldown_time = 180
