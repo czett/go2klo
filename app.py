@@ -89,7 +89,6 @@ def startpoint():
         session.pop("report")
 
     ts = get_texts(session["lang"], "index")
-    session["cooldown"] = 0
 
     session["rated"] = (False, "")
     return render_template("index.html", session=session, rated=rated, ts=ts, report=report)
