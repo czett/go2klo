@@ -383,7 +383,7 @@ button{
 .benefit-cards .card .card-icon span{
     font-size: 7rem;
     margin-bottom: 1vh;
-    color: var(--ac);
+    /* color: var(--ac); */
     opacity: 0.7;
     transition: 250ms;
 }
