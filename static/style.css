@@ -2656,8 +2656,9 @@ input.tag-input{
         position: absolute;
         inset: 50% auto auto 50%;
         transform: translate(-50%, -50%);
-        font-size: 2rem; 
-        color: var(--bg);
+        font-size: 2.25rem; 
+        color: var(--fg);
+        font-weight: 600;
         transition: 250ms;
     }
     
@@ -2668,6 +2669,7 @@ input.tag-input{
     .nav .link.nopc.rate-link span{
         aspect-ratio: 1;
         background-color: var(--fg) !important;
+        color: var(--bg);
         padding: 2vh !important;
         border-radius: 50%;
         font-size: 2.25rem;
@@ -2708,6 +2710,16 @@ input.tag-input{
     .nav .menu-icon span{
         font-size: 2rem;
     }
+
+    /* some glass nav perchance */
+
+    .nav{
+        backdrop-filter: blur(25px) brightness(0.95) saturate(2) hue-rotate(5deg);
+        background-color: transparent;
+        height: 15dvh !important;
+    }
+
+    /* more stuff */
     
     .banner, .get-loc-map{
         aspect-ratio: 1;
@@ -2955,6 +2967,7 @@ input.tag-input{
     
     .explore-search form button{
         border-radius: 0 0 calc(0.5*var(--brad)) calc(0.5*var(--brad));
+        background-color: var(--fg);
     }
 
     .banner .title-text{
