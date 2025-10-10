@@ -1710,7 +1710,7 @@ def smart_flush(toilet_id: int):
     try:
         client = Groq()
         completion = client.chat.completions.create(
-            model="gemma2-9b-it",
+            model="llama-3.1-8b-instant",
             messages=[
                 {"role": "user", "content": prompt}
             ],
