@@ -1,6 +1,6 @@
 ![banner where?](https://github.com/czett/go2klo/blob/main/static/img/banner.png)
 
-# 🚽 go2klo (visit [here](https://go2klo.vercel.app/) now!)
+# 🚽 go2klo (visit [here](https://go2klo.xyz/) now!)
 
 **The public toilet rating app!**  
 
@@ -65,4 +65,4 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - my friends and family for early- and stress-testing the app from (almost) day one
 - GPT-4o
 
-[go2klo](https://go2klo.vercel.app/), in development since 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.xyz/), in development since 11/24 (idea and prototype 10/2022)
