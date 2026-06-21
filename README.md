@@ -1,6 +1,6 @@
 ![banner where?](https://github.com/czett/go2klo/blob/main/static/img/banner.png)
 
-# 🚽 go2klo (visit [here](https://go2klo.com/) now!)
+# 🚽 go2klo (visit [here](https://go2klo.vercel.app/) now!)
 
 **The public toilet rating app!**  
 
@@ -45,7 +45,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
 - **Mailing**: Brevo/sendinblue
-- **Smart Flush**: Gemma 9b from groq
+- **Smart Flush**: Llama-3.1-8b-instant via Groq
 
 ## 🚧 Future Features/planned improvements
 
@@ -65,4 +65,4 @@ So sit back, relax, and let go2klo take the *pressure* off. 😉
 - my friends and family for early- and stress-testing the app from (almost) day one
 - GPT-4o
 
-[go2klo](https://go2klo.com/), in development since 11/24 (idea and prototype 10/2022)
+[go2klo](https://go2klo.vercel.app/), in development since 11/24 (idea and prototype 10/2022)

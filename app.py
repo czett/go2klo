@@ -1,19 +1,45 @@
-from flask import Flask, render_template, redirect, session, send_from_directory, request, url_for, jsonify
-import funcs, re, random, json, os, regex
-from werkzeug.exceptions import HTTPException
+import json
+import os
+import random
+import re
 from datetime import datetime
+
+import regex
 from better_profanity import profanity
 from dotenv import load_dotenv
+from flask import (
+    Flask,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    session,
+    url_for,
+)
+from werkzeug.exceptions import HTTPException
+
+import funcs
 
 try:
     load_dotenv()
 except:
-    pass # :) great code, right?
+    pass  # :) great code, right?
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-rank_icon_map = {"dev": "data_object", "mod": "gavel",  "supporter": "favorite", "og": "workspace_premium", "basic": "handshake", "creator": "campaign", "recruiter": "military_tech", "gambler": "playing_cards"}
+rank_icon_map = {
+    "dev": "data_object",
+    "mod": "gavel",
+    "supporter": "favorite",
+    "og": "workspace_premium",
+    "basic": "handshake",
+    "creator": "campaign",
+    "recruiter": "military_tech",
+    "gambler": "playing_cards",
+}
+
 
 def check_login_status():
     if session.get("logged_in"):
@@ -22,16 +48,17 @@ def check_login_status():
     else:
         session["logged_in"] = False
         return False
-    
+
     return True
+
 
 def check_cookie_status():
     # cookie banner removal for now because only essential cookies are used
     session["cookies"] = True
-    
+
     if not session.get("lang"):
         session["lang"] = "english"
-    
+
     return True
 
     # old banner validation code
@@ -41,8 +68,9 @@ def check_cookie_status():
     else:
         session["lang"] = "english"
         return False
-    
+
     return True
+
 
 def add_notification(notficiation: dict) -> None:
     # dict with keys title and text!!!!!
@@ -56,32 +84,43 @@ def add_notification(notficiation: dict) -> None:
     session["notifications"] = current_notifications
     session.update()
 
-def get_texts(lang:str, template:str) -> dict:
+
+def get_texts(lang: str, template: str) -> dict:
     with open("static/langs/langs.json", "r", encoding="utf-8") as file:
         content = json.load(file)["langs"]
-    
+
     req_content = content[lang][template]
     base = content[lang]["base"]
     req_content.update(base)
 
     return req_content
 
+
 def trim_session_for_registration():
-    keep_keys = {"creds", "auth_code", "lang", "referral", "referral_name", "referral_uid"}
+    keep_keys = {
+        "creds",
+        "auth_code",
+        "lang",
+        "referral",
+        "referral_name",
+        "referral_uid",
+    }
     keys_to_remove = [k for k in session.keys() if k not in keep_keys]
     for key in keys_to_remove:
         session.pop(key, None)
+
 
 @app.route("/session")
 def session_out():
     return str(dict(session))
 
+
 @app.route("/")
 def startpoint():
     check_cookie_status()
-    
-    rated = (False, "") # normie case :3
-    report = None # normie case :3
+
+    rated = (False, "")  # normie case :3
+    report = None  # normie case :3
     if session.get("rated"):
         rated = session["rated"]
     if session.get("report"):
@@ -91,16 +130,22 @@ def startpoint():
     ts = get_texts(session["lang"], "index")
 
     session["rated"] = (False, "")
-    return render_template("index.html", session=session, rated=rated, ts=ts, report=report)
+    return render_template(
+        "index.html", session=session, rated=rated, ts=ts, report=report
+    )
+
 
 @app.route("/login")
 def login():
     check_cookie_status()
     ts = get_texts(session["lang"], "logreg")
-    return render_template("logreg.html", action="login", msg=None, ts=ts, session=session)
+    return render_template(
+        "logreg.html", action="login", msg=None, ts=ts, session=session
+    )
+
 
 @app.route("/login/process", methods=["POST"])
-def process_login():    
+def process_login():
     check_cookie_status()
     ts = get_texts(session["lang"], "logreg")
 
@@ -110,8 +155,16 @@ def process_login():
         password = request.form["password"]
         password.strip()
 
-        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", username):  # Prevents SQL injection and allows email login
-            return render_template("logreg.html", action="login", msg="Invalid username or email!", session=session, ts=ts)
+        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(
+            r"[^@]+@[^@]+\.[^@]+", username
+        ):  # Prevents SQL injection and allows email login
+            return render_template(
+                "logreg.html",
+                action="login",
+                msg="Invalid username or email!",
+                session=session,
+                ts=ts,
+            )
 
         if username and password:
             username = username.lower()
@@ -119,23 +172,33 @@ def process_login():
             if response[0] == True:
                 if "@" in username:
                     username = funcs.get_username_by_email(username)
-                    
+
                 session["user"] = username
                 session["logged_in"] = True
                 session.permanent = True
                 return redirect("/")
             else:
-                return render_template("logreg.html", action="login", msg=response[1], session=session, ts=ts)
+                return render_template(
+                    "logreg.html",
+                    action="login",
+                    msg=response[1],
+                    session=session,
+                    ts=ts,
+                )
     except:
         return redirect("/")
 
     return "Congrats, you worked around my code :)"
 
+
 @app.route("/pwreset")
 def pwreset():
     check_cookie_status()
     ts = get_texts(session["lang"], "logreg")
-    return render_template("logreg.html", action="pwreset", msg=None, ts=ts, session=session)
+    return render_template(
+        "logreg.html", action="pwreset", msg=None, ts=ts, session=session
+    )
+
 
 @app.route("/pwreset/process", methods=["POST"])
 def process_pwreset():
@@ -146,21 +209,42 @@ def process_pwreset():
         email = request.form["email"]
         username = request.form["username"].lower()
 
-        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email):
-            return render_template("logreg.html", action="pwreset", msg="Invalid username or email!", session=session, ts=ts)
+        if not re.fullmatch(r"^[A-Za-z0-9_]{3,20}$", username) and not re.fullmatch(
+            r"[^@]+@[^@]+\.[^@]+", email
+        ):
+            return render_template(
+                "logreg.html",
+                action="pwreset",
+                msg="Invalid username or email!",
+                session=session,
+                ts=ts,
+            )
 
         if not username == funcs.get_username_by_email(email):
-            return render_template("logreg.html", action="pwreset", msg="Username and email don't belong to same account!", session=session, ts=ts)
+            return render_template(
+                "logreg.html",
+                action="pwreset",
+                msg="Username and email don't belong to same account!",
+                session=session,
+                ts=ts,
+            )
 
         if email:
             session["username"] = username
             session["pwreset_code"] = funcs.generate_password_reset_code()
             funcs.send_password_reset_email(email, session["pwreset_code"])
-            return render_template("logreg.html", action="pwreset", msg="Reset link sent via email. Make sure to quickly open in this browser.", session=session, ts=ts)
+            return render_template(
+                "logreg.html",
+                action="pwreset",
+                msg="Reset link sent via email. Make sure to quickly open in this browser.",
+                session=session,
+                ts=ts,
+            )
     except Exception as e:
         return redirect("/")
 
     return "Congrats, you worked around my code :)"
+
 
 @app.route("/r/<code>")
 def reset_password(code):
@@ -168,14 +252,29 @@ def reset_password(code):
     ts = get_texts(session["lang"], "logreg")
 
     if not session.get("pwreset_code"):
-        return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
+        return render_template(
+            "logreg.html",
+            action="pwreset",
+            msg="Invalid reset link!",
+            ts=ts,
+            session=session,
+        )
 
     # print(code, session["pwreset_code"])
 
     if code == session["pwreset_code"]:
-        return render_template("logreg.html", action="newpw", msg=None, ts=ts, session=session)
+        return render_template(
+            "logreg.html", action="newpw", msg=None, ts=ts, session=session
+        )
     else:
-        return render_template("logreg.html", action="pwreset", msg="Invalid reset link!", ts=ts, session=session)
+        return render_template(
+            "logreg.html",
+            action="pwreset",
+            msg="Invalid reset link!",
+            ts=ts,
+            session=session,
+        )
+
 
 @app.route("/r/process", methods=["POST"])
 def process_new_password():
@@ -187,42 +286,91 @@ def process_new_password():
         username = session["username"]
 
         if not re.match(r"^(?!.*--)[\x20-\x7E]+$", password):
-            return render_template("logreg.html", action="newpw", msg="Password contains invalid characters or '--' sequence is not allowed", ts=ts, session=session)
+            return render_template(
+                "logreg.html",
+                action="newpw",
+                msg="Password contains invalid characters or '--' sequence is not allowed",
+                ts=ts,
+                session=session,
+            )
         elif len(password) < 6:
-           return render_template("logreg.html", action="newpw", msg="Password too short! (min. 6 characters)", ts=ts, session=session)
+            return render_template(
+                "logreg.html",
+                action="newpw",
+                msg="Password too short! (min. 6 characters)",
+                ts=ts,
+                session=session,
+            )
 
         response = funcs.reset_password(username, password)
         if response[0] == True:
-            return render_template("logreg.html", action="login", msg="Password reset successfully! You can now login.", ts=ts, session=session)
+            return render_template(
+                "logreg.html",
+                action="login",
+                msg="Password reset successfully! You can now login.",
+                ts=ts,
+                session=session,
+            )
         else:
-            return render_template("logreg.html", action="newpw", msg=response[1], ts=ts, session=session)
+            return render_template(
+                "logreg.html", action="newpw", msg=response[1], ts=ts, session=session
+            )
     except Exception as e:
-        return render_template("logreg.html", action="newpw", msg="An error occured. Whoopsie!", ts=ts, session=session)
+        return render_template(
+            "logreg.html",
+            action="newpw",
+            msg="An error occured. Whoopsie!",
+            ts=ts,
+            session=session,
+        )
 
     return "Congrats, you worked around my code :)"
 
+
 @app.route("/accept-cookies")
-def accept_cookies(): 
+def accept_cookies():
     session["cookies"] = True
-    session.modified = True   
+    session.modified = True
     return redirect("/")
+
 
 @app.route("/switchlang")
 def switchlang():
-    langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"]
+    langs = [
+        "english",
+        "german",
+        "italian",
+        "bulgarian",
+        "french",
+        "spanish",
+        "norwegian",
+        "albanian",
+        "austrian",
+    ]
     clang = session["lang"]
 
     if clang != langs[-1]:
-        session["lang"] = langs[1 + langs.index(clang)] 
+        session["lang"] = langs[1 + langs.index(clang)]
     else:
         session["lang"] = langs[0]
 
-    session.modified = True   
+    session.modified = True
     return redirect("/")
+
 
 @app.route("/switchlang/<lang>")
 def switchlang_picked(lang):
-    langs = ["english", "german", "italian", "bulgarian", "french", "spanish", "norwegian", "albanian", "austrian"]
+    langs = [
+        "english",
+        "german",
+        "italian",
+        "bulgarian",
+        "french",
+        "spanish",
+        "norwegian",
+        "albanian",
+        "austrian",
+    ]
     # clang = session["lang"]
 
     if lang in langs:
@@ -230,22 +378,26 @@ def switchlang_picked(lang):
     else:
         return redirect("/error/404")
 
-    session.modified = True   
+    session.modified = True
     return redirect("/")
+
 
 @app.route("/register")
 def register():
     check_cookie_status()
     trim_session_for_registration()
-    
+
     ts = get_texts(session["lang"], "logreg")
-    return render_template("logreg.html", action="register", ts=ts, msg=None, session=session)
+    return render_template(
+        "logreg.html", action="register", ts=ts, msg=None, session=session
+    )
+
 
 @app.route("/register/auth")
 def register_auth():
     check_cookie_status()
     trim_session_for_registration()
-    
+
     ts = get_texts(session["lang"], "logreg")
     auth_code = funcs.generate_auth_code()
 
@@ -257,11 +409,12 @@ def register_auth():
 
     return render_template("auth.html", ts=ts, session=session, msg=None)
 
+
 @app.route("/register/auth/check", methods=["POST"])
 def process_register_auth():
     check_cookie_status()
     trim_session_for_registration()
-    
+
     ts = get_texts(session["lang"], "logreg")
     auth_code = session["auth_code"]
 
@@ -287,21 +440,30 @@ def process_register_auth():
                 session.permanent = True
                 return redirect("/")
             else:
-                return render_template("logreg.html", action="register", ts=ts, msg=response[1], session=session)
+                return render_template(
+                    "logreg.html",
+                    action="register",
+                    ts=ts,
+                    msg=response[1],
+                    session=session,
+                )
         else:
-            return render_template("auth.html", ts=ts, session=session, msg=f"Invalid code! Try again.")
+            return render_template(
+                "auth.html", ts=ts, session=session, msg=f"Invalid code! Try again."
+            )
     except:
         return redirect("/explore")
 
     return "Congrats, you worked around my code :)"
 
+
 @app.route("/register/process", methods=["POST"])
 def process_register():
     check_cookie_status()
     trim_session_for_registration()
-    
+
     ts = get_texts(session["lang"], "logreg")
-    
+
     try:
         username = request.form["username"].lower()
         username.strip()
@@ -312,43 +474,89 @@ def process_register():
 
         session["creds"] = (username, password, email)
 
-        if not re.match("^[A-Za-z0-9_]*$", username): # only letters, digits, and underscores
-            return render_template("logreg.html", action="register", msg="Only letters, digits and underscores allowed in username!", session=session, ts=ts)
+        if not re.match(
+            "^[A-Za-z0-9_]*$", username
+        ):  # only letters, digits, and underscores
+            return render_template(
+                "logreg.html",
+                action="register",
+                msg="Only letters, digits and underscores allowed in username!",
+                session=session,
+                ts=ts,
+            )
         if not re.match(r"^(?!.*--)[\x20-\x7E]+$", password):
-            return render_template("logreg.html", action="register", msg="Password contains invalid characters or '--' sequence is not allowed", ts=ts, session=session)
+            return render_template(
+                "logreg.html",
+                action="register",
+                msg="Password contains invalid characters or '--' sequence is not allowed",
+                ts=ts,
+                session=session,
+            )
         elif len(username) < 3 or len(username) > 20:
-            return render_template("logreg.html", action="register", msg="Username too short or too long! (min. 3, max. 20 characters)", session=session, ts=ts)
+            return render_template(
+                "logreg.html",
+                action="register",
+                msg="Username too short or too long! (min. 3, max. 20 characters)",
+                session=session,
+                ts=ts,
+            )
         elif len(password) < 6:
-            return render_template("logreg.html", action="register", msg="Password too short! (min. 6 characters)", session=session, ts=ts)
-            
+            return render_template(
+                "logreg.html",
+                action="register",
+                msg="Password too short! (min. 6 characters)",
+                session=session,
+                ts=ts,
+            )
+
         username = username.lower()
-        
+
         if profanity.contains_profanity(username):
-            return render_template("logreg.html", action="register", msg="Bad words detected! Try a proper username", session=session, ts=ts)
+            return render_template(
+                "logreg.html",
+                action="register",
+                msg="Bad words detected! Try a proper username",
+                session=session,
+                ts=ts,
+            )
 
         if len(username) > 20:
-            return render_template("logreg.html", action="register", msg="Username too long! (max. 20 characters)", session=session, ts=ts)
+            return render_template(
+                "logreg.html",
+                action="register",
+                msg="Username too long! (max. 20 characters)",
+                session=session,
+                ts=ts,
+            )
 
         if username and password:
             if funcs.check_username_or_email_exists(username, email)[0]:
-                return render_template("logreg.html", action="register", msg="Username or email already taken!", session=session, ts=ts)
+                return render_template(
+                    "logreg.html",
+                    action="register",
+                    msg="Username or email already taken!",
+                    session=session,
+                    ts=ts,
+                )
             return redirect("/register/auth")
     except:
         return redirect("/explore")
-    
+
     return "Congrats, you worked around my code :)"
+
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
 
+
 @app.route("/rate")
 def rate():
     check_cookie_status()
     if not check_login_status():
         return redirect("/login")
-    
+
     if session.get("rating_coords") != None:
         rating_coords = session.get("rating_coords")
     else:
@@ -360,24 +568,44 @@ def rate():
 
     username = session["user"]
     user_id = funcs.get_user_id_by_username(username)
-    rank = funcs.get_user_rank(user_id) # either none or rank, no other case possible (at least i hope so)
+    rank = funcs.get_user_rank(
+        user_id
+    )  # either none or rank, no other case possible (at least i hope so)
 
     if not session.get("cooldown") or funcs.compare_ranks(rank, "creator") == True:
         session["cooldown"] = 0
     else:
         cooldown_time = 180
         if datetime.now().timestamp() - session["cooldown"] < cooldown_time:
-            cooldown_msg = "You have to wait " + str(int(cooldown_time/60)) + " minutes between ratings! Currently you have to wait for " + str(cooldown_time - int(datetime.now().timestamp() - session["cooldown"])) + " seconds."
-            return render_template("get_location.html", session=session, ts=ts, msg=cooldown_msg)
+            cooldown_msg = (
+                "You have to wait "
+                + str(int(cooldown_time / 60))
+                + " minutes between ratings! Currently you have to wait for "
+                + str(
+                    cooldown_time
+                    - int(datetime.now().timestamp() - session["cooldown"])
+                )
+                + " seconds."
+            )
+            return render_template(
+                "get_location.html", session=session, ts=ts, msg=cooldown_msg
+            )
 
-    return render_template("get_location.html", session=session, ts=ts, msg=None, rating_coords=rating_coords)
+    return render_template(
+        "get_location.html",
+        session=session,
+        ts=ts,
+        msg=None,
+        rating_coords=rating_coords,
+    )
+
 
 @app.route("/rate/t/<tid>")
 def rate_tid(tid):
     check_cookie_status()
     if not check_login_status():
         return redirect("/login")
-    
+
     if not tid:
         return redirect("/explore")
 
@@ -390,8 +618,9 @@ def rate_tid(tid):
 
     lat, lng = toilet["latitude"], toilet["longitude"]
     session["rating_coords"] = f"{lat}, {lng}"
-    
+
     return redirect("/rate")
+
 
 @app.route("/rate/process", methods=["POST"])
 def process_rating():
@@ -399,10 +628,10 @@ def process_rating():
         return redirect("/")
 
     query = request.form["location_query"]
-    
+
     if profanity.contains_profanity(query) or "gustav" in query.lower():
         return redirect("/rate")
-    
+
     lat, lng = funcs.get_coordinates(query)
 
     session["rating_coords"] = (lat, lng)
@@ -410,15 +639,20 @@ def process_rating():
 
     # rank fetching for img upload
     uid = funcs.get_user_id_by_username(session["user"])
-    rank = funcs.get_user_rank(uid) # either none or rank, no other case possible (at least i hope so)
+    rank = funcs.get_user_rank(
+        uid
+    )  # either none or rank, no other case possible (at least i hope so)
 
-    return render_template("rate.html", lat=lat, lng=lng, ts=ts, msg=None, session=session, rank=rank)
+    return render_template(
+        "rate.html", lat=lat, lng=lng, ts=ts, msg=None, session=session, rank=rank
+    )
+
 
 @app.route("/rate/finish", methods=["POST"])
 def finish_rating():
     if not check_login_status():
         return redirect("/")
-    
+
     ts = get_texts(session["lang"], "rate")
 
     cleanliness = request.form["cleanliness"]
@@ -441,15 +675,19 @@ def finish_rating():
 
     if uid == None:
         return redirect("/logout")
-    
+
     # way more generous regex than before including emojis and other languages :)
     if not regex.fullmatch(r"^[\p{L}\p{N}\p{P}\p{Zs}\p{So}]*$", comment):
-        return render_template("rate.html", msg="Invalid chars in comment", ts=ts, session=session)
+        return render_template(
+            "rate.html", msg="Invalid chars in comment", ts=ts, session=session
+        )
 
     profanity.load_censor_words()
     comment = profanity.censor(comment)
 
-    response = funcs.create_rating(cleanliness, supplies, privacy, comment, session["rating_coords"], uid)
+    response = funcs.create_rating(
+        cleanliness, supplies, privacy, comment, session["rating_coords"], uid
+    )
 
     # upload tags if any were supplied
     if len(tags_list) > 0:
@@ -461,13 +699,20 @@ def finish_rating():
             if img_b64.startswith("data:image"):
                 img_b64 = img_b64.split(",")[1]
 
-            funcs.upload_rating_image(response[1], response[2], img_b64, uid)  # response[1] = rating_id, 2nd one is toilet id
-    
-        msgs = ["Every rating counts! Your feedback helps us build a cleaner, better-connected world.", "You've just made the world a bit more bearable—one restroom at a time!", "Your input is noted!", "Got it! Other toilets nearby could use your expertise as well..."]
+            funcs.upload_rating_image(
+                response[1], response[2], img_b64, uid
+            )  # response[1] = rating_id, 2nd one is toilet id
+
+        msgs = [
+            "Every rating counts! Your feedback helps us build a cleaner, better-connected world.",
+            "You've just made the world a bit more bearable—one restroom at a time!",
+            "Your input is noted!",
+            "Got it! Other toilets nearby could use your expertise as well...",
+        ]
         session["rated"] = (True, random.choice(msgs))
 
         # clear trends and leaderboard
-        if session.get("trends"): 
+        if session.get("trends"):
             session.pop("trends")
         if session.get("leaderboard"):
             session.pop("leaderboard")
@@ -478,39 +723,43 @@ def finish_rating():
     else:
         ts = get_texts(session["lang"], "rate")
         return render_template("rate.html", msg=response[1], session=session, ts=ts)
-    
+
+
 @app.route("/rate/edit-rating/<tid>", methods=["POST"])
 def edit_rating(tid):
     if not check_login_status():
         return redirect("/")
-    
+
     new_comment = request.form["edited-rating-text"]
 
     if profanity.contains_profanity(new_comment):
         return redirect(f"/toilet/{tid}")
     if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", new_comment, re.UNICODE):
         return redirect(f"/toilet/{tid}")
-    
+
     if not new_comment:
         return redirect(f"/toilet/{tid}")
-    
+
     if len(new_comment) > 500:
         return redirect(f"/toilet/{tid}")
-    
+
     uid = funcs.get_user_id_by_username(session["user"])
     if uid == None:
         return redirect("/logout")
-    
+
     response = funcs.edit_rating(tid, new_comment, uid)
 
     if response[0] == True:
         # clear trends and leaderboard
-        if session.get("trends"): 
+        if session.get("trends"):
             session.pop("trends")
         if session.get("leaderboard"):
             session.pop("leaderboard")
 
-        msgs = ["Your rating has been updated!", "Thanks for keeping your feedback fresh!"]
+        msgs = [
+            "Your rating has been updated!",
+            "Thanks for keeping your feedback fresh!",
+        ]
         session["rated"] = (True, random.choice(msgs))
 
         return redirect(f"/toilet/{tid}")
@@ -518,14 +767,16 @@ def edit_rating(tid):
         ts = get_texts(session["lang"], "rate")
         return render_template("rate.html", msg=response[1], session=session, ts=ts)
 
+
 @app.route("/explore")
 def explore():
     check_cookie_status()
     ts = get_texts(session["lang"], "explore")
 
     toilets = funcs.get_toilets(21)
-    
+
     return render_template("explore.html", ts=ts, session=session, toilets=toilets)
+
 
 @app.route("/explore/search", methods=["POST"])
 def search_toilets():
@@ -553,7 +804,7 @@ def search_toilets():
     # Default to center of Europe if no toilets found :(((
     t1_coords = [50.1109, 8.6821]
     zoom = 6
-    
+
     if len(toilets) != 0:
         t1 = toilets[0]
         t1_coords = (t1["latitude"], t1["longitude"])
@@ -571,14 +822,24 @@ def search_toilets():
     if zoom == None:
         zoom = 6
 
-    return render_template("explore.html", ts=ts, session=session, toilets=toilets, zoom=zoom, query=query, focus_coords=list(t1_coords))
+    return render_template(
+        "explore.html",
+        ts=ts,
+        session=session,
+        toilets=toilets,
+        zoom=zoom,
+        query=query,
+        focus_coords=list(t1_coords),
+    )
+
 
 @app.route("/api/toilets")
-def toilets_api(): # thanks GPT here :o
+def toilets_api():  # thanks GPT here :o
     start_id = request.args.get("start_id", default=0, type=int)
     limit = request.args.get("limit", default=50, type=int)
     toilets = funcs.get_toilets_chunk(start_id, limit)
     return jsonify(toilets)
+
 
 @app.route("/toilet/<tid>")
 def toilet_num(tid):
@@ -600,10 +861,18 @@ def toilet_num(tid):
     # in case someone shares a faulty url >:(
     if info == None:
         return redirect("/explore")
-    
+
     ts = get_texts(session["lang"], "toilet")
 
-    return render_template("toilet.html", toilet=info, imgs=imgs, ts=ts, session=session, icon_map=rank_icon_map)
+    return render_template(
+        "toilet.html",
+        toilet=info,
+        imgs=imgs,
+        ts=ts,
+        session=session,
+        icon_map=rank_icon_map,
+    )
+
 
 # @app.route("/toilet") # all because of adsense bro
 # def toilet():
@@ -629,6 +898,7 @@ def toilet_num(tid):
 
 #     return render_template("toilet.html", toilet=info, ts=ts, session=session, icon_map=rank_icon_map)
 
+
 @app.route("/profile/<int:pid>")
 def profile(pid):
     check_cookie_status()
@@ -645,8 +915,10 @@ def profile(pid):
         session[f"user_achievements_{pid}"] = user_achievements
     else:
         user_achievements = session[f"user_achievements_{pid}"]
-    
-    cached_ratings_keys = [key for key in session.keys() if key.startswith("user_ratings_")]
+
+    cached_ratings_keys = [
+        key for key in session.keys() if key.startswith("user_ratings_")
+    ]
     if len(cached_ratings_keys) >= 2:
         # Delete one user's ratings (the first one in the list) as too many ratings are cached
         for key in cached_ratings_keys:
@@ -665,10 +937,10 @@ def profile(pid):
     #     avg_lat = sum(rating['latitude'] for rating in ratings) / len(ratings)
     #     avg_lon = sum(rating['longitude'] for rating in ratings) / len(ratings)
     # else:
-    #     
-    
+    #
+
     # AS OF NOW, APRIL 4TH 25, I AM REMOVING THE USER MAP DUE TO IT BEING UNNECESSARY AND CHEWING UP MY VERCEL PLAN
-    #avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
+    # avg_lat, avg_lon = 51.1657, 10.4515 # default is Germany
 
     user_rank = funcs.get_user_rank(pid)
 
@@ -693,36 +965,51 @@ def profile(pid):
     #         return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots, reports=reports, user_achievements=user_achievements, uname=uname, ratings=ratings)
 
     # return render_template("profile.html", ts=ts, pid=str(pid), session=session, avg_lat=avg_lat, avg_lon=avg_lon, own=own, nots=nots)
-    return render_template("profile.html", ts=ts, pid=str(pid), icon_map=rank_icon_map, rank=user_rank, session=session, own=own, nots=nots)
+    return render_template(
+        "profile.html",
+        ts=ts,
+        pid=str(pid),
+        icon_map=rank_icon_map,
+        rank=user_rank,
+        session=session,
+        own=own,
+        nots=nots,
+    )
+
 
 @app.route("/profile/<username>")
 def profile_by_username(username):
     # Fetch the user ID using the username
     user_id = funcs.get_user_id_by_username(username)
-    
+
     if not user_id:
         return redirect("/")  # Redirect to homepage if username does not exist
-    
+
     # Redirect to the original profile route with user ID
-    return redirect(url_for('profile', pid=user_id))
+    return redirect(url_for("profile", pid=user_id))
+
 
 @app.route("/myprofile")
 def my_profile():
     if not check_login_status():
         return redirect("/")
-    
+
     username = session["user"]
     return redirect(f"/profile/{username}")
 
+
 @app.route("/leaderboard")
-def leaderboard():    
+def leaderboard():
     check_cookie_status()
     if not session.get("leaderboard"):
         leaderboard = funcs.get_users_sorted_by_ratings()
         session["leaderboard"] = leaderboard
 
     ts = get_texts(session["lang"], "leaderboard")
-    return render_template("leaderboard.html", ts=ts, session=session, icon_map=rank_icon_map)
+    return render_template(
+        "leaderboard.html", ts=ts, session=session, icon_map=rank_icon_map
+    )
+
 
 @app.route("/trending")
 def trending():
@@ -734,30 +1021,33 @@ def trending():
     ts = get_texts(session["lang"], "trending")
     return render_template("trends.html", ts=ts, session=session)
 
+
 @app.route("/totd")
 def totd():
     check_cookie_status()
-    
+
     result = funcs.get_toilet_of_the_day()
 
     return redirect(f"/toilet/{result}") if result != None else redirect("/explore")
+
 
 @app.route("/clear-notifications")
 def clear_notifications():
     if not check_login_status():
         return redirect("/")
-    
+
     if session.get("notifications"):
         #   (session["notifications"])
         session["notifications"] = []
 
     return redirect("/")
 
+
 @app.route("/claim/limited-edition-rank")
 def claim_limited_edition_rank():
     if not check_login_status():
         return redirect("/")
-    
+
     if session.get("user"):
         user = session["user"]
         uid = funcs.get_user_id_by_username(user)
@@ -769,15 +1059,18 @@ def claim_limited_edition_rank():
 
     return redirect("/")
 
+
 @app.route("/report", methods=["POST"])
 def report_process():
     if not check_login_status():
         return redirect("/")
-    
+
     try:
         toilet_id = request.form["toilet_id"]
         report_text = request.form["report_text"]
-        if not re.match(r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", report_text, re.UNICODE):
+        if not re.match(
+            r"^[\w!?,.;:\-()=$€£/%\s\u00C0-\u017F]*$", report_text, re.UNICODE
+        ):
             return redirect("/error/400")
 
         session["report"] = toilet_id
@@ -788,12 +1081,13 @@ def report_process():
         return redirect("/")
     except:
         return redirect("/")
-    
+
+
 @app.route("/report/decline/<rid>")
 def decline_report(rid):
     if not check_login_status():
         return redirect("/")
-    
+
     if session.get("user"):
         user = session["user"]
         uid = funcs.get_user_id_by_username(user)
@@ -810,11 +1104,12 @@ def decline_report(rid):
 
     return redirect("/admin-dashboard")
 
+
 @app.route("/report/accept/<tid>")
 def accept_report(tid):
     if not check_login_status():
         return redirect("/")
-    
+
     if session.get("user"):
         user = session["user"]
         uid = funcs.get_user_id_by_username(user)
@@ -829,8 +1124,9 @@ def accept_report(tid):
 
         if has_rank[0] == True:
             funcs.delete_toilet_by_id(int(tid))
-        
+
     return redirect("/admin-dashboard")
+
 
 @app.route("/rl/<username>")
 def referral(username):
@@ -838,10 +1134,10 @@ def referral(username):
 
     if session.get("logged_in") == True:
         return redirect("/")
-    
+
     if not re.match("^[A-Za-z0-9_]*$", username):
         return redirect("/")
-    
+
     uid = funcs.get_user_id_by_username(username)
 
     if uid:
@@ -849,14 +1145,15 @@ def referral(username):
         session["referral_name"] = username
         session["referral_uid"] = uid
         return redirect("/register")
-        
+
     return redirect("/")
+
 
 @app.route("/blog")
 def blog():
     check_cookie_status()
     ts = get_texts(session["lang"], "blog")
-    
+
     # search if done
     search_query = request.args.get("search_query")
     search_results = None
@@ -865,7 +1162,7 @@ def blog():
         articles = funcs.search_articles(search_query)
         search_results = articles
 
-    #check for msg
+    # check for msg
     msg = request.args.get("msg")
 
     if session.get("newest_articles"):
@@ -873,7 +1170,7 @@ def blog():
     else:
         newest_articles = funcs.get_newest_articles(12)
         session["newest_articles"] = newest_articles
-    
+
     if session.get("hot_articles"):
         hot_articles = session["hot_articles"]
     else:
@@ -891,7 +1188,17 @@ def blog():
     #         if funcs.compare_ranks(rank, "mod") == True:
     #             unreviewed_articles = funcs.get_unreviewed_articles(30)
 
-    return render_template("blog.html", ts=ts, msg=msg, session=session, newest_articles=newest_articles, hot_articles=hot_articles, search_results=search_results, unreviewed_articles=unreviewed_articles)
+    return render_template(
+        "blog.html",
+        ts=ts,
+        msg=msg,
+        session=session,
+        newest_articles=newest_articles,
+        hot_articles=hot_articles,
+        search_results=search_results,
+        unreviewed_articles=unreviewed_articles,
+    )
+
 
 @app.route("/blog/write")
 def write_blog():
@@ -899,9 +1206,10 @@ def write_blog():
 
     if not check_login_status():
         return redirect("/login")
-    
+
     ts = get_texts(session["lang"], "blog")
     return render_template("blog_write.html", ts=ts, session=session)
+
 
 @app.route("/blog/submit", methods=["POST"])
 def submit_blog():
@@ -916,7 +1224,7 @@ def submit_blog():
     uid = funcs.get_user_id_by_username(user)
     if uid == None:
         return redirect("/logout")
-    
+
     response = funcs.submit_article(title, content, slug, img, uid)
 
     if response[0] == True:
@@ -925,6 +1233,7 @@ def submit_blog():
         msg = "An error occurred while submitting your article: " + response[1]
 
     return redirect(url_for("blog", msg=msg))
+
 
 @app.route("/blog/p/<slug>")
 def blog_post(slug):
@@ -959,13 +1268,14 @@ def blog_post(slug):
 
     return render_template("blog_article.html", article=article, session=session, ts=ts)
 
+
 @app.route("/blog/mod/<action>/<slug>")
 def blog_mod_action(action, slug):
     check_cookie_status()
 
     if not session.get("user"):
         return redirect("/blog")
-    
+
     user = session["user"]
     uid = funcs.get_user_id_by_username(user)
     if uid == None:
@@ -973,7 +1283,7 @@ def blog_mod_action(action, slug):
     rank = funcs.get_user_rank(uid)
     if not funcs.compare_ranks(rank, "mod"):
         return redirect("/blog")
-    
+
     if action == "approve":
         funcs.approve_article(slug)
 
@@ -983,6 +1293,7 @@ def blog_mod_action(action, slug):
         funcs.reject_article(slug)
 
     return redirect("/admin-dashboard")
+
 
 @app.route("/blog/search", methods=["POST"])
 def blog_search():
@@ -996,7 +1307,9 @@ def blog_search():
 
     return redirect(url_for("blog", search_query=query))
 
+
 # quick redirection urls
+
 
 @app.route("/p/<identifier>")
 def profile_referrer(identifier):
@@ -1007,6 +1320,7 @@ def profile_referrer(identifier):
 
     return redirect(f"/profile/{identifier}")
 
+
 @app.route("/t/<tid>")
 def toilet_referrer(tid):
     check_cookie_status()
@@ -1016,12 +1330,14 @@ def toilet_referrer(tid):
 
     return redirect(f"/toilet/{tid}")
 
+
 @app.route("/l/<page>")
 def logout_and_redirect(page):
     check_cookie_status()
     session.clear()
 
     return redirect(f"/{page}")
+
 
 @app.route("/legal")
 def legal():
@@ -1030,14 +1346,15 @@ def legal():
 
     return render_template("legal.html", ts=ts, session=session)
 
+
 @app.route("/api/like-rating/<tid>", methods=["POST"])
 def toggle_like_rating(tid):
     if not check_login_status():
         return jsonify({"error": "You must be logged in to like a rating."}), 401
-    
+
     user = session["user"]
     uid = funcs.get_user_id_by_username(user)
-    
+
     if uid is None:
         return jsonify({"error": "User not found."}), 404
 
@@ -1048,12 +1365,14 @@ def toggle_like_rating(tid):
     else:
         return jsonify({"error": response[1]}), 400
 
+
 @app.route("/rfr")
 def rfr():
     check_cookie_status()
     ts = get_texts(session["lang"], "rfr")
 
     return render_template("rfr.html", ts=ts, session=session)
+
 
 @app.route("/gambling")
 def gambling():
@@ -1077,6 +1396,7 @@ def gambling():
 
     return render_template("gambling.html", ts=ts, msg=msg, session=session)
 
+
 @app.route("/gambling/<result>")
 def gambling_result(result):
     check_cookie_status()
@@ -1088,7 +1408,7 @@ def gambling_result(result):
         return redirect("/error/404")
 
     msg = "You lost! Too bad."
-    
+
     if result == "w":
         uid = funcs.get_user_id_by_username(session["user"])
         rank = funcs.get_user_rank(uid)
@@ -1100,10 +1420,11 @@ def gambling_result(result):
 
         msg = "You won! Check out your new rank (you might need to log out and in again for the changes to take effect)"
         funcs.assign_user_rank(uid, "gambler")
-    
+
     session["msg"] = msg
 
     return redirect("/gambling")
+
 
 @app.route("/admin-dashboard")
 def admin_dash():
@@ -1112,7 +1433,7 @@ def admin_dash():
 
     if not session.get("user"):
         return redirect("/")
-    
+
     if not session.get("admin_dash_certified"):
         session["admin_dash_certified"] = False
 
@@ -1123,7 +1444,7 @@ def admin_dash():
         # nuh uh buddy, you're (hopefully) not getting in here
         if not funcs.compare_ranks(rank, "mod"):
             return redirect("/")
-            
+
     session["admin_dash_certified"] = True
     session.modified = True
 
@@ -1140,7 +1461,15 @@ def admin_dash():
     images = []
     images = funcs.get_unapproved_rating_images(24)
 
-    return render_template("admin_dashboard.html", ts=ts, session=session, images=images, unreviewed_articles=unreviewed_articles, reports=reports)
+    return render_template(
+        "admin_dashboard.html",
+        ts=ts,
+        session=session,
+        images=images,
+        unreviewed_articles=unreviewed_articles,
+        reports=reports,
+    )
+
 
 @app.route("/img/<action>/<img_id>")
 def img_mod(action, img_id):
@@ -1154,27 +1483,30 @@ def img_mod(action, img_id):
         # nuh uh buddy, you're (hopefully) not getting in here
         if not funcs.compare_ranks(rank, "mod"):
             return redirect("/")
-            
+
     session["admin_dash_certified"] = True
     session.modified = True
 
-    if action == "a": # a = accept
+    if action == "a":  # a = accept
         funcs.approve_rating_image(img_id)
     else:
         funcs.decline_rating_image(img_id)
 
     return redirect("/admin-dashboard")
 
+
 @app.route("/flush-or-pass")
 def flush_or_pass():
     check_cookie_status()
     ts = get_texts(session["lang"], "index")
-    
+
     return render_template("flush_or_pass.html", ts=ts, session=session)
 
-@app.route('/ads.txt')
+
+@app.route("/ads.txt")
 def ads():
-    return send_from_directory('public', 'ads.txt')
+    return send_from_directory("public", "ads.txt")
+
 
 @app.route("/api/smart-flush/<toilet_id>", methods=["POST"])
 def api_new_smart_flush(toilet_id):
@@ -1183,13 +1515,18 @@ def api_new_smart_flush(toilet_id):
 
         if not sm_response:
             return redirect("/error/500")
-        
+
         smart_flush_text = sm_response[1]
-        smart_flush_text = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', smart_flush_text)
-        
+        smart_flush_text = re.sub(
+            r"__(.+?)__",
+            r'<span class="smart-flush-highlight">\1</span>',
+            smart_flush_text,
+        )
+
         return jsonify({"success": True, "content": smart_flush_text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # TEST ROUTE:
 # @app.route("/tests")
@@ -1204,17 +1541,21 @@ def api_new_smart_flush(toilet_id):
 
 #     return render_template("tests.html", ts=ts)
 
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
+    print(e)
     if isinstance(e, HTTPException):
         code = e.code
     return redirect(f"/error/{code}")
+
 
 @app.route("/error/<code>")
 def error(code):
     ts = get_texts(session["lang"], "error")
     return render_template("error.html", ts=ts, code=f"error {code} :(")
 
+
 if __name__ == "__main__":
-    app.run(debug=False, port=7000)
+    app.run(debug=False, port=7300)

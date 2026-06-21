@@ -1,32 +1,36 @@
-import psycopg
-from datetime import datetime, timezone, timedelta
-from psycopg import sql
-import bcrypt
-from geopy.geocoders import Nominatim
-import requests
-from math import radians, sin, cos, sqrt, atan2
+import base64
 import json
-import app
-import os, re
+import os
+import random
+import re
+import string
+from datetime import datetime, timedelta, timezone
+from math import atan2, cos, radians, sin, sqrt
+
+import bcrypt
+import psycopg
+import requests
 import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
-import random, string, base64
 from geopy.distance import geodesic
-import base64, requests
+from geopy.geocoders import Nominatim
 from groq import Groq
+from psycopg import sql
+from sib_api_v3_sdk.rest import ApiException
+
+import app
 
 try:
     load_dotenv()
 except:
-    pass # :) great code, right?
+    pass  # :) great code, right?
 
 DB_CONFIG = {
     "dbname": os.getenv("DB_NAME"),
     "user": os.getenv("DB_USER"),
     "password": os.getenv("DB_PASSWORD"),
     "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT")
+    "port": os.getenv("DB_PORT"),
 }
 
 alphabet = string.ascii_lowercase
@@ -36,11 +40,24 @@ deepseek_api_key = os.getenv("GROQ_KEY")
 api_key = os.getenv("MAIL")
 configuration = sib_api_v3_sdk.Configuration()
 configuration.api_key["api-key"] = api_key
-api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-rank_hierarchy = ["dev", "mod", "recruiter", "creator", "gambler", "supporter", "og", "basic"]
+api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+    sib_api_v3_sdk.ApiClient(configuration)
+)
+rank_hierarchy = [
+    "dev",
+    "mod",
+    "recruiter",
+    "creator",
+    "gambler",
+    "supporter",
+    "og",
+    "basic",
+]
+
 
 def get_rank_hierarchy():
     return rank_hierarchy
+
 
 def compare_ranks(rank1, rank2):
     if rank1 not in rank_hierarchy or rank2 not in rank_hierarchy:
@@ -51,18 +68,35 @@ def compare_ranks(rank1, rank2):
 
     return index1 <= index2  # true whem rank1 is higher or equal than rank2
 
+
 def distance(coord1, coord2):
     return geodesic(coord1, coord2).km
 
+
 def get_zoom_level(km):
-    zoom_levels = {5.859375: 15, 11.71875: 14, 23.4375: 13, 46.875: 12, 93.75: 11, 187.5: 10, 375: 9, 750: 8, 1500: 7, 3000: 6, 6000: 5, 12000: 4, 24000: 3}
+    zoom_levels = {
+        5.859375: 15,
+        11.71875: 14,
+        23.4375: 13,
+        46.875: 12,
+        93.75: 11,
+        187.5: 10,
+        375: 9,
+        750: 8,
+        1500: 7,
+        3000: 6,
+        6000: 5,
+        12000: 4,
+        24000: 3,
+    }
     sorted_keys = sorted(zoom_levels.keys())
 
     for key in sorted_keys:
         if km <= key:
             return zoom_levels[key] - 2
- 
+
     return 7
+
 
 def encode(clear):
     key = enc_key
@@ -76,6 +110,7 @@ def encode(clear):
         enc.append(enc_c)
     return "".join(enc)
 
+
 def decode(enc):
     key = enc_key
     dec = []
@@ -88,13 +123,16 @@ def decode(enc):
         dec.append(dec_c)
     return "".join(dec)
 
+
 def generate_auth_code():
     first_digit = str(random.randint(1, 9))
-    remaining_digits = ''.join([str(random.randint(0, 9)) for _ in range(5)])
+    remaining_digits = "".join([str(random.randint(0, 9)) for _ in range(5)])
     return first_digit + remaining_digits
+
 
 def generate_password_reset_code():
     return "".join(random.choices(string.ascii_lowercase, k=16))
+
 
 def upload_rating_image(rating_id, toilet_id, image_data, user_id):
     imgbb_api_key = os.getenv("IMGBB_KEY")
@@ -102,10 +140,10 @@ def upload_rating_image(rating_id, toilet_id, image_data, user_id):
         return False, "Missing API key"
 
     try:
-        response = requests.post("https://api.imgbb.com/1/upload", data={
-            "key": imgbb_api_key,
-            "image": image_data
-        })
+        response = requests.post(
+            "https://api.imgbb.com/1/upload",
+            data={"key": imgbb_api_key, "image": image_data},
+        )
 
         if response.status_code == 200:
             image_url = response.json()["data"]["url"]
@@ -113,10 +151,13 @@ def upload_rating_image(rating_id, toilet_id, image_data, user_id):
             try:
                 conn = get_db_connection()
                 cur = conn.cursor()
-                cur.execute("""
+                cur.execute(
+                    """
                     INSERT INTO rating_images (rating_id, toilet_id, image_url, user_id, approved)
                     VALUES (%s, %s, %s, %s, FALSE)
-                """, (rating_id, toilet_id, image_url, user_id))
+                """,
+                    (rating_id, toilet_id, image_url, user_id),
+                )
                 conn.commit()
                 cur.close()
                 conn.close()
@@ -130,38 +171,38 @@ def upload_rating_image(rating_id, toilet_id, image_data, user_id):
         print("Exception during upload:", e)
         return False, f"Exception during upload: {e}"
 
+
 def send_verification_email(recipient_email, auth_code):
-    sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
+    sender = {"name": "go2klo", "email": "noreply@go2klo.xyz"}
     to = [{"email": recipient_email, "name": recipient_email}]
-    
+
     email_data = sib_api_v3_sdk.SendSmtpEmail(
-        to=to,
-        sender=sender,
-        template_id=1,
-        params={"auth_code": auth_code}
+        to=to, sender=sender, template_id=1, params={"auth_code": auth_code}
     )
-    
+
     try:
         api_instance.send_transac_email(email_data)
         return True, f"Verification email sent to {recipient_email}"
     except ApiException as e:
         return False, f"Error sending email: {e}"
-    
+
+
 def send_password_reset_email(recipient_email, pwlink):
-    sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
+    sender = {"name": "go2klo", "email": "noreply@go2klo.xyz"}
     to = [{"email": recipient_email, "name": recipient_email}]
-    
+
     email_data = sib_api_v3_sdk.SendSmtpEmail(
         to=to,
         sender=sender,
         template_id=2,
-        params={"pwlink": f"https://go2klo.com/r/{pwlink}"}
+        params={"pwlink": f"https://go2klo.xyz/r/{pwlink}"},
     )
-    
+
     try:
         api_instance.send_transac_email(email_data)
     except ApiException as e:
         print(f"Error sending email: {e}")
+
 
 def reset_password(username, new_password):
     hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt())
@@ -171,7 +212,7 @@ def reset_password(username, new_password):
             with conn.cursor() as cur:
                 cur.execute(
                     "UPDATE users SET password = %s WHERE username = %s",
-                    (hashed_password.decode(), username)
+                    (hashed_password.decode(), username),
                 )
         return True, "Password reset successfully"
     except Exception as e:
@@ -179,8 +220,10 @@ def reset_password(username, new_password):
     finally:
         conn.close()
 
+
 def get_db_connection():
     return psycopg.connect(**DB_CONFIG)
+
 
 def register(username: str, password: str, email: str, referral: tuple):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
@@ -204,30 +247,34 @@ def register(username: str, password: str, email: str, referral: tuple):
 
                     cur.execute(
                         "UPDATE users SET referrals = referrals + 1 WHERE user_id = %s",
-                        (uid,)
+                        (uid,),
                     )
 
-                    cur.execute("SELECT rank, referrals FROM users WHERE user_id = %s", (uid,))
+                    cur.execute(
+                        "SELECT rank, referrals FROM users WHERE user_id = %s", (uid,)
+                    )
                     result = cur.fetchone()
 
                     if result:
                         rank, referrals = result
                         if rank not in rank_hierarchy:
-                            if referrals >= 3: # min referrals for recruiter
+                            if referrals >= 3:  # min referrals for recruiter
                                 cur.execute(
                                     "UPDATE users SET rank = %s WHERE user_id = %s",
-                                    ("recruiter", uid)
+                                    ("recruiter", uid),
                                 )
-                        if rank_hierarchy.index(rank) < rank_hierarchy.index("recruiter"):
-                            if referrals >= 3: # min referrals for recruiter
+                        if rank_hierarchy.index(rank) < rank_hierarchy.index(
+                            "recruiter"
+                        ):
+                            if referrals >= 3:  # min referrals for recruiter
                                 cur.execute(
                                     "UPDATE users SET rank = %s WHERE user_id = %s",
-                                    ("recruiter", uid)
+                                    ("recruiter", uid),
                                 )
 
                 cur.execute(
                     "UPDATE app_data SET count = count + 1 WHERE data_name = %s",
-                    ("user_count",)
+                    ("user_count",),
                 )
         return True, "Success"
     except psycopg.errors.UniqueViolation:
@@ -237,13 +284,17 @@ def register(username: str, password: str, email: str, referral: tuple):
     finally:
         conn.close()
 
+
 def check_username_or_email_exists(username: str, email: str):
     conn = get_db_connection()
     email = encode(email)
 
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT 1 FROM users WHERE username = %s OR email = %s", (username, email))
+            cur.execute(
+                "SELECT 1 FROM users WHERE username = %s OR email = %s",
+                (username, email),
+            )
             user = cur.fetchone()
             if user:
                 return True, "Username or email already exists"
@@ -253,6 +304,7 @@ def check_username_or_email_exists(username: str, email: str):
         return False, f"Error: {e}"
     finally:
         conn.close()
+
 
 def get_username_by_email(email: str):
     conn = get_db_connection()
@@ -270,12 +322,16 @@ def get_username_by_email(email: str):
     finally:
         conn.close()
 
+
 def login(identifier: str, password: str):
     identifier = identifier.replace(" ", "")
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT username, password, email FROM users WHERE username = %s OR email = %s", (identifier, encode(identifier)))
+            cur.execute(
+                "SELECT username, password, email FROM users WHERE username = %s OR email = %s",
+                (identifier, encode(identifier)),
+            )
             user = cur.fetchone()
             if user and bcrypt.checkpw(password.encode(), user[1].encode()):
                 return True, "Success"
@@ -285,6 +341,7 @@ def login(identifier: str, password: str):
     finally:
         conn.close()
 
+
 def get_coordinates(location_name):
     geolocator = Nominatim(user_agent="go2klo_app")
     location = geolocator.geocode(location_name)
@@ -292,6 +349,7 @@ def get_coordinates(location_name):
         return location.latitude, location.longitude
     else:
         return None, None
+
 
 # def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user: str):
 #     latitude, longitude = coords
@@ -361,7 +419,7 @@ def get_coordinates(location_name):
 
 #                 cur.execute(
 #                     """
-#                     SELECT latitude, longitude 
+#                     SELECT latitude, longitude
 #                     FROM toilets t
 #                     JOIN ratings r ON t.toilet_id = r.toilet_id
 #                     WHERE r.username = %s
@@ -397,6 +455,7 @@ def get_coordinates(location_name):
 #     finally:
 #         conn.close()
 
+
 def coords_to_nice_address(latitude, longitude):
     geolocator = Nominatim(user_agent="go2klo_app")
     location = geolocator.reverse((latitude, longitude), addressdetails=True)
@@ -410,7 +469,8 @@ def coords_to_nice_address(latitude, longitude):
         return ", ".join(filter(None, components))
     else:
         return "Unknown location"
-    
+
+
 def create_tags(toilet_id, user_id, tags):
     conn = get_db_connection()
 
@@ -423,14 +483,22 @@ def create_tags(toilet_id, user_id, tags):
                         INSERT INTO toilet_tags (tag_text, toilet_id, user_id)
                         VALUES (%s, %s, %s)
                         """,
-                        (tag_text, toilet_id, user_id)
+                        (tag_text, toilet_id, user_id),
                     )
 
         return True, "All given tags were added"
     except:
         return False, "Could not add tags to db"
 
-def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, coords: tuple, user_id: int):
+
+def create_rating(
+    cleanliness: int,
+    supplies: int,
+    privacy: int,
+    comment: str,
+    coords: tuple,
+    user_id: int,
+):
     latitude, longitude = coords
     conn = get_db_connection()
 
@@ -446,7 +514,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         WHERE latitude = %s AND longitude = %s
                     ) AND rated_user_id = %s
                     """,
-                    (latitude, longitude, user_id)
+                    (latitude, longitude, user_id),
                 )
                 if cur.fetchone():
                     return False, "You have already rated this toilet."
@@ -457,7 +525,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     SELECT toilet_id FROM toilets
                     WHERE ABS(latitude - %s) <= 0.000225 AND ABS(longitude - %s) <= 0.000225
                     """,
-                    (latitude, longitude)
+                    (latitude, longitude),
                 )
                 result = cur.fetchone()
 
@@ -471,7 +539,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                         VALUES (%s, %s, %s)
                         RETURNING toilet_id
                         """,
-                        (latitude, longitude, location_str)
+                        (latitude, longitude, location_str),
                     )
                     toilet_id = cur.fetchone()[0]
 
@@ -485,12 +553,22 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     RETURNING rating_id
                     """,
-                    (toilet_id, cleanliness, supplies, privacy, comment, user_id, current_utc_time)
+                    (
+                        toilet_id,
+                        cleanliness,
+                        supplies,
+                        privacy,
+                        comment,
+                        user_id,
+                        current_utc_time,
+                    ),
                 )
                 rating_id = cur.fetchone()[0]
 
                 # Fetch the achievements of the user based on user_id
-                cur.execute("SELECT achievements FROM users WHERE user_id = %s", (user_id,))
+                cur.execute(
+                    "SELECT achievements FROM users WHERE user_id = %s", (user_id,)
+                )
                 result = cur.fetchone()
                 if result is None:
                     return False, "User not found."
@@ -499,46 +577,78 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 new_achievements = []
 
                 # Check how many ratings the user has made
-                cur.execute("SELECT COUNT(*) FROM ratings WHERE rated_user_id = %s", (user_id,))
+                cur.execute(
+                    "SELECT COUNT(*) FROM ratings WHERE rated_user_id = %s", (user_id,)
+                )
                 rating_count = cur.fetchone()[0]
                 if rating_count == 1 and "first_flush" not in current_achievements:
                     new_achievements.append("first_flush")
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'First Flush'!"})
+                    app.add_notification(
+                        {
+                            "title": "New achievement earned!",
+                            "text": "Congrats, you earned 'First Flush'!",
+                        }
+                    )
 
                 # Check if the user qualifies for the "Globetrotter" achievement
                 cur.execute(
                     """
-                    SELECT latitude, longitude 
+                    SELECT latitude, longitude
                     FROM toilets t
                     JOIN ratings r ON t.toilet_id = r.toilet_id
                     WHERE r.rated_user_id = %s
                     """,
-                    (user_id,)
+                    (user_id,),
                 )
                 user_ratings = cur.fetchall()
                 if len(user_ratings) > 1:
                     for prev_coords in user_ratings:
-                        if distance_between_coords(prev_coords, coords) >= 50 and "globetrotter" not in current_achievements:
+                        if (
+                            distance_between_coords(prev_coords, coords) >= 50
+                            and "globetrotter" not in current_achievements
+                        ):
                             new_achievements.append("globetrotter")
-                            app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Globetrotter'!"})
+                            app.add_notification(
+                                {
+                                    "title": "New achievement earned!",
+                                    "text": "Congrats, you earned 'Globetrotter'!",
+                                }
+                            )
                             break
 
                 # Check if the user qualifies for the "Clean Sweep" achievement
-                if cleanliness == 5 and supplies == 5 and privacy == 5 and "clean_sweep" not in current_achievements:
+                if (
+                    cleanliness == 5
+                    and supplies == 5
+                    and privacy == 5
+                    and "clean_sweep" not in current_achievements
+                ):
                     new_achievements.append("clean_sweep")
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Clean Sweep'!"})
+                    app.add_notification(
+                        {
+                            "title": "New achievement earned!",
+                            "text": "Congrats, you earned 'Clean Sweep'!",
+                        }
+                    )
 
                 # Check if the user qualifies for the "Toilet Master" achievement
                 if rating_count >= 10 and "toilet_master" not in current_achievements:
                     new_achievements.append("toilet_master")
-                    app.add_notification({"title": "New achievement earned!", "text": "Congrats, you earned 'Toilet Master'!"})
+                    app.add_notification(
+                        {
+                            "title": "New achievement earned!",
+                            "text": "Congrats, you earned 'Toilet Master'!",
+                        }
+                    )
 
                 # Update the user's achievements if needed
                 if new_achievements:
-                    updated_achievements = list(set(current_achievements + new_achievements))
+                    updated_achievements = list(
+                        set(current_achievements + new_achievements)
+                    )
                     cur.execute(
                         "UPDATE users SET achievements = %s WHERE user_id = %s",
-                        (json.dumps(updated_achievements), user_id)
+                        (json.dumps(updated_achievements), user_id),
                     )
 
                 # tag adding is a unique method above
@@ -549,16 +659,20 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
     finally:
         conn.close()
 
+
 def edit_rating(toilet_id, new_comment, user_id):
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 # Check if the user has rated this toilet
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT rating_id FROM ratings
                     WHERE toilet_id = %s AND rated_user_id = %s
-                """, (toilet_id, user_id))
+                """,
+                    (toilet_id, user_id),
+                )
                 result = cur.fetchone()
 
                 if not result:
@@ -567,11 +681,14 @@ def edit_rating(toilet_id, new_comment, user_id):
                 rating_id = result[0]
 
                 # Update the comment for the rating
-                cur.execute("""
+                cur.execute(
+                    """
                     UPDATE ratings
                     SET comment = %s
                     WHERE rating_id = %s
-                """, (new_comment, rating_id))
+                """,
+                    (new_comment, rating_id),
+                )
 
         return True, "Rating updated successfully."
     except Exception as e:
@@ -579,15 +696,19 @@ def edit_rating(toilet_id, new_comment, user_id):
     finally:
         conn.close()
 
-def get_toilets(num=10): # just for initial click on explore, to be concise the cards below map.
+
+def get_toilets(
+    num=10,
+):  # just for initial click on explore, to be concise the cards below map.
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
+                cur.execute(
+                    """
+                    SELECT
+                        t.toilet_id,
+                        t.latitude,
                         t.longitude,
                         t.location_str,
                         COUNT(r.rating_id) AS rating_count,
@@ -597,22 +718,36 @@ def get_toilets(num=10): # just for initial click on explore, to be concise the 
                     GROUP BY t.toilet_id, t.location_str
                     ORDER BY latest_rating_date DESC NULLS LAST, t.toilet_id DESC
                     LIMIT %s
-                """, (num,))
+                """,
+                    (num,),
+                )
                 toilets = cur.fetchall()
 
-                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "location_str": toilet[3], "rating_count": toilet[4], "latest_rating_date": toilet[5]} for toilet in toilets]
+                return [
+                    {
+                        "toilet_id": toilet[0],
+                        "latitude": toilet[1],
+                        "longitude": toilet[2],
+                        "location_str": toilet[3],
+                        "rating_count": toilet[4],
+                        "latest_rating_date": toilet[5],
+                    }
+                    for toilet in toilets
+                ]
     except Exception as e:
         return f"Error: {e}"
-    
+
+
 def get_toilets_chunk(start_id, limit):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
+                cur.execute(
+                    """
+                    SELECT
+                        t.toilet_id,
+                        t.latitude,
                         t.longitude,
                         COUNT(r.rating_id) AS rating_count
                     FROM toilets t
@@ -621,12 +756,23 @@ def get_toilets_chunk(start_id, limit):
                     GROUP BY t.toilet_id
                     ORDER BY t.toilet_id
                     LIMIT %s
-                """, (start_id, limit))
+                """,
+                    (start_id, limit),
+                )
                 toilets = cur.fetchall()
 
-                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+                return [
+                    {
+                        "toilet_id": toilet[0],
+                        "latitude": toilet[1],
+                        "longitude": toilet[2],
+                        "rating_count": toilet[3],
+                    }
+                    for toilet in toilets
+                ]
     except Exception as e:
         return {"error": str(e)}
+
 
 def get_toilet_details(toilet_id, uid, with_smart_flush=True):
     try:
@@ -634,11 +780,14 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
         with conn:
             with conn.cursor() as cur:
                 # Get toilet coordinates and location string
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT latitude, longitude, location_str
                     FROM toilets
                     WHERE toilet_id = %s
-                """, (toilet_id,))
+                """,
+                    (toilet_id,),
+                )
                 toilet = cur.fetchone()
                 if not toilet:
                     return None
@@ -646,11 +795,14 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                 latitude, longitude, location_str = toilet
 
                 # Get ratings for this toilet including rating_id
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT cleanliness, supplies, privacy, comment, rated_user_id, rating_id
                     FROM ratings
                     WHERE toilet_id = %s
-                """, (toilet_id,))
+                """,
+                    (toilet_id,),
+                )
                 ratings = cur.fetchall()
 
                 # Calculate average ratings
@@ -664,14 +816,16 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     sum(r[2] for r in ratings) / len(ratings) if ratings else 0
                 ) or 0
 
-
                 # Fetch the username associated with each rating using user_id
                 rated_users = []
                 for r in ratings:
                     user_id = r[4]
-                    cur.execute("""
+                    cur.execute(
+                        """
                         SELECT username, user_id, rank FROM users WHERE user_id = %s
-                    """, (user_id,))
+                    """,
+                        (user_id,),
+                    )
                     user = cur.fetchone()
 
                     # Check if the current user (uid) has liked this rating
@@ -679,23 +833,25 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     if uid is not None:
                         cur.execute(
                             "SELECT 1 FROM likes WHERE user_id = %s AND rating_id = %s",
-                            (uid, r[5])
+                            (uid, r[5]),
                         )
                         liked = cur.fetchone() is not None
 
-                    rated_users.append({
-                        "user": {
-                            "username": user[0] if user else "Unknown",
-                            "user_id": user[1] if user else None,
-                            "rank": user[2] if user else None
-                        },
-                        "cleanliness": r[0],
-                        "supplies": r[1],
-                        "privacy": r[2],
-                        "comment": r[3],
-                        "rating_id": r[5],
-                        "liked": liked
-                    })
+                    rated_users.append(
+                        {
+                            "user": {
+                                "username": user[0] if user else "Unknown",
+                                "user_id": user[1] if user else None,
+                                "rank": user[2] if user else None,
+                            },
+                            "cleanliness": r[0],
+                            "supplies": r[1],
+                            "privacy": r[2],
+                            "comment": r[3],
+                            "rating_id": r[5],
+                            "liked": liked,
+                        }
+                    )
 
                 smart_flush_okay = True
 
@@ -706,30 +862,40 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     # SMART FLUSH LOGIC :3
                     sf_result = None
                     with conn.cursor() as cur:
-                        cur.execute("""
+                        cur.execute(
+                            """
                             SELECT id, created_at, updated_at, summary_content
                             FROM smart_flush
                             WHERE toilet_id = %s
-                        """, (toilet_id,))
+                        """,
+                            (toilet_id,),
+                        )
                         sf_result = cur.fetchone()
 
                     # smart_flush_okay = None
 
                     if sf_result:
                         sf_id, created_at, updated_at, summary_content = sf_result
-                        if updated_at is None or updated_at < datetime.utcnow() - timedelta(days=1):
-                        # if updated_at is None or updated_at < datetime.utcnow() - timedelta(minutes=1):
+                        if (
+                            updated_at is None
+                            or updated_at < datetime.utcnow() - timedelta(days=1)
+                        ):
+                            # if updated_at is None or updated_at < datetime.utcnow() - timedelta(minutes=1):
                             smart_flush_okay = False
                             now = datetime.now()
 
                             with conn.cursor() as cur:
                                 cur.execute(
                                     "UPDATE smart_flush SET created_at = %s WHERE id = %s",
-                                    (now, sf_id)
+                                    (now, sf_id),
                                 )
                         else:
                             if summary_content:
-                                smart_flush_okay = re.sub(r'__(.+?)__', r'<span class="smart-flush-highlight">\1</span>', summary_content)
+                                smart_flush_okay = re.sub(
+                                    r"__(.+?)__",
+                                    r'<span class="smart-flush-highlight">\1</span>',
+                                    summary_content,
+                                )
                             else:
                                 smart_flush_okay = summary_content
                     else:
@@ -737,12 +903,14 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
 
                 # fetch tags
                 with conn.cursor() as cur:
-                    cur.execute("""
+                    cur.execute(
+                        """
                         SELECT tag_text, COUNT(tag_text) AS tag_count
                         FROM toilet_tags
                         WHERE toilet_id = %s
                         GROUP BY tag_text
-                        ORDER BY tag_count DESC;""", (toilet_id,)
+                        ORDER BY tag_count DESC;""",
+                        (toilet_id,),
                     )
                     tags = cur.fetchall()
 
@@ -757,10 +925,11 @@ def get_toilet_details(toilet_id, uid, with_smart_flush=True):
                     "avg_supplies": avg_supplies,
                     "avg_privacy": avg_privacy,
                     "smart_flush": smart_flush_okay,
-                    "tags": tags
+                    "tags": tags,
                 }
     except Exception as e:
         return {"error": str(e)}
+
 
 def get_user_ratings(user_id: int):
     try:
@@ -777,8 +946,9 @@ def get_user_ratings(user_id: int):
                 username = user[0]
 
                 # Fetch ratings based on the user_id (now using rated_user_id)
-                cur.execute("""
-                    SELECT 
+                cur.execute(
+                    """
+                    SELECT
                         r.toilet_id,
                         t.latitude,
                         t.longitude,
@@ -790,7 +960,9 @@ def get_user_ratings(user_id: int):
                     FROM ratings r
                     JOIN toilets t ON r.toilet_id = t.toilet_id
                     WHERE r.rated_user_id = %s
-                """, (user_id,))
+                """,
+                    (user_id,),
+                )
 
                 ratings = cur.fetchall()
 
@@ -806,7 +978,7 @@ def get_user_ratings(user_id: int):
                         "supplies": r[4],
                         "privacy": r[5],
                         "comment": r[6],
-                        "username": username  # Returning the username here as it was fetched earlier
+                        "username": username,  # Returning the username here as it was fetched earlier
                     }
                     for r in ratings
                 ]
@@ -814,6 +986,7 @@ def get_user_ratings(user_id: int):
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def check_user_exists(user_id: str):
     try:
@@ -833,6 +1006,7 @@ def check_user_exists(user_id: str):
     finally:
         conn.close()
 
+
 def get_username_by_user_id(user_id):
     try:
         conn = get_db_connection()
@@ -845,6 +1019,7 @@ def get_username_by_user_id(user_id):
                 return None
     except Exception as e:
         return None
+
 
 def get_user_id_by_username(username):
     try:
@@ -863,6 +1038,7 @@ def get_user_id_by_username(username):
     finally:
         conn.close()
 
+
 def coords_to_address(latitude, longitude):
     geolocator = Nominatim(user_agent="go2klo_app")
     location = geolocator.reverse((latitude, longitude))
@@ -870,7 +1046,8 @@ def coords_to_address(latitude, longitude):
         return location.address
     else:
         return "Address not found"
-    
+
+
 def get_achievements_by_user_id(user_id: int):
     conn = get_db_connection()
     try:
@@ -886,6 +1063,7 @@ def get_achievements_by_user_id(user_id: int):
     finally:
         conn.close()
 
+
 def distance_between_coords(coord1, coord2):
     R = 6371  # Radius of the Earth in kilometers
     lat1, lon1 = map(radians, coord1)
@@ -898,6 +1076,7 @@ def distance_between_coords(coord1, coord2):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
     return R * c
+
 
 def get_user_rank(user_id: int):
     conn = get_db_connection()
@@ -914,15 +1093,16 @@ def get_user_rank(user_id: int):
     finally:
         conn.close()
 
+
 def get_users_sorted_by_ratings():
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        u.username, 
-                        u.rank, 
+                    SELECT
+                        u.username,
+                        u.rank,
                         COUNT(r.rating_id) AS rating_count
                     FROM users u
                     LEFT JOIN ratings r ON u.user_id = r.rated_user_id  -- Changed to use user_id
@@ -933,11 +1113,15 @@ def get_users_sorted_by_ratings():
                 """)
                 users = cur.fetchall()
 
-                return [{"username": user[0], "rank": user[1], "rating_count": user[2]} for user in users]
+                return [
+                    {"username": user[0], "rank": user[1], "rating_count": user[2]}
+                    for user in users
+                ]
     except Exception as e:
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def get_reviewed_countries(user_id):
     conn = get_db_connection()
@@ -945,12 +1129,12 @@ def get_reviewed_countries(user_id):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT DISTINCT t.country 
+                SELECT DISTINCT t.country
                 FROM toilets t
                 JOIN ratings r ON t.toilet_id = r.toilet_id
                 WHERE r.rated_user_id = %s AND t.country IS NOT NULL
                 """,
-                (user_id,)
+                (user_id,),
             )
             countries = [row[0] for row in cur.fetchall()]
             return countries
@@ -959,6 +1143,7 @@ def get_reviewed_countries(user_id):
         return []
     finally:
         conn.close()
+
 
 def get_achievements(user):
     conn = get_db_connection()
@@ -976,6 +1161,7 @@ def get_achievements(user):
     finally:
         conn.close()
 
+
 def get_country_from_coordinates(lat, lon):
     geolocator = Nominatim(user_agent="go2klo_app")
     try:
@@ -987,6 +1173,7 @@ def get_country_from_coordinates(lat, lon):
         pass
     return "unknown"
 
+
 def convert_usernames_to_lowercase():
     conn = get_db_connection()
     try:
@@ -994,12 +1181,12 @@ def convert_usernames_to_lowercase():
             with conn.cursor() as cur:
                 cur.execute("SELECT user_id, username FROM users")
                 users = cur.fetchall()
-                
+
                 for user_id, username in users:
                     lower_username = username.lower()
                     cur.execute(
                         "UPDATE users SET username = %s WHERE user_id = %s",
-                        (lower_username, user_id)
+                        (lower_username, user_id),
                     )
         return True, "Usernames converted to lowercase successfully."
     except Exception as e:
@@ -1007,15 +1194,16 @@ def convert_usernames_to_lowercase():
     finally:
         conn.close()
 
+
 def get_top_10_toilets():
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
+                    SELECT
+                        t.toilet_id,
+                        t.latitude,
                         t.longitude,
                         COUNT(r.rating_id) AS rating_count
                     FROM toilets t
@@ -1026,11 +1214,20 @@ def get_top_10_toilets():
                 """)
                 toilets = cur.fetchall()
 
-                return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "rating_count": toilet[3]} for toilet in toilets]
+                return [
+                    {
+                        "toilet_id": toilet[0],
+                        "latitude": toilet[1],
+                        "longitude": toilet[2],
+                        "rating_count": toilet[3],
+                    }
+                    for toilet in toilets
+                ]
     except Exception as e:
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 # def convert_ratings_usernames_to_lowercase():
 #     conn = get_db_connection()
@@ -1039,7 +1236,7 @@ def get_top_10_toilets():
 #             with conn.cursor() as cur:
 #                 cur.execute("SELECT rating_id, username FROM ratings")
 #                 ratings = cur.fetchall()
-                
+
 #                 for rating_id, username in ratings:
 #                     lower_username = username.lower()
 #                     cur.execute(
@@ -1052,20 +1249,21 @@ def get_top_10_toilets():
 #     finally:
 #         conn.close()
 
-def encode_all_emails(): # yeah i didnt figure this out too quickly damn
+
+def encode_all_emails():  # yeah i didnt figure this out too quickly damn
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT user_id, email FROM users")
                 users = cur.fetchall()
-                
+
                 for user_id, email in users:
                     if email:  # Check if email exists
                         encoded_email = encode(email)
                         cur.execute(
                             "UPDATE users SET email = %s WHERE user_id = %s",
-                            (encoded_email, user_id)
+                            (encoded_email, user_id),
                         )
         return True, "Emails encoded successfully."
     except Exception as e:
@@ -1073,13 +1271,14 @@ def encode_all_emails(): # yeah i didnt figure this out too quickly damn
     finally:
         conn.close()
 
+
 def get_ratings_last_24h():
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
+                    SELECT
                         r.rating_id,
                         r.toilet_id,
                         r.cleanliness,
@@ -1102,7 +1301,7 @@ def get_ratings_last_24h():
                         "privacy": r[4],
                         "comment": r[5],
                         "rated_user_id": r[6],
-                        "rating_date": r[7]
+                        "rating_date": r[7],
                     }
                     for r in ratings
                 ]
@@ -1111,11 +1310,12 @@ def get_ratings_last_24h():
     finally:
         conn.close()
 
+
 def get_toilet_of_the_day():
     last24h_list = get_ratings_last_24h()
     if not last24h_list:
         return None
-    
+
     toilet_counts = {}
     for rating in last24h_list:
         toilet_id = rating["toilet_id"]
@@ -1123,6 +1323,7 @@ def get_toilet_of_the_day():
 
     most_common_toilet = max(toilet_counts, key=toilet_counts.get, default=None)
     return most_common_toilet
+
 
 def assign_user_rank(user_id: int, rank_name: str):
     conn = get_db_connection()
@@ -1132,21 +1333,25 @@ def assign_user_rank(user_id: int, rank_name: str):
                 # Check if the rank is a limited edition rank
                 cur.execute(
                     "SELECT 1 FROM app_data WHERE data_name = %s AND data_content = %s",
-                    ("limited_edition_rank", rank_name)
+                    ("limited_edition_rank", rank_name),
                 )
                 if cur.fetchone():
                     cur.execute(
                         "UPDATE app_data SET count = count - 1 WHERE data_name = %s AND count > 0",
-                        ("limited_edition_rank",)
+                        ("limited_edition_rank",),
                     )
 
                 # Assign the rank to the user
-                cur.execute("UPDATE users SET rank = %s WHERE user_id = %s", (rank_name, user_id))
+                cur.execute(
+                    "UPDATE users SET rank = %s WHERE user_id = %s",
+                    (rank_name, user_id),
+                )
         return True, f"Rank '{rank_name}' assigned to user with ID {user_id}."
     except Exception as e:
         return False, f"Error: {e}"
     finally:
         conn.close()
+
 
 def has_user_rank(user_id: int, rank_name: str):
     conn = get_db_connection()
@@ -1167,6 +1372,7 @@ def has_user_rank(user_id: int, rank_name: str):
     finally:
         conn.close()
 
+
 def add_report(tid: int, desc: str, user_id: int):
     conn = get_db_connection()
     try:
@@ -1177,13 +1383,14 @@ def add_report(tid: int, desc: str, user_id: int):
                     INSERT INTO reported (tid, description, report_date, user_id)
                     VALUES (%s, %s, NOW(), %s)
                     """,
-                    (tid, desc, user_id)
+                    (tid, desc, user_id),
                 )
         return True, "Report added successfully."
     except Exception as e:
         return False, f"Error: {e}"
     finally:
         conn.close()
+
 
 def get_all_reports():
     conn = get_db_connection()
@@ -1203,7 +1410,7 @@ def get_all_reports():
                         "tid": report[1],
                         "user_id": report[2],
                         "description": report[3],
-                        "report_date": report[4]
+                        "report_date": report[4],
                     }
                     for report in reports
                 ]
@@ -1211,6 +1418,7 @@ def get_all_reports():
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def delete_toilet_by_id(toilet_id: int):
     conn = get_db_connection()
@@ -1227,6 +1435,7 @@ def delete_toilet_by_id(toilet_id: int):
     finally:
         conn.close()
 
+
 def delete_report_by_id(report_id: int):
     conn = get_db_connection()
     try:
@@ -1239,45 +1448,49 @@ def delete_report_by_id(report_id: int):
     finally:
         conn.close()
 
+
 def search_toilets(query: str):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
                 # the following is claude haiku, aint no way i would figure this out myself. works great tho
-                cur.execute("""
+                cur.execute(
+                    """
                     WITH tag_counts AS (
                         SELECT toilet_id, tag_text, COUNT(*) as tag_frequency
                         FROM toilet_tags
                         GROUP BY toilet_id, tag_text
                     ),
                     location_matches AS (
-                        SELECT toilets.toilet_id, 
-                            toilets.latitude, 
-                            toilets.longitude, 
-                            toilets.location_str, 
-                            COUNT(ratings.rating_id) as rating_count, 
+                        SELECT toilets.toilet_id,
+                            toilets.latitude,
+                            toilets.longitude,
+                            toilets.location_str,
+                            COUNT(ratings.rating_id) as rating_count,
                             MAX(ratings.rating_date) as latest_rating_date,
                             COALESCE(MAX(tag_counts.tag_frequency), 0) as max_tag_frequency
                         FROM toilets
                         LEFT JOIN ratings ON toilets.toilet_id = ratings.toilet_id
                         LEFT JOIN tag_counts ON toilets.toilet_id = tag_counts.toilet_id
                         WHERE (
-                            unaccent(toilets.location_str) ILIKE unaccent(%s) OR 
+                            unaccent(toilets.location_str) ILIKE unaccent(%s) OR
                             toilets.toilet_id IN (
-                                SELECT toilet_id 
-                                FROM toilet_tags 
+                                SELECT toilet_id
+                                FROM toilet_tags
                                 WHERE unaccent(tag_text) ILIKE unaccent(%s)
                             )
                         )
                         GROUP BY toilets.toilet_id, toilets.location_str
-                        ORDER BY 
+                        ORDER BY
                             max_tag_frequency DESC,  -- Toiletten mit häufigsten Tags zuerst
-                            latest_rating_date DESC NULLS LAST, 
+                            latest_rating_date DESC NULLS LAST,
                             toilets.toilet_id DESC
                     )
                     SELECT * FROM location_matches;
-                """, (f"%{query}%", f"%{query}%"))
+                """,
+                    (f"%{query}%", f"%{query}%"),
+                )
 
                 # i hate joins, 10 ands in where are better
                 # change my mind
@@ -1291,7 +1504,7 @@ def search_toilets(query: str):
                         "longitude": toilet[2],
                         "location_str": toilet[3],
                         "rating_count": toilet[4],
-                        "latest_rating_date": toilet[5]
+                        "latest_rating_date": toilet[5],
                     }
                     for toilet in toilet_results
                 ]
@@ -1300,13 +1513,16 @@ def search_toilets(query: str):
     finally:
         conn.close()
 
-def submit_article(title: str, content: str, slug:str, img:str, user_id: int):
+
+def submit_article(title: str, content: str, slug: str, img: str, user_id: int):
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 # Check if the slug already exists
-                slug = ''.join(c for c in slug.lower().strip().replace(" ", "-") if c.isascii())[:100]
+                slug = "".join(
+                    c for c in slug.lower().strip().replace(" ", "-") if c.isascii()
+                )[:100]
 
                 if slug == "":
                     return False, "Slug cannot be empty."
@@ -1321,7 +1537,7 @@ def submit_article(title: str, content: str, slug:str, img:str, user_id: int):
                     INSERT INTO blog (title, text, slug, img, author_id, created_at, views, published)
                     VALUES (%s, %s, %s, %s, %s, NOW(), %s, %s)
                     """,
-                    (title, content, slug, img, user_id, 0, False)
+                    (title, content, slug, img, user_id, 0, False),
                 )
         return True, "Article submitted successfully."
     except Exception as e:
@@ -1329,18 +1545,22 @@ def submit_article(title: str, content: str, slug:str, img:str, user_id: int):
     finally:
         conn.close()
 
+
 def get_newest_articles(limit: int = 12):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
                     FROM blog
                     WHERE published = TRUE
                     ORDER BY created_at DESC
                     LIMIT %s
-                """, (limit,))
+                """,
+                    (limit,),
+                )
                 articles = cur.fetchall()
 
                 return [
@@ -1354,7 +1574,7 @@ def get_newest_articles(limit: int = 12):
                         "created_at": article[6],
                         "views": article[7],
                         "published": article[8],
-                        "author_username": get_username_by_user_id(article[5])
+                        "author_username": get_username_by_user_id(article[5]),
                     }
                     for article in articles
                 ]
@@ -1362,71 +1582,90 @@ def get_newest_articles(limit: int = 12):
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def get_article_by_slug(slug: str):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
                     FROM blog
                     WHERE slug = %s AND published = TRUE
-                """, (slug,))
+                """,
+                    (slug,),
+                )
                 article = cur.fetchone()
 
                 if article:
-                    return ["published", {
-                        "id": article[0],
-                        "title": article[1],
-                        "text": article[2],
-                        "slug": article[3],
-                        "img": article[4],
-                        "author_id": article[5],
-                        "created_at": article[6],
-                        "views": article[7],
-                        "published": article[8],
-                        "author_username": get_username_by_user_id(article[5])
-                    }]
+                    return [
+                        "published",
+                        {
+                            "id": article[0],
+                            "title": article[1],
+                            "text": article[2],
+                            "slug": article[3],
+                            "img": article[4],
+                            "author_id": article[5],
+                            "created_at": article[6],
+                            "views": article[7],
+                            "published": article[8],
+                            "author_username": get_username_by_user_id(article[5]),
+                        },
+                    ]
                 else:
                     # If the article exists but is not published, return a specific message
-                    cur.execute("""
+                    cur.execute(
+                        """
                         SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
                         FROM blog
                         WHERE slug = %s
-                    """, (slug,))
+                    """,
+                        (slug,),
+                    )
                     unpublished_article = cur.fetchone()
                     if unpublished_article:
-                        return ["unpublished", {
-                            "id": unpublished_article[0],
-                            "title": unpublished_article[1],
-                            "text": unpublished_article[2],
-                            "slug": unpublished_article[3],
-                            "img": unpublished_article[4],
-                            "author_id": unpublished_article[5],
-                            "created_at": unpublished_article[6],
-                            "views": unpublished_article[7],
-                            "published": unpublished_article[8],
-                            "author_username": get_username_by_user_id(unpublished_article[5])
-                        }]
+                        return [
+                            "unpublished",
+                            {
+                                "id": unpublished_article[0],
+                                "title": unpublished_article[1],
+                                "text": unpublished_article[2],
+                                "slug": unpublished_article[3],
+                                "img": unpublished_article[4],
+                                "author_id": unpublished_article[5],
+                                "created_at": unpublished_article[6],
+                                "views": unpublished_article[7],
+                                "published": unpublished_article[8],
+                                "author_username": get_username_by_user_id(
+                                    unpublished_article[5]
+                                ),
+                            },
+                        ]
                     return None
     except Exception as e:
         return {"error": str(e)}
     finally:
         conn.close()
 
+
 def get_hot_articles(limit: int = 3):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
                     FROM blog
                     WHERE published = TRUE
                     ORDER BY views DESC
                     LIMIT %s
-                """, (limit,))
+                """,
+                    (limit,),
+                )
                 articles = cur.fetchall()
 
                 return [
@@ -1440,7 +1679,7 @@ def get_hot_articles(limit: int = 3):
                         "created_at": article[6],
                         "views": article[7],
                         "published": article[8],
-                        "author_username": get_username_by_user_id(article[5])
+                        "author_username": get_username_by_user_id(article[5]),
                     }
                     for article in articles
                 ]
@@ -1448,6 +1687,7 @@ def get_hot_articles(limit: int = 3):
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def add_article_view(slug: str):
     conn = get_db_connection()
@@ -1455,7 +1695,9 @@ def add_article_view(slug: str):
         with conn:
             with conn.cursor() as cur:
                 # Increment the view count for the article
-                cur.execute("UPDATE blog SET views = views + 1 WHERE slug = %s", (slug,))
+                cur.execute(
+                    "UPDATE blog SET views = views + 1 WHERE slug = %s", (slug,)
+                )
                 if cur.rowcount == 0:
                     return False, "Article not found."
         return True, "View count updated successfully."
@@ -1464,18 +1706,22 @@ def add_article_view(slug: str):
     finally:
         conn.close()
 
+
 def search_articles(query: str):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
                     FROM blog
                     WHERE unaccent(title) ILIKE unaccent(%s) OR unaccent(text) ILIKE unaccent(%s)
                     AND published = TRUE
-                """, (f"%{query}%", f"%{query}%"))
-                
+                """,
+                    (f"%{query}%", f"%{query}%"),
+                )
+
                 articles = cur.fetchall()
 
                 return [
@@ -1489,7 +1735,7 @@ def search_articles(query: str):
                         "created_at": article[6],
                         "views": article[7],
                         "published": article[8],
-                        "author_username": get_username_by_user_id(article[5])
+                        "author_username": get_username_by_user_id(article[5]),
                     }
                     for article in articles
                 ]
@@ -1497,6 +1743,7 @@ def search_articles(query: str):
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def get_unpublished_articles():
     try:
@@ -1521,7 +1768,7 @@ def get_unpublished_articles():
                         "created_at": article[6],
                         "views": article[7],
                         "published": article[8],
-                        "author_username": get_username_by_user_id(article[5])
+                        "author_username": get_username_by_user_id(article[5]),
                     }
                     for article in articles
                 ]
@@ -1530,17 +1777,21 @@ def get_unpublished_articles():
     finally:
         conn.close()
 
+
 def get_unreviewed_articles(limit: int = 30):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT blog_id, title, text, slug, img, author_id, created_at, views, published
                     FROM blog
                     WHERE published = FALSE
                     LIMIT %s
-                """, (limit,))
+                """,
+                    (limit,),
+                )
                 articles = cur.fetchall()
 
                 return [
@@ -1554,7 +1805,7 @@ def get_unreviewed_articles(limit: int = 30):
                         "created_at": article[6],
                         "views": article[7],
                         "published": article[8],
-                        "author_username": get_username_by_user_id(article[5])
+                        "author_username": get_username_by_user_id(article[5]),
                     }
                     for article in articles
                 ]
@@ -1562,6 +1813,7 @@ def get_unreviewed_articles(limit: int = 30):
         return {"error": str(e)}
     finally:
         conn.close()
+
 
 def approve_article(slug: str):
     conn = get_db_connection()
@@ -1578,6 +1830,7 @@ def approve_article(slug: str):
     finally:
         conn.close()
 
+
 def reject_article(slug: str):
     conn = get_db_connection()
     try:
@@ -1593,38 +1846,52 @@ def reject_article(slug: str):
     finally:
         conn.close()
 
+
 def toggle_like_rating(uid, rid):
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 # Check if the user has already liked this rating
-                cur.execute("SELECT 1 FROM likes WHERE user_id = %s AND rating_id = %s", (uid, rid))
+                cur.execute(
+                    "SELECT 1 FROM likes WHERE user_id = %s AND rating_id = %s",
+                    (uid, rid),
+                )
                 if cur.fetchone():
                     # User has already liked this rating, so we remove the like
-                    cur.execute("DELETE FROM likes WHERE user_id = %s AND rating_id = %s", (uid, rid))
+                    cur.execute(
+                        "DELETE FROM likes WHERE user_id = %s AND rating_id = %s",
+                        (uid, rid),
+                    )
                     return True, "Like removed successfully."
                 else:
                     # User has not liked this rating, so we add the like
-                    cur.execute("INSERT INTO likes (user_id, rating_id) VALUES (%s, %s)", (uid, rid))
+                    cur.execute(
+                        "INSERT INTO likes (user_id, rating_id) VALUES (%s, %s)",
+                        (uid, rid),
+                    )
                     return True, "Like added successfully."
     except Exception as e:
         return False, f"Error: {e}"
     finally:
         conn.close()
 
+
 def get_unapproved_rating_images(limit: int = 50):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT image_id, rating_id, image_url, approved, user_id
                     FROM rating_images
                     WHERE approved = FALSE
                     ORDER BY image_id DESC
                     LIMIT %s
-                """, (limit,))
+                """,
+                    (limit,),
+                )
                 images = cur.fetchall()
 
                 return [
@@ -1633,7 +1900,7 @@ def get_unapproved_rating_images(limit: int = 50):
                         "rating_id": img[1],
                         "image_url": img[2],
                         "approved": img[3],
-                        "user_id": img[4]
+                        "user_id": img[4],
                     }
                     for img in images
                 ]
@@ -1642,57 +1909,70 @@ def get_unapproved_rating_images(limit: int = 50):
     finally:
         conn.close()
 
+
 def decline_rating_image(image_id: int):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     DELETE FROM rating_images
                     WHERE image_id = %s
-                """, (image_id,))
+                """,
+                    (image_id,),
+                )
         return True
     except Exception as e:
         return {"error": str(e)}
+
 
 def approve_rating_image(image_id: int):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     UPDATE rating_images
                     SET approved = TRUE
                     WHERE image_id = %s
-                """, (image_id,))
+                """,
+                    (image_id,),
+                )
         return True
     except Exception as e:
         return {"error": str(e)}
-    
+
+
 def get_images_by_toilet_id(toilet_id: int):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT image_url, user_id, rating_id, uploaded_at
                     FROM rating_images
                     WHERE toilet_id = %s AND approved = TRUE
                     ORDER BY uploaded_at DESC
-                """, (toilet_id,))
+                """,
+                    (toilet_id,),
+                )
                 results = cur.fetchall()
                 return [
                     {
                         "url": row[0],
                         "user_id": row[1],
                         "rating_id": row[2],
-                        "created_at": row[3]
+                        "created_at": row[3],
                     }
                     for row in results
                 ]
     except Exception as e:
         return {"error": str(e)}
-    
+
+
 def smart_flush(toilet_id: int):
     info = get_toilet_details(toilet_id, None, with_smart_flush=False)
 
@@ -1711,13 +1991,11 @@ def smart_flush(toilet_id: int):
         client = Groq()
         completion = client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
+            messages=[{"role": "user", "content": prompt}],
             temperature=1,
             max_completion_tokens=1024,
             top_p=1,
-            stream=True
+            stream=True,
         )
 
         raw_reply = ""
@@ -1730,12 +2008,13 @@ def smart_flush(toilet_id: int):
         return f"Groq API Error: {str(e)}"
 
     # Cleaning output
-    cleaned_reply = raw_reply.replace('**', '')
-    cleaned_reply = cleaned_reply.replace('*', '')
-    cleaned_reply = re.sub(r'^\n+|\s*\(\d+\s*words?\)\s*$', '', cleaned_reply).strip()
-    cleaned_reply = re.sub(r'\n{2,}', '\n\n', cleaned_reply)
+    cleaned_reply = raw_reply.replace("**", "")
+    cleaned_reply = cleaned_reply.replace("*", "")
+    cleaned_reply = re.sub(r"^\n+|\s*\(\d+\s*words?\)\s*$", "", cleaned_reply).strip()
+    cleaned_reply = re.sub(r"\n{2,}", "\n\n", cleaned_reply)
 
     return cleaned_reply
+
 
 def check_smart_flush(toilet_id: int):
     conn = get_db_connection()
@@ -1763,6 +2042,7 @@ def check_smart_flush(toilet_id: int):
     finally:
         conn.close()
 
+
 def create_smart_flush(toilet_id: int):
     # I ASSUME WE ONLY RUN THIS AFTER CHECKING THE STATUS OF THE SMART FLUSH AND LOO BEFOREHAND
 
@@ -1773,7 +2053,9 @@ def create_smart_flush(toilet_id: int):
                 # create sf text
                 smart_flush_content = smart_flush(toilet_id)
 
-                if not smart_flush_content or smart_flush_content.startswith("API Error"):
+                if not smart_flush_content or smart_flush_content.startswith(
+                    "API Error"
+                ):
                     return False, f"Could not create Smart Flush: {smart_flush_content}"
 
                 # Insert the new sf overview into db
@@ -1782,7 +2064,7 @@ def create_smart_flush(toilet_id: int):
                     INSERT INTO smart_flush (created_at, toilet_id, summary_content, updated_at)
                     VALUES (NOW(), %s, %s, NOW())
                     """,
-                    (toilet_id, smart_flush_content)
+                    (toilet_id, smart_flush_content),
                 )
         return True, smart_flush_content
     except Exception as e:
@@ -1790,20 +2072,25 @@ def create_smart_flush(toilet_id: int):
     finally:
         conn.close()
 
+
 def update_smart_flush(toilet_id: int):
     conn = get_db_connection()
     try:
         with conn:
             with conn.cursor() as cur:
                 # check if smart flush exists
-                cur.execute("SELECT id FROM smart_flush WHERE toilet_id = %s", (toilet_id,))
+                cur.execute(
+                    "SELECT id FROM smart_flush WHERE toilet_id = %s", (toilet_id,)
+                )
                 existing = cur.fetchone()
                 if not existing:
                     return False, f"No Smart Flush exists for toilet {toilet_id}."
 
                 # generate new AI summary
                 smart_flush_content = smart_flush(toilet_id)
-                if not smart_flush_content or smart_flush_content.startswith("API Error"):
+                if not smart_flush_content or smart_flush_content.startswith(
+                    "API Error"
+                ):
                     return False, f"Could not update Smart Flush: {smart_flush_content}"
 
                 # update existing record
@@ -1813,7 +2100,7 @@ def update_smart_flush(toilet_id: int):
                     SET summary_content = %s, updated_at = NOW()
                     WHERE toilet_id = %s
                     """,
-                    (smart_flush_content, toilet_id)
+                    (smart_flush_content, toilet_id),
                 )
         return True, "Smart Flush updated successfully."
     except Exception as e:
