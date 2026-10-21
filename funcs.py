@@ -186,7 +186,6 @@ def send_verification_email(recipient_email, auth_code):
     except ApiException as e:
         return False, f"Error sending email: {e}"
 
-
 def send_password_reset_email(recipient_email, pwlink):
     sender = {"name": "go2klo", "email": "noreply@go2klo.xyz"}
     to = [{"email": recipient_email, "name": recipient_email}]
@@ -470,7 +469,6 @@ def coords_to_nice_address(latitude, longitude):
     else:
         return "Unknown location"
 
-
 def create_tags(toilet_id, user_id, tags):
     conn = get_db_connection()
 
@@ -704,8 +702,7 @@ def get_toilets(
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute(
-                    """
+                cur.execute("""
                     SELECT
                         t.toilet_id,
                         t.latitude,
@@ -737,14 +734,12 @@ def get_toilets(
     except Exception as e:
         return f"Error: {e}"
 
-
 def get_toilets_chunk(start_id, limit):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
-                cur.execute(
-                    """
+                cur.execute("""
                     SELECT
                         t.toilet_id,
                         t.latitude,
@@ -946,8 +941,7 @@ def get_user_ratings(user_id: int):
                 username = user[0]
 
                 # Fetch ratings based on the user_id (now using rated_user_id)
-                cur.execute(
-                    """
+                cur.execute("""
                     SELECT
                         r.toilet_id,
                         t.latitude,
@@ -1046,7 +1040,6 @@ def coords_to_address(latitude, longitude):
         return location.address
     else:
         return "Address not found"
-
 
 def get_achievements_by_user_id(user_id: int):
     conn = get_db_connection()
@@ -1718,9 +1711,7 @@ def search_articles(query: str):
                     FROM blog
                     WHERE unaccent(title) ILIKE unaccent(%s) OR unaccent(text) ILIKE unaccent(%s)
                     AND published = TRUE
-                """,
-                    (f"%{query}%", f"%{query}%"),
-                )
+                """, (f"%{query}%", f"%{query}%"))
 
                 articles = cur.fetchall()
 
@@ -1944,7 +1935,6 @@ def approve_rating_image(image_id: int):
     except Exception as e:
         return {"error": str(e)}
 
-
 def get_images_by_toilet_id(toilet_id: int):
     try:
         conn = get_db_connection()
@@ -1972,7 +1962,6 @@ def get_images_by_toilet_id(toilet_id: int):
     except Exception as e:
         return {"error": str(e)}
 
-
 def smart_flush(toilet_id: int):
     info = get_toilet_details(toilet_id, None, with_smart_flush=False)
 
@@ -1990,11 +1979,12 @@ def smart_flush(toilet_id: int):
     try:
         client = Groq()
         completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="qwen/qwen3.8-27b", # lets see for how long this will be supported (i need to read my email regarding deprecation tho)
             messages=[{"role": "user", "content": prompt}],
-            temperature=1,
-            max_completion_tokens=1024,
-            top_p=1,
+            temperature=0.4,
+            max_completion_tokens=280,
+            reasoning_effort="default",
+            top_p=0.9,
             stream=True,
         )
 
