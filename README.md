@@ -45,7 +45,7 @@ Say goodbye to restroom roulette and hello to clean, reliable loos. **go2klo** i
 - **Database**: Supabase, PostgreSQL
 - **Maps Integration**: Leaflet/OSM and Google Maps
 - **Mailing**: Brevo/sendinblue
-- **Smart Flush**: Gemma 9b from groq
+- **Smart Flush**: Qwen 3.8 (27B) from groq
 
 ## 🚧 Future Features/planned improvements
 

@@ -1712,10 +1712,10 @@ def smart_flush(toilet_id: int):
         completion = client.chat.completions.create(
             model="qwen/qwen3.8-27b", # lets see for how long this will be supported (i need to read my email regarding deprecation tho)
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.6,
-            max_completion_tokens=1024,
-            reasoning_effort="default",
-            top_p=0.95,
+            temperature=0.4,
+            max_completion_tokens=280,
+            reasoning_effort="low",
+            top_p=0.9,
             stream=True,
         )
 
