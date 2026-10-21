@@ -61,7 +61,7 @@ def get_zoom_level(km):
     for key in sorted_keys:
         if km <= key:
             return zoom_levels[key] - 2
- 
+
     return 7
 
 def encode(clear):
@@ -133,31 +133,31 @@ def upload_rating_image(rating_id, toilet_id, image_data, user_id):
 def send_verification_email(recipient_email, auth_code):
     sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
     to = [{"email": recipient_email, "name": recipient_email}]
-    
+
     email_data = sib_api_v3_sdk.SendSmtpEmail(
         to=to,
         sender=sender,
         template_id=1,
         params={"auth_code": auth_code}
     )
-    
+
     try:
         api_instance.send_transac_email(email_data)
         return True, f"Verification email sent to {recipient_email}"
     except ApiException as e:
         return False, f"Error sending email: {e}"
-    
+
 def send_password_reset_email(recipient_email, pwlink):
     sender = {"name": "go2klo", "email": "noreply@go2klo.com"}
     to = [{"email": recipient_email, "name": recipient_email}]
-    
+
     email_data = sib_api_v3_sdk.SendSmtpEmail(
         to=to,
         sender=sender,
         template_id=2,
         params={"pwlink": f"https://go2klo.com/r/{pwlink}"}
     )
-    
+
     try:
         api_instance.send_transac_email(email_data)
     except ApiException as e:
@@ -361,7 +361,7 @@ def get_coordinates(location_name):
 
 #                 cur.execute(
 #                     """
-#                     SELECT latitude, longitude 
+#                     SELECT latitude, longitude
 #                     FROM toilets t
 #                     JOIN ratings r ON t.toilet_id = r.toilet_id
 #                     WHERE r.username = %s
@@ -410,7 +410,7 @@ def coords_to_nice_address(latitude, longitude):
         return ", ".join(filter(None, components))
     else:
         return "Unknown location"
-    
+
 def create_tags(toilet_id, user_id, tags):
     conn = get_db_connection()
 
@@ -508,7 +508,7 @@ def create_rating(cleanliness: int, supplies: int, privacy: int, comment: str, c
                 # Check if the user qualifies for the "Globetrotter" achievement
                 cur.execute(
                     """
-                    SELECT latitude, longitude 
+                    SELECT latitude, longitude
                     FROM toilets t
                     JOIN ratings r ON t.toilet_id = r.toilet_id
                     WHERE r.rated_user_id = %s
@@ -585,9 +585,9 @@ def get_toilets(num=10): # just for initial click on explore, to be concise the 
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
+                    SELECT
+                        t.toilet_id,
+                        t.latitude,
                         t.longitude,
                         t.location_str,
                         COUNT(r.rating_id) AS rating_count,
@@ -603,16 +603,16 @@ def get_toilets(num=10): # just for initial click on explore, to be concise the 
                 return [{"toilet_id": toilet[0], "latitude": toilet[1], "longitude": toilet[2], "location_str": toilet[3], "rating_count": toilet[4], "latest_rating_date": toilet[5]} for toilet in toilets]
     except Exception as e:
         return f"Error: {e}"
-    
+
 def get_toilets_chunk(start_id, limit):
     try:
         conn = get_db_connection()
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
+                    SELECT
+                        t.toilet_id,
+                        t.latitude,
                         t.longitude,
                         COUNT(r.rating_id) AS rating_count
                     FROM toilets t
@@ -778,7 +778,7 @@ def get_user_ratings(user_id: int):
 
                 # Fetch ratings based on the user_id (now using rated_user_id)
                 cur.execute("""
-                    SELECT 
+                    SELECT
                         r.toilet_id,
                         t.latitude,
                         t.longitude,
@@ -870,7 +870,7 @@ def coords_to_address(latitude, longitude):
         return location.address
     else:
         return "Address not found"
-    
+
 def get_achievements_by_user_id(user_id: int):
     conn = get_db_connection()
     try:
@@ -920,9 +920,9 @@ def get_users_sorted_by_ratings():
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        u.username, 
-                        u.rank, 
+                    SELECT
+                        u.username,
+                        u.rank,
                         COUNT(r.rating_id) AS rating_count
                     FROM users u
                     LEFT JOIN ratings r ON u.user_id = r.rated_user_id  -- Changed to use user_id
@@ -945,7 +945,7 @@ def get_reviewed_countries(user_id):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT DISTINCT t.country 
+                SELECT DISTINCT t.country
                 FROM toilets t
                 JOIN ratings r ON t.toilet_id = r.toilet_id
                 WHERE r.rated_user_id = %s AND t.country IS NOT NULL
@@ -994,7 +994,7 @@ def convert_usernames_to_lowercase():
             with conn.cursor() as cur:
                 cur.execute("SELECT user_id, username FROM users")
                 users = cur.fetchall()
-                
+
                 for user_id, username in users:
                     lower_username = username.lower()
                     cur.execute(
@@ -1013,9 +1013,9 @@ def get_top_10_toilets():
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
-                        t.toilet_id, 
-                        t.latitude, 
+                    SELECT
+                        t.toilet_id,
+                        t.latitude,
                         t.longitude,
                         COUNT(r.rating_id) AS rating_count
                     FROM toilets t
@@ -1039,7 +1039,7 @@ def get_top_10_toilets():
 #             with conn.cursor() as cur:
 #                 cur.execute("SELECT rating_id, username FROM ratings")
 #                 ratings = cur.fetchall()
-                
+
 #                 for rating_id, username in ratings:
 #                     lower_username = username.lower()
 #                     cur.execute(
@@ -1059,7 +1059,7 @@ def encode_all_emails(): # yeah i didnt figure this out too quickly damn
             with conn.cursor() as cur:
                 cur.execute("SELECT user_id, email FROM users")
                 users = cur.fetchall()
-                
+
                 for user_id, email in users:
                     if email:  # Check if email exists
                         encoded_email = encode(email)
@@ -1079,7 +1079,7 @@ def get_ratings_last_24h():
         with conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT 
+                    SELECT
                         r.rating_id,
                         r.toilet_id,
                         r.cleanliness,
@@ -1115,7 +1115,7 @@ def get_toilet_of_the_day():
     last24h_list = get_ratings_last_24h()
     if not last24h_list:
         return None
-    
+
     toilet_counts = {}
     for rating in last24h_list:
         toilet_id = rating["toilet_id"]
@@ -1252,28 +1252,28 @@ def search_toilets(query: str):
                         GROUP BY toilet_id, tag_text
                     ),
                     location_matches AS (
-                        SELECT toilets.toilet_id, 
-                            toilets.latitude, 
-                            toilets.longitude, 
-                            toilets.location_str, 
-                            COUNT(ratings.rating_id) as rating_count, 
+                        SELECT toilets.toilet_id,
+                            toilets.latitude,
+                            toilets.longitude,
+                            toilets.location_str,
+                            COUNT(ratings.rating_id) as rating_count,
                             MAX(ratings.rating_date) as latest_rating_date,
                             COALESCE(MAX(tag_counts.tag_frequency), 0) as max_tag_frequency
                         FROM toilets
                         LEFT JOIN ratings ON toilets.toilet_id = ratings.toilet_id
                         LEFT JOIN tag_counts ON toilets.toilet_id = tag_counts.toilet_id
                         WHERE (
-                            unaccent(toilets.location_str) ILIKE unaccent(%s) OR 
+                            unaccent(toilets.location_str) ILIKE unaccent(%s) OR
                             toilets.toilet_id IN (
-                                SELECT toilet_id 
-                                FROM toilet_tags 
+                                SELECT toilet_id
+                                FROM toilet_tags
                                 WHERE unaccent(tag_text) ILIKE unaccent(%s)
                             )
                         )
                         GROUP BY toilets.toilet_id, toilets.location_str
-                        ORDER BY 
+                        ORDER BY
                             max_tag_frequency DESC,  -- Toiletten mit häufigsten Tags zuerst
-                            latest_rating_date DESC NULLS LAST, 
+                            latest_rating_date DESC NULLS LAST,
                             toilets.toilet_id DESC
                     )
                     SELECT * FROM location_matches;
@@ -1475,7 +1475,7 @@ def search_articles(query: str):
                     WHERE unaccent(title) ILIKE unaccent(%s) OR unaccent(text) ILIKE unaccent(%s)
                     AND published = TRUE
                 """, (f"%{query}%", f"%{query}%"))
-                
+
                 articles = cur.fetchall()
 
                 return [
@@ -1668,7 +1668,7 @@ def approve_rating_image(image_id: int):
         return True
     except Exception as e:
         return {"error": str(e)}
-    
+
 def get_images_by_toilet_id(toilet_id: int):
     try:
         conn = get_db_connection()
@@ -1692,7 +1692,7 @@ def get_images_by_toilet_id(toilet_id: int):
                 ]
     except Exception as e:
         return {"error": str(e)}
-    
+
 def smart_flush(toilet_id: int):
     info = get_toilet_details(toilet_id, None, with_smart_flush=False)
 
@@ -1710,14 +1710,13 @@ def smart_flush(toilet_id: int):
     try:
         client = Groq()
         completion = client.chat.completions.create(
-            model="gemma2-9b-it",
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
-            temperature=1,
+            model="qwen/qwen3.8-27b", # lets see for how long this will be supported (i need to read my email regarding deprecation tho)
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.6,
             max_completion_tokens=1024,
-            top_p=1,
-            stream=True
+            reasoning_effort="default",
+            top_p=0.95,
+            stream=True,
         )
 
         raw_reply = ""
