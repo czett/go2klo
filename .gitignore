@@ -3,3 +3,5 @@ credentials.yml
 test.py
 __pycache__/
 *.pyc
+*.backup
+.venv/

@@ -12,8 +12,17 @@
     <form action="/rate/finish" enctype="multipart/form-data" method="post">
         <h2 class="title">{{ts["title"]}}</h2>
 
-        <!-- <iframe src="'https://maps.google.com/maps?q=' + {{lat}} + ',' + {{lng}} + '&t=&z=15&ie=UTF8&iwloc=&output=embed'" /> -->
-        <iframe src = "https://maps.google.com/maps?q={{lat}},{{lng}}&hl=es;z=14&amp;output=embed"></iframe>
+        {% if lat is not none and lng is not none %}
+            <div id="map" style="margin-bottom: 2vh;"></div>
+            <script>
+                var map = L.map('map').setView([{{ lat }}, {{ lng }}], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                var marker = L.marker([{{ lat }}, {{ lng }}]).addTo(map);
+            </script>
+        {% endif %}
         
         {% if lat == None and lng == None %}
             <div class="wrong-pin" style="color: #d4040d; font-weight: 600;">{{ts["wrong_1"]}} <a href="/rate">{{ts["try_again_1"]}}</a> {{ts["try_again_2"]}}</div>
