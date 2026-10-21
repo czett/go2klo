@@ -1714,7 +1714,7 @@ def smart_flush(toilet_id: int):
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
             max_completion_tokens=280,
-            reasoning_effort="low",
+            reasoning_effort="default",
             top_p=0.9,
             stream=True,
         )
